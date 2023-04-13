@@ -1,0 +1,112 @@
+CRITICAL - 2023-04-05 17:33:27 --> The framework needs the following extension(s) installed and loaded: intl.
+#0 C:\xamppV8.2.0\htdocs\CodeIgniter4-4.1.4\system\CodeIgniter.php(218): CodeIgniter\Exceptions\FrameworkException::forMissingExtension('intl')
+#1 C:\xamppV8.2.0\htdocs\CodeIgniter4-4.1.4\system\CodeIgniter.php(176): CodeIgniter\CodeIgniter->resolvePlatformExtensions()
+#2 C:\xamppV8.2.0\htdocs\CodeIgniter4-4.1.4\system\bootstrap.php(146): CodeIgniter\CodeIgniter->initialize()
+#3 C:\xamppV8.2.0\htdocs\CodeIgniter4-4.1.4\public\index.php(28): require('C:\\xamppV8.2.0\\...')
+#4 {main}
+CRITICAL - 2023-04-05 17:33:40 --> The framework needs the following extension(s) installed and loaded: intl.
+#0 C:\xamppV8.2.0\htdocs\CodeIgniter4-4.1.4\system\CodeIgniter.php(218): CodeIgniter\Exceptions\FrameworkException::forMissingExtension('intl')
+#1 C:\xamppV8.2.0\htdocs\CodeIgniter4-4.1.4\system\CodeIgniter.php(176): CodeIgniter\CodeIgniter->resolvePlatformExtensions()
+#2 C:\xamppV8.2.0\htdocs\CodeIgniter4-4.1.4\system\bootstrap.php(146): CodeIgniter\CodeIgniter->initialize()
+#3 C:\xamppV8.2.0\htdocs\CodeIgniter4-4.1.4\public\index.php(28): require('C:\\xamppV8.2.0\\...')
+#4 {main}
+CRITICAL - 2023-04-05 17:33:50 --> The framework needs the following extension(s) installed and loaded: intl.
+#0 C:\xamppV8.2.0\htdocs\CodeIgniter4-4.1.4\system\CodeIgniter.php(218): CodeIgniter\Exceptions\FrameworkException::forMissingExtension('intl')
+#1 C:\xamppV8.2.0\htdocs\CodeIgniter4-4.1.4\system\CodeIgniter.php(176): CodeIgniter\CodeIgniter->resolvePlatformExtensions()
+#2 C:\xamppV8.2.0\htdocs\CodeIgniter4-4.1.4\system\bootstrap.php(146): CodeIgniter\CodeIgniter->initialize()
+#3 C:\xamppV8.2.0\htdocs\CodeIgniter4-4.1.4\public\index.php(28): require('C:\\xamppV8.2.0\\...')
+#4 {main}
+CRITICAL - 2023-04-05 18:22:00 --> The framework needs the following extension(s) installed and loaded: intl.
+#0 C:\xamppV8.2.0\htdocs\CodeIgniter4-4.1.4\system\CodeIgniter.php(218): CodeIgniter\Exceptions\FrameworkException::forMissingExtension('intl')
+#1 C:\xamppV8.2.0\htdocs\CodeIgniter4-4.1.4\system\CodeIgniter.php(176): CodeIgniter\CodeIgniter->resolvePlatformExtensions()
+#2 C:\xamppV8.2.0\htdocs\CodeIgniter4-4.1.4\system\bootstrap.php(146): CodeIgniter\CodeIgniter->initialize()
+#3 C:\xamppV8.2.0\htdocs\CodeIgniter4-4.1.4\public\index.php(28): require('C:\\xamppV8.2.0\\...')
+#4 {main}
+CRITICAL - 2023-04-05 18:35:33 --> The framework needs the following extension(s) installed and loaded: intl.
+#0 C:\xamppV8.2.0\htdocs\CodeIgniter4-4.1.4\system\CodeIgniter.php(218): CodeIgniter\Exceptions\FrameworkException::forMissingExtension('intl')
+#1 C:\xamppV8.2.0\htdocs\CodeIgniter4-4.1.4\system\CodeIgniter.php(176): CodeIgniter\CodeIgniter->resolvePlatformExtensions()
+#2 C:\xamppV8.2.0\htdocs\CodeIgniter4-4.1.4\system\bootstrap.php(146): CodeIgniter\CodeIgniter->initialize()
+#3 C:\xamppV8.2.0\htdocs\CodeIgniter4-4.1.4\public\index.php(28): require('C:\\xamppV8.2.0\\...')
+#4 {main}
+CRITICAL - 2023-04-05 18:35:35 --> The framework needs the following extension(s) installed and loaded: intl.
+#0 C:\xamppV8.2.0\htdocs\CodeIgniter4-4.1.4\system\CodeIgniter.php(218): CodeIgniter\Exceptions\FrameworkException::forMissingExtension('intl')
+#1 C:\xamppV8.2.0\htdocs\CodeIgniter4-4.1.4\system\CodeIgniter.php(176): CodeIgniter\CodeIgniter->resolvePlatformExtensions()
+#2 C:\xamppV8.2.0\htdocs\CodeIgniter4-4.1.4\system\bootstrap.php(146): CodeIgniter\CodeIgniter->initialize()
+#3 C:\xamppV8.2.0\htdocs\CodeIgniter4-4.1.4\public\index.php(28): require('C:\\xamppV8.2.0\\...')
+#4 {main}
+CRITICAL - 2023-04-05 18:36:05 --> The framework needs the following extension(s) installed and loaded: intl.
+#0 C:\xamppV8.2.0\htdocs\CodeIgniter4-4.1.4\system\CodeIgniter.php(218): CodeIgniter\Exceptions\FrameworkException::forMissingExtension('intl')
+#1 C:\xamppV8.2.0\htdocs\CodeIgniter4-4.1.4\system\CodeIgniter.php(176): CodeIgniter\CodeIgniter->resolvePlatformExtensions()
+#2 C:\xamppV8.2.0\htdocs\CodeIgniter4-4.1.4\system\bootstrap.php(146): CodeIgniter\CodeIgniter->initialize()
+#3 C:\xamppV8.2.0\htdocs\CodeIgniter4-4.1.4\public\index.php(28): require('C:\\xamppV8.2.0\\...')
+#4 {main}
+CRITICAL - 2023-04-05 18:36:05 --> Uncaught ErrorException: strtolower(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xamppV8.2.0\htdocs\CodeIgniter4-4.1.4\system\Validation\FormatRules.php:253
+Stack trace:
+#0 [internal function]: CodeIgniter\Debug\Exceptions->errorHandler(8192, 'strtolower(): P...', 'C:\\xamppV8.2.0\\...', 253)
+#1 C:\xamppV8.2.0\htdocs\CodeIgniter4-4.1.4\system\Validation\FormatRules.php(253): strtolower(NULL)
+#2 C:\xamppV8.2.0\htdocs\CodeIgniter4-4.1.4\system\HTTP\RequestTrait.php(151): CodeIgniter\Validation\FormatRules->valid_ip('::1')
+#3 C:\xamppV8.2.0\htdocs\CodeIgniter4-4.1.4\app\Views\errors\html\error_exception.php(206): CodeIgniter\HTTP\Request->getIPAddress()
+#4 C:\xamppV8.2.0\htdocs\CodeIgniter4-4.1.4\system\Debug\Exceptions.php(235): include('C:\\xamppV8.2.0\\...')
+#5 C:\xamppV8.2.0\htdocs\CodeIgniter4-4.1.4\system\Debug\Exceptions.php(132): CodeIgniter\Debug\Exceptions->render(Object(CodeIgniter\Exceptions\FrameworkException), 500)
+#6 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(CodeIgniter\Exceptions\FrameworkException))
+#7 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+CRITICAL - 2023-04-05 18:37:34 --> The framework needs the following extension(s) installed and loaded: intl.
+#0 C:\xamppV8.2.0\htdocs\CodeIgniter4-4.1.4\system\CodeIgniter.php(218): CodeIgniter\Exceptions\FrameworkException::forMissingExtension('intl')
+#1 C:\xamppV8.2.0\htdocs\CodeIgniter4-4.1.4\system\CodeIgniter.php(176): CodeIgniter\CodeIgniter->resolvePlatformExtensions()
+#2 C:\xamppV8.2.0\htdocs\CodeIgniter4-4.1.4\system\bootstrap.php(146): CodeIgniter\CodeIgniter->initialize()
+#3 C:\xamppV8.2.0\htdocs\CodeIgniter4-4.1.4\public\index.php(28): require('C:\\xamppV8.2.0\\...')
+#4 {main}
+CRITICAL - 2023-04-05 18:37:34 --> Uncaught ErrorException: strtolower(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xamppV8.2.0\htdocs\CodeIgniter4-4.1.4\system\Validation\FormatRules.php:253
+Stack trace:
+#0 [internal function]: CodeIgniter\Debug\Exceptions->errorHandler(8192, 'strtolower(): P...', 'C:\\xamppV8.2.0\\...', 253)
+#1 C:\xamppV8.2.0\htdocs\CodeIgniter4-4.1.4\system\Validation\FormatRules.php(253): strtolower(NULL)
+#2 C:\xamppV8.2.0\htdocs\CodeIgniter4-4.1.4\system\HTTP\RequestTrait.php(151): CodeIgniter\Validation\FormatRules->valid_ip('::1')
+#3 C:\xamppV8.2.0\htdocs\CodeIgniter4-4.1.4\app\Views\errors\html\error_exception.php(206): CodeIgniter\HTTP\Request->getIPAddress()
+#4 C:\xamppV8.2.0\htdocs\CodeIgniter4-4.1.4\system\Debug\Exceptions.php(235): include('C:\\xamppV8.2.0\\...')
+#5 C:\xamppV8.2.0\htdocs\CodeIgniter4-4.1.4\system\Debug\Exceptions.php(132): CodeIgniter\Debug\Exceptions->render(Object(CodeIgniter\Exceptions\FrameworkException), 500)
+#6 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(CodeIgniter\Exceptions\FrameworkException))
+#7 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+CRITICAL - 2023-04-05 18:37:35 --> The framework needs the following extension(s) installed and loaded: intl.
+#0 C:\xamppV8.2.0\htdocs\CodeIgniter4-4.1.4\system\CodeIgniter.php(218): CodeIgniter\Exceptions\FrameworkException::forMissingExtension('intl')
+#1 C:\xamppV8.2.0\htdocs\CodeIgniter4-4.1.4\system\CodeIgniter.php(176): CodeIgniter\CodeIgniter->resolvePlatformExtensions()
+#2 C:\xamppV8.2.0\htdocs\CodeIgniter4-4.1.4\system\bootstrap.php(146): CodeIgniter\CodeIgniter->initialize()
+#3 C:\xamppV8.2.0\htdocs\CodeIgniter4-4.1.4\public\index.php(28): require('C:\\xamppV8.2.0\\...')
+#4 {main}
+CRITICAL - 2023-04-05 18:37:35 --> Uncaught ErrorException: strtolower(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xamppV8.2.0\htdocs\CodeIgniter4-4.1.4\system\Validation\FormatRules.php:253
+Stack trace:
+#0 [internal function]: CodeIgniter\Debug\Exceptions->errorHandler(8192, 'strtolower(): P...', 'C:\\xamppV8.2.0\\...', 253)
+#1 C:\xamppV8.2.0\htdocs\CodeIgniter4-4.1.4\system\Validation\FormatRules.php(253): strtolower(NULL)
+#2 C:\xamppV8.2.0\htdocs\CodeIgniter4-4.1.4\system\HTTP\RequestTrait.php(151): CodeIgniter\Validation\FormatRules->valid_ip('::1')
+#3 C:\xamppV8.2.0\htdocs\CodeIgniter4-4.1.4\app\Views\errors\html\error_exception.php(206): CodeIgniter\HTTP\Request->getIPAddress()
+#4 C:\xamppV8.2.0\htdocs\CodeIgniter4-4.1.4\system\Debug\Exceptions.php(235): include('C:\\xamppV8.2.0\\...')
+#5 C:\xamppV8.2.0\htdocs\CodeIgniter4-4.1.4\system\Debug\Exceptions.php(132): CodeIgniter\Debug\Exceptions->render(Object(CodeIgniter\Exceptions\FrameworkException), 500)
+#6 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(CodeIgniter\Exceptions\FrameworkException))
+#7 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+CRITICAL - 2023-04-05 18:37:37 --> The framework needs the following extension(s) installed and loaded: intl.
+#0 C:\xamppV8.2.0\htdocs\CodeIgniter4-4.1.4\system\CodeIgniter.php(218): CodeIgniter\Exceptions\FrameworkException::forMissingExtension('intl')
+#1 C:\xamppV8.2.0\htdocs\CodeIgniter4-4.1.4\system\CodeIgniter.php(176): CodeIgniter\CodeIgniter->resolvePlatformExtensions()
+#2 C:\xamppV8.2.0\htdocs\CodeIgniter4-4.1.4\system\bootstrap.php(146): CodeIgniter\CodeIgniter->initialize()
+#3 C:\xamppV8.2.0\htdocs\CodeIgniter4-4.1.4\public\index.php(28): require('C:\\xamppV8.2.0\\...')
+#4 {main}
+CRITICAL - 2023-04-05 18:37:37 --> Uncaught ErrorException: strtolower(): Passing null to parameter #1 ($string) of type string is deprecated in C:\xamppV8.2.0\htdocs\CodeIgniter4-4.1.4\system\Validation\FormatRules.php:253
+Stack trace:
+#0 [internal function]: CodeIgniter\Debug\Exceptions->errorHandler(8192, 'strtolower(): P...', 'C:\\xamppV8.2.0\\...', 253)
+#1 C:\xamppV8.2.0\htdocs\CodeIgniter4-4.1.4\system\Validation\FormatRules.php(253): strtolower(NULL)
+#2 C:\xamppV8.2.0\htdocs\CodeIgniter4-4.1.4\system\HTTP\RequestTrait.php(151): CodeIgniter\Validation\FormatRules->valid_ip('::1')
+#3 C:\xamppV8.2.0\htdocs\CodeIgniter4-4.1.4\app\Views\errors\html\error_exception.php(206): CodeIgniter\HTTP\Request->getIPAddress()
+#4 C:\xamppV8.2.0\htdocs\CodeIgniter4-4.1.4\system\Debug\Exceptions.php(235): include('C:\\xamppV8.2.0\\...')
+#5 C:\xamppV8.2.0\htdocs\CodeIgniter4-4.1.4\system\Debug\Exceptions.php(132): CodeIgniter\Debug\Exceptions->render(Object(CodeIgniter\Exceptions\FrameworkException), 500)
+#6 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(CodeIgniter\Exceptions\FrameworkException))
+#7 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
