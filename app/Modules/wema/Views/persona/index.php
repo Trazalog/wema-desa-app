@@ -1,25 +1,41 @@
+
 <?php $this->extend('templates/admin_template') ?>
 
 <?= $this->section('content') ?>
 
-<!-- <style>
-   .modal.fade:not(.in).right .modal-dialog {
-    -webkit-transform: translate3d(45%, 0, 0);
-    transform: translate3d(45%, 0, 0);
-} 
-</style> -->
-
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6">
-            <h1>Cuentas</h1>
+        <div class="row mb-2"> 
+          <div class="col-sm-10">
+            <nav style="--bs-breadcrumb-divider: '>'; font-size:30px" aria-label="breadcrumb">
+              <ol class="breadcrumb">
+                <li class="breadcrumb-item active"><a>CONFIANZA Y TECNOLOGIA</a></li>
+                <li class="breadcrumb-item active" aria-current="page">BIMBO S.A de C.V</li>
+              </ol>
+            </nav>
+          </div><!-- 
+          <div class="col-sm-4">
+          <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+            <div class="callout callout-info btn-outline-primary">
+              <h5>CONFIANZA Y TECNOLOGIA</h5>
+              <p>BIMBO S.A de C.V</p>
+            </div>
           </div>
-          <div class="col-sm-6">
+</nav> -->
+
+          <div class="col-sm-2">
+          <button type="button" class="btn btn-outline-primary btn-block btn-sm"><i class="fa fa-info float-left"></i> Información del Cliente</button>
+          </div>
+        </div>
+        <div class="row mb-2">
+          <div class="col-sm-8">
+            <h1>Personas</h1>
+          </div>
+          <div class="col-sm-4">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Cuentas</li>
+              <li class="breadcrumb-item active">Personas</li>
             </ol>
           </div>
         </div>
@@ -31,34 +47,38 @@
           <div class="col-12">
             <div class="card">
               <div class="card-header">
-                <h3 class="card-title">Tabla de cuentas</h3>
+                <h3 class="card-title">Tabla de Personas</h3>
               </div>
               <!-- /.card-header -->
               <div class="card-body">
                 
-                <table id="tabla_cuentas" class="table table-bordered table-striped">
+                <table id="tabla_personas" class="table table-bordered table-striped">
                   <thead>
                   <tr>
                     <th>Acciones</th>
-                    <th>Logo</th>
-                    <th>Tipo(s)</th>
-                    <th>RFC</th>
-                    <th>Nombre Cuenta</th>
-                    <th>Tipo Persona</th>
+                    <th>Imagen</th>
+                    <th>CURP</th>
+                    <th>Apellidos</th>
+                    <th>Nombres</th>
                   </tr>
                   </thead>
                   <tbody>
                   <tr>
-                    <td>Trident</td>
-                    <td>Internet
-                      Explorer 4.0
+                    <td>
+                      <div class="btn-group">
+                        <i class="fa fa-search" style="cursor: pointer;margin: 3px;" title="Ver Detalles" onclick="verPersona()"></i>
+                        <div id="habilitarPersona" class="bootstrap-switch-container float-right" style="width: 15px; margin-left: 24px;">
+                            <input type="checkbox" name="my-checkbox" checked="" data-bootstrap-switch="">
+                        </div>
+                      </div>
                     </td>
-                    <td>Win 95+</td>
-                    <td> 4</td>
-                    <td>X</td>
-                    <td>X</td>
+                    <td>
+                        <img src="<?= base_url()?>/public/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image" style="height: auto; width: 2.1rem;">
+                    </td>
+                    <td>54512184561521564</td>
+                    <td>Palacio Gomez</td>
+                    <td>Francisco</td>
                   </tr>
-                 
                   </tbody>
                 </table>
               </div>
@@ -75,19 +95,37 @@
     <!-- /.content -->
 
 
-    <!-- MODAL NUEVA CUENTA -->
-    <div class="modal fade right" id="nueva_cuenta" aria-modal="true" role="dialog">
-        <div class="modal-dialog modal-lg">
+    <!-- MODAL NUEVA PERSONA -->
+    <div class="modal fade right" id="nueva_persona" aria-modal="true" role="dialog">
+        <div class="modal-dialog modal-xl">
           <div class="modal-content">
             <div class="modal-header">
-              <h4 class="modal-title">Nueva Cuenta</h4>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">×</span>
-              </button>
+                <div class="col-3">
+                  <h5 class="modal-title" id="mdl-title">Nueva Persona</h5>
+                </div>
+                <div id="btn-habilitarPersona" class="bootstrap-switch-container" style="width: 126px; margin-left: -42px;" hidden>
+                    <!-- <span class="bootstrap-switch-handle-on bootstrap-switch-primary" style="width: 42px;"></span> -->
+                    <!-- <span class="bootstrap-switch-label" style="width: 42px;">&nbsp;</span> -->
+                    <!-- <span class="bootstrap-switch-handle-off bootstrap-switch-default" style="width: 42px;"></span> -->
+                    <input type="checkbox" name="my-checkbox" checked="" data-bootstrap-switch="">
+                </div>
+                <div class="col-3" >
+                    <button type="button" id="btn-editar" class="btn btn-outline-primary btn-block btn-sm" onclick="habilitaEditarPersona()" hidden><i class="fa fa-edit"></i> Editar</button>
+                </div>
+                <div class="col-3" >
+                    <button type="button" id="btn-asociarPosicion" class="btn btn-outline-primary btn-block btn-sm" hidden><i class="fas fa-inbox" ></i> Asociar posición</button>
+                </div>
+                <div class="col-3">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">×</span>
+                </button>
+                </div>
+              
             </div>
+
             <div class="modal-body">
-            <form id="frm-nueva_cuenta">
-                        <div class="row">
+            <form id="frm-nuevaPersona">
+                        <div class="row" style="margin-top:-7px">
                           <div class="col">
                             <div class="card card-light">
                               <div class="card-header">
@@ -96,62 +134,101 @@
                                <div class="car-body">
                                 <div class="container">
                                   <div class="row">
-                                    <div class="col-md-4">
+                                    <div class="col-md-4 ">
                                       <div class="form-group">
-                                        <label>Nombre Cuenta <strong class="text-danger">*</strong>: </label>
-                                        <input type="text" class="form-control" id="nombreCuenta" name="nombreCuenta">
+                                        <label>Apellidos<strong class="text-danger">*</strong>: </label>
+                                        <input type="text" class="form-control" id="apellidos" name="apellidos">
                                       </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                        <label>Tipo Cuenta <strong class="text-danger">*</strong>: </label>
-                                          <select name="tipoCuenta" class="form-control">
-                                            <option value="" selected disabled> - Seleccionar - </option>
-                                          </select>
+                                        <label>Nombres <strong class="text-danger">*</strong>: </label>
+                                        <input type="text" class="form-control" id="nombres" name="nombres">
                                         </div>
                                     </div>
                                     <div class="col-md-4">
-                                          <div class="form-group">
-                                            <label>Logo </label>
-                                            <input class="form-control" type="file" id="formFile">
+                                          <div class="form-group icon">
+                                            <label>Imagen </label>
+                                            <div class="small-box" style="position:initial;">
+                                              <div class="icon" >
+                                                <i class="fas fa-user" style="right:250px;"></i>
+                                                <button class="btn btn-sm float-right" style="margin-top:-20px;margin-right:150px">
+                                                  <i class="fas fa-eye"></i>
+                                                </button>
+                                                <button class="btn btn-sm float-right agregaImagen" style="margin-top:-5px;margin-right:150px">
+                                                  <i class="fas fa-upload"></i>
+                                                </button>
+                                              </div>
+                                            </div>
+                                            <!-- <div>
+                                              style="font-size:20px; right:150px; top:60px; color:black"
+                                              <input class="form-control" type="file" id="formFile">
+                                            </div> -->
                                           </div>
                                     </div>
-                                
                                  
                                     <div class="col-md-4">
                                       <div class="form-group">
-                                          <label>RFC<strong class="text-danger">*</strong>: </label>
-                                          <input type="text" class="form-control" id="rfcCuenta" name="rfcCuenta">
+                                          <label>CURP<strong class="text-danger">*</strong>: </label>
+                                          <input type="text" class="form-control" id="curp" name="curp">
                                       </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                          <label>Nacionalidad <strong class="text-danger">*</strong>: </label>
-                                          <select name="tipoCuenta" class="form-control">
+                                          <label>Genero <strong class="text-danger">*</strong>: </label>
+                                          <select name="genero" id="genero" class="form-control">
                                             <option value="" selected disabled> - Seleccionar - </option>
                                           </select>
                                         </div>
                                     </div>
-                                  
-                                  
+                                    <div class="col-md-4">
+                                    </div>
+                                    
                                     <div class="col-md-4">
                                       <div class="form-group">
-                                          <label>Tipo de Persona<strong class="text-danger">*</strong>: </label>
-                                          <input type="text" class="form-control" id="tipoPersona" name="tipoPersona">
+                                          <label>Fecha de Nacimiento<strong class="text-danger">*</strong>: </label>
+                                         <input type="date" class="form-control float-left" id="fechaNacimiento" name="fechaNacimiento"> 
                                       </div>
                                     </div>
-                                
-                                  
-                                    <div class="col-md-8">
+
+                                    <div class="col-md-4">
                                       <div class="form-group">
-                                          <label>Razón Social<strong class="text-danger">*</strong>: </label>
-                                          <input type="text" class="form-control" id="razonSocial" name="razonSocial">
+                                          <label>Pais de nacimiento<strong class="text-danger">*</strong>: </label>
+                                          <select name="paisNacimiento" id="paisNacimiento" class="form-control">
+                                            <option value="" selected disabled> - Seleccionar - </option>
+                                          </select>
                                       </div>
                                     </div>
                                     <div class="col-md-4">
                                       <div class="form-group">
-                                          <label>Representante Legal<strong class="text-danger">*</strong>: </label>
-                                          <input type="text" class="form-control" id="representanteLegal" name="representanteLegal">
+                                          <label>Estado Civil<strong class="text-danger">*</strong>: </label>
+                                          <select name="estadoCivil" id="estadoCivil" class="form-control">
+                                            <option value="" selected disabled> - Seleccionar - </option>
+                                          </select>
+                                      </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                      <div class="form-group">
+                                          <label>Nacionalidad<strong class="text-danger">*</strong>: </label>
+                                          <select name="nacionalidad" id="nacionalidad" class="form-control">
+                                            <option value="" selected disabled> - Seleccionar - </option>
+                                          </select>
+                                      </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                      <div class="form-group">
+                                          <label>Escolaridad<strong class="text-danger">*</strong>: </label>
+                                          <select name="escolaridad" id="escolaridad" class="form-control">
+                                            <option value="" selected disabled> - Seleccionar - </option>
+                                          </select>
+                                      </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                      <div class="form-group">
+                                          <label>Ocupacion<strong class="text-danger">*</strong>: </label>
+                                          <input type="text" class="form-control" id="ocupacion" name="ocupacion">
                                       </div>
                                     </div>
                                   </div>
@@ -164,7 +241,7 @@
 
                         <div class="row">
                           <div class="col">
-                            <div class="card card-light">
+                            <div class="card card-light" style="margin-bottom: 0rem;">
                               <div class="card-header">
                                 <h2 class="card-title">Datos de Contacto</h2>
                               </div><!-- fin card title -->
@@ -231,9 +308,9 @@
                 </form><!-- fin form -->
             </div><!-- fin modal-body -->
             <div class="modal-footer ">
-              <div class="col-12 justify-content-center">
-                <button type="button" class="btn btn-secondary float-left" data-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-success float-left" style="margin-left: 5px;" onclick="guardarCuenta()">Crear</button>
+              <div class="col-mt-1 col-12 justify-content-center" style="margin-top:-5px">
+                <button type="button" class="btn btn-secondary float-left" data-dismiss="modal" onclick="limpiaForm('#nueva_persona')" >Cancelar</button>
+                <button type="button" class="btn btn-success float-left" id='btn-accion' style="margin-left: 5px;" onclick="guardarPersona()">Crear</button>
               </div>
             </div>
           </div>
@@ -242,10 +319,37 @@
         <!-- /.modal-dialog -->
       </div>
 
+
+      <!-- Modal Agregar adjunto -->
+<div class="modal fade" id="modalAgregarImagen">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Agregar</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <form id="formAgregarImagen" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <input type="hidden" id="idAgregaImagen" name="idAgregaImagen">
+                    <input id="inputImagen" name="inputImagen[]" type="file" class="form-control input-md" multiple>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary btnAgregarEditar">Agregar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <script>
 
+
   $(function () {
-    $("#tabla_cuentas").DataTable({
+    $("#tabla_personas").DataTable({
       dom: 'lfBtip', //orden de los elementos del datatable
       'initComplete': function (settings, json) {
         //estilos botones iniciales
@@ -282,44 +386,301 @@
                       className: 'btn btn-dark btn-sm'
                     },  */
                     {
-                      text: '<a class="text-light" data-toggle="modal" data-target="#nueva_cuenta"> Agregar </a>',
+                      text: '<a class="text-light" data-toggle="modal" data-target="#nueva_persona"> Agregar </a>',
                       style: 'margin-left:10px',
-                      className: 'btn btn-secondary agregar',
+                      className: 'btn btn-secondary btn-sm agregar',
                       action: function ( e, dt, node, config ) {
-                        
+                       // $('#nueva_cuenta').modal('show');
                       }
                     }
                   ],
     }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
   });
 
+ 
+  $("#nueva_persona").on("hide.bs.modal", function() {
+    $('#btn-accion').attr('onclick', 'guardarPersona()');
+    $('#btn-accion').html('Crear');
+    $('#mdl-title').html('Nueva Persona');
+    $('#frm-nuevaPersona').find('.form-control').prop('disabled', false);
+    $('#btn-editar').prop('hidden', true);
+    $('#btn-asociarPosicion').prop('hidden', true);
+    $('#btn-habilitarPersona').prop('hidden', true);
+    $('#btn-accion').show();
+    $('#frm-nuevaPersona')[0].reset();
+  }); 
 
-  $("#nueva_cuenta").on("hide.bs.modal", function() {
-
-  });
-
-function guardarCuenta(){
+function guardarPersona(){
   //alert("hola");
-  var formData = new FormData($('#frm-nueva_cuenta')[0]);
-  
-  console.log(formData);
+  var form = this;
+
+  var formData = new FormData($('#frm-nuevaPersona')[0]);
+
   if(!validarForm()) return;
 
-
+  $.ajax({
+    type:'POST',
+    dataType: 'JSON',
+    processData: false,
+    contentType: false,
+    url: '<?= base_url()?>/guardarPersona',
+    data:formData,
+    success: function(resp) {
+            console.log(resp);
+            alert("guardado");
+            $('#nueva_persona').modal('hide');
+            $('#frm-nuevaPersona')[0].reset();
+            limpiaForm('#nueva_persona');
+        },
+    });
 }
 
-function validarForm(){
-  var ban = ($('#nombreCuenta').val() == '')
-  
+
+/* Validacion de formulario */
+function validarForm(){ 
+  ban=1;
   if(ban){
-    $('#nombreCuenta').addClass('is-invalid');
-  }else{
-    $('#nombreCuenta').removeClass('is-invalid');
-    $('#nombreCuenta').addClass('is-valid');
+
+    /* Datos Generales */
+      if($('#apellidos').val() == ''){
+         $('#apellidos').addClass('is-invalid');
+         ban=0;
+      }else{
+         $('#apellidos').removeClass('is-invalid');
+         $('#apellidos').addClass('is-valid');
+      }
+    
+      if($('#nombres').val() == ''){
+         $('#nombres').addClass('is-invalid');
+         ban=0;
+      }else{
+         $('#nombres').removeClass('is-invalid');
+         $('#nombres').addClass('is-valid');
+      }
+    
+       if($('#curp').val() == ''){
+         $('#curp').addClass('is-invalid');
+         ban=0;
+      }else{
+         $('#curp').removeClass('is-invalid');
+         $('#curp').addClass('is-valid');  
+      } 
+    
+       if($('#genero').val() == 'false'){
+         $('#genero').addClass('is-invalid');
+         ban=0;
+      }else{
+         $('#genero').removeClass('is-invalid');
+         $('#genero').addClass('is-valid');
+      } 
+    
+      if($('#fechaNacimiento').val() == ''){
+         $('#fechaNacimiento').addClass('is-invalid');
+         ban=0;
+      }else{
+         $('#fechaNacimiento').removeClass('is-invalid');
+         $('#fechaNacimiento').addClass('is-valid');
+      }
+    
+      if($('#paisNacimiento').val() == 'false'){
+         $('#paisNacimiento').addClass('is-invalid');
+         ban=0;
+      }else{
+         $('#paisNacimiento').removeClass('is-invalid');
+         $('#paisNacimiento').addClass('is-valid');
+      }
+    
+      if($('#estadoCivil').val() == 'false'){
+         $('#estadoCivil').addClass('is-invalid');
+         ban=0;
+      }else{
+         $('#estadoCivil').removeClass('is-invalid');
+         $('#estadoCivil').addClass('is-valid');
+      }
+      if($('#nacionalidad').val() == 'false'){
+         $('#nacionalidad').addClass('is-invalid');
+         ban=0;
+      }else{
+         $('#nacionalidad').removeClass('is-invalid');
+         $('#nacionalidad').addClass('is-valid');
+      }
+      if($('#escolaridad').val() == ''){
+         $('#escolaridad').addClass('is-invalid');
+         ban=0;
+      }else{
+         $('#escolaridad').removeClass('is-invalid');
+         $('#escolaridad').addClass('is-valid');
+      }
+
+      if($('#ocupacion').val() == ''){
+         $('#ocupacion').addClass('is-invalid');
+         ban=0;
+      }else{
+         $('#ocupacion').removeClass('is-invalid');
+         $('#ocupacion').addClass('is-valid');
+      }
+
+
+      /* Datos de Contacto */
+      if($('#telefono').val() == ''){
+         $('#telefono').addClass('is-invalid');
+         ban=0;
+      }else{
+         $('#telefono').removeClass('is-invalid');
+         $('#telefono').addClass('is-valid');
+      }
+
+      if($('#correo').val() == ''){
+         $('#correo').addClass('is-invalid');
+         ban=0;
+      }else{
+         $('#correo').removeClass('is-invalid');
+         $('#correo').addClass('is-valid');
+      }
+
+      if($('#calle').val() == ''){
+         $('#calle').addClass('is-invalid');
+         ban=0;
+      }else{
+         $('#calle').removeClass('is-invalid');
+         $('#calle').addClass('is-valid');
+      }
+
+      if($('#numeroExterior').val() == ''){
+         $('#numeroExterior').addClass('is-invalid');
+         ban=0;
+      }else{
+         $('#numeroExterior').removeClass('is-invalid');
+         $('#numeroExterior').addClass('is-valid');
+      }
+
+      if($('#numeroInterior').val() == ''){
+         $('#numeroInterior').addClass('is-invalid');
+         ban=0;
+      }else{
+         $('#numeroInterior').removeClass('is-invalid');
+         $('#numeroInterior').addClass('is-valid');
+      }
+
+      if($('#CodigoColonia').val() == ''){
+         $('#CodigoColonia').addClass('is-invalid');
+         ban=0;
+      }else{
+         $('#CodigoColonia').removeClass('is-invalid');
+         $('#CodigoColonia').addClass('is-valid');
+      }
+}
+
+  if(!ban){
+    alert('Complete los Campos Obligatorios (*)');
   }
-  return ban;
+  return ban; 
   
 }
+
+/* Elimina los estilos de los input correctos-incorrectos */
+function limpiaForm(formulario){
+  $(formulario).find(".is-valid").removeClass().addClass('form-control');
+  $(formulario).find(".is-invalid").removeClass().addClass('form-control');
+}
+
+function verPersona(){
+    $('#btn-accion').hide();
+    $('#mdl-title').html('Persona');
+    $('#frm-nuevaPersona').find('.form-control').prop('disabled', true);
+    $('#btn-editar').prop('hidden', false);
+    $('#btn-asociarPosicion').prop('hidden', false);
+    $('#nueva_persona').modal('show');
+    $('#btn-habilitarPersona').prop('hidden', true);
+
+}
+
+function habilitaEditarPersona(){
+  $('#btn-habilitarPersona').prop('hidden', false);
+  $('#btn-accion').show();
+  $('#btn-accion').html('Modificar');
+  $('#btn-accion').attr('onclick', 'editarPersona()');
+  $('#frm-nuevaPersona').find('.form-control').prop('disabled', false);
+  $('#btn-editar').prop('hidden', true);
+  $('#btn-asociarPosicion').prop('hidden', false);
+  $('#btn-asociarPosicion').prop('hidden', true);
+}
+
+function editarPersona(){
+  var form = this;
+
+  var formData = new FormData($('#frm-nuevaPersona')[0]);
+
+  if(!validarForm()) return;
+
+  $.ajax({
+    type:'POST',
+    dataType: 'JSON',
+    processData: false,
+    contentType: false,
+    url: '<?= base_url()?>/editarPersona',
+    data:formData,
+    success: function(resp) {
+            console.log(resp);
+            alert("Editado");
+            $('#nueva_persona').modal('hide');
+            $('#frm-nuevaPersona')[0].reset();
+            limpiaForm('#nueva_persona');
+        },
+    });
+}
+
+
+
+$("input[data-bootstrap-switch]").each(function(){
+      $(this).bootstrapSwitch('state', $(this).prop('checked'));
+});
+
+
+//abrir modal agregar adjunto
+$(document).on("click", ".agregaImagen", function() {
+    $('#modalAgregarImagen').modal('show');
+  event.preventDefault();
+  $( window ).scroll(function() {
+  
+});
+});
+
+//agregar adjunto
+$("#formAgregarImagen").submit(function(event) {
+
+ 
+  event.preventDefault(); 
+  $( window ).scroll(function() {
+  
+});
+    $('#modalAgregarImagen').modal('hide');
+
+    if (document.getElementById("inputImagen").files.length == 0) {
+      alert('error');
+        $('#error').fadeIn('slow');
+    } else {
+        $('#error').fadeOut('slow'); 
+        var formData = new FormData($("#formAgregarImagen")[0]);
+        
+         $.ajax({
+                cache: false,
+                contentType: false,
+                data: formData,
+                dataType: 'json',
+                processData: false,
+                type: 'POST',
+                url: '<?= base_url()?>/guardarPersona',
+            })
+            .done(function(data) {
+              alert("Agregado");
+            })
+            .error(function(result) {
+                console.error(result);
+            }); 
+    } 
+});
+
 </script>
 
 <?= $this->endSection() ?>
