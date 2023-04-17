@@ -30,6 +30,9 @@
   <!-- Theme style -->
   <link rel="stylesheet" href="<?= base_url()?>/public/dist/css/adminlte.min.css">
 
+  <!-- Sweet Alert 2 -->
+  <script src="<?= base_url()?>/lib/sweetalert2/dist/sweetalert2.all.min.js"></script>
+  <script rel="stylesheet" src="<?= base_url()?>/lib/sweetalert2/dist/sweetalert2.min.css"></script>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
