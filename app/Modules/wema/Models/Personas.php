@@ -6,8 +6,15 @@ use CodeIgniter\Model;
 
 class Personas extends Model{
 
+
+    public function __construct()
+    {
+        $this->db = \Config\Database::connect();
+    }
     public function getPersonas(){
         $url = REST_PERSONA.'persona/';
-        return $url;
+        $aux = $this->REST->callAPI("GET",$url);
+        $data = json_decode($aux['data']);
+        return $data;
     }
 }

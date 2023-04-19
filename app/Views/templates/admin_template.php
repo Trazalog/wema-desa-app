@@ -1,4 +1,4 @@
-
+l
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -32,10 +32,10 @@
   <!-- Bootstrap Switch -->
   <script src="<?= base_url()?>/public/plugins/bootstrap-switch/js/bootstrap-switch.min.js"></script>
 
-
-  <!-- Sweet Alert 2 -->
-  <script src="<?= base_url()?>/lib/sweetalert2/dist/sweetalert2.all.min.js"></script>
-  <script rel="stylesheet" src="<?= base_url()?>/lib/sweetalert2/dist/sweetalert2.min.css"></script>
+<!-- Sweet Alert 2 -->
+ <script src="<?= base_url()?>/public/plugins/sweetalert2/dist/sweetalert2.all.min.js"></script>
+ <script rel="stylesheet" src="<?= base_url()?>/public/plugins/sweetalert2/dist/sweetalert2.min.css"></script> 
+ 
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
@@ -265,6 +265,7 @@
 
 <!-- lenguaje datatable NO FUNCA-->
 <!-- <script src="https://cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json"></script> -->
+
 
 
 </body>

@@ -7,13 +7,17 @@
     <section class="content-header">
       <div class="container-fluid">
         <div class="row mb-2"> 
-          <div class="col-sm-10">
-            <nav style="--bs-breadcrumb-divider: '>'; font-size:30px" aria-label="breadcrumb">
-              <ol class="breadcrumb">
-                <li class="breadcrumb-item active"><a>CONFIANZA Y TECNOLOGIA</a></li>
-                <li class="breadcrumb-item active" aria-current="page">BIMBO S.A de C.V</li>
-              </ol>
-            </nav>
+          <div class="col-sm-7">
+            <div class="card">
+              <div class="card-body">
+                <nav style="--bs-breadcrumb-divider: '>'; font-size:30px" aria-label="breadcrumb">
+                  <ol class="breadcrumb">
+                    <li class="breadcrumb-item active"><a>CONFIANZA Y TECNOLOGIA</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">BIMBO S.A de C.V</li>
+                  </ol>
+                </nav>
+              </div>
+            </div>
           </div><!-- 
           <div class="col-sm-4">
           <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
@@ -23,7 +27,7 @@
             </div>
           </div>
 </nav> -->
-
+           <div class="col-sm-3"></div> 
           <div class="col-sm-2">
           <button type="button" class="btn btn-outline-primary btn-block btn-sm"><i class="fa fa-info float-left"></i> Información del Cliente</button>
           </div>
@@ -63,22 +67,23 @@
                   </tr>
                   </thead>
                   <tbody>
-                  <tr>
-                    <td>
-                      <div class="btn-group">
-                        <i class="fa fa-search" style="cursor: pointer;margin: 3px;" title="Ver Detalles" onclick="verPersona()"></i>
-                        <div id="habilitarPersona" class="bootstrap-switch-container float-right" style="width: 15px; margin-left: 24px;">
-                            <input type="checkbox" name="my-checkbox" checked="" data-bootstrap-switch="">
-                        </div>
-                      </div>
-                    </td>
-                    <td>
-                        <img src="<?= base_url()?>/public/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image" style="height: auto; width: 2.1rem;">
-                    </td>
-                    <td>54512184561521564</td>
-                    <td>Palacio Gomez</td>
-                    <td>Francisco</td>
-                  </tr>
+                    <?php foreach ($listadoPersonas as $key => $persona) {
+                      echo '<tr data-json=\''.json_encode($persona).'\'>';
+                      echo'<td>
+                              <div class="btn-group"> 
+                                <i class="fa fa-search" style="cursor: pointer;margin: 3px;" title="Ver Detalles" onclick="verPersona(this)"></i>
+                                <div id="habilitarPersona" class="bootstrap-switch-container float-right" style="width: 15px; margin-left: 24px;">
+                                  <input type="checkbox" name="my-checkbox" checked="" data-bootstrap-switch="">
+                                </div>
+                              </div>
+                            </td>
+                            <td></td>
+                            <td>'.$persona->curp.'</td>
+                            <td>'.$persona->apellidos.'</td>
+                            <td>'.$persona->nombres.'</td>
+                    </tr>
+                    ';
+                    }?>
                   </tbody>
                 </table>
               </div>
@@ -116,7 +121,7 @@
                     <button type="button" id="btn-asociarPosicion" class="btn btn-outline-primary btn-block btn-sm" hidden><i class="fas fa-inbox" ></i> Asociar posición</button>
                 </div>
                 <div class="col-3">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" onclick="limpiaForm('#nueva_persona')" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">×</span>
                 </button>
                 </div>
@@ -125,6 +130,7 @@
 
             <div class="modal-body">
             <form id="frm-nuevaPersona">
+              <input id="pers_id" name="pers_id" type="text" disabled hidden>
                         <div class="row" style="margin-top:-7px">
                           <div class="col">
                             <div class="card card-light">
@@ -153,7 +159,7 @@
                                               <div class="icon" >
                                                 <i class="fas fa-user" style="right:250px;"></i>
                                                 <button class="btn btn-sm float-right" style="margin-top:-20px;margin-right:150px">
-                                                  <i class="fas fa-eye"></i>
+                                                  <i href="<?base_url()?>/public/dist/img/user2-160x160.jpg" target="_blank" class="fas fa-eye"></i>
                                                 </button>
                                                 <button class="btn btn-sm float-right agregaImagen" style="margin-top:-5px;margin-right:150px">
                                                   <i class="fas fa-upload"></i>
@@ -178,6 +184,11 @@
                                           <label>Genero <strong class="text-danger">*</strong>: </label>
                                           <select name="genero" id="genero" class="form-control">
                                             <option value="" selected disabled> - Seleccionar - </option>
+                                            <?php 
+                                              foreach ($listadoGeneros as $key => $gen) {
+                                                echo "<option value='$gen->tabl_id'>$gen->valor</option>";
+                                              }
+                                            ?>
                                           </select>
                                         </div>
                                     </div>
@@ -196,6 +207,11 @@
                                           <label>Pais de nacimiento<strong class="text-danger">*</strong>: </label>
                                           <select name="paisNacimiento" id="paisNacimiento" class="form-control">
                                             <option value="" selected disabled> - Seleccionar - </option>
+                                            <?php 
+                                              foreach ($listadoPaises as $key => $pa) {
+                                                echo "<option value='$pa->tabl_id'>$pa->valor</option>";
+                                              }
+                                            ?>
                                           </select>
                                       </div>
                                     </div>
@@ -204,6 +220,11 @@
                                           <label>Estado Civil<strong class="text-danger">*</strong>: </label>
                                           <select name="estadoCivil" id="estadoCivil" class="form-control">
                                             <option value="" selected disabled> - Seleccionar - </option>
+                                            <?php 
+                                              foreach ($listadoEstadoCivil as $key => $civil) {
+                                                echo "<option value='$civil->tabl_id'>$civil->valor</option>";
+                                              }
+                                            ?>
                                           </select>
                                       </div>
                                     </div>
@@ -213,6 +234,11 @@
                                           <label>Nacionalidad<strong class="text-danger">*</strong>: </label>
                                           <select name="nacionalidad" id="nacionalidad" class="form-control">
                                             <option value="" selected disabled> - Seleccionar - </option>
+                                            <?php 
+                                              foreach ($listadoPaises as $key => $pa) {
+                                                echo "<option value='$pa->tabl_id'>$pa->valor</option>";
+                                              }
+                                            ?>
                                           </select>
                                       </div>
                                     </div>
@@ -222,6 +248,11 @@
                                           <label>Escolaridad<strong class="text-danger">*</strong>: </label>
                                           <select name="escolaridad" id="escolaridad" class="form-control">
                                             <option value="" selected disabled> - Seleccionar - </option>
+                                            <?php 
+                                              foreach ($listadoNivelEducativo as $key => $esco) {
+                                                echo "<option value='$esco->tabl_id'>$esco->valor</option>";
+                                              }
+                                            ?>
                                           </select>
                                       </div>
                                     </div>
@@ -255,7 +286,7 @@
                                           <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-phone"></i></span>
                                           </div>
-                                          <input id="telefono" type="text" class="form-control" data-inputmask="&quot;mask&quot;: &quot;(999) 999-9999&quot;" data-mask="" inputmode="text">
+                                          <input id="telefono" type="text" name="telefono" class="form-control">
                                         </div>
                                       </div>
                                     </div>
@@ -265,7 +296,7 @@
                                         <div class="input-group">
                                           <div class="input-group-prepend">
                                             <span class="input-group-text">@</span>
-                                          </div><input type="text" class="form-control" id="correo" >
+                                          </div><input type="text" class="form-control" name="correo" id="correo" >
                                         </div>
                                         </div>
                                     </div>
@@ -411,8 +442,6 @@
   }); 
 
 function guardarPersona(){
-  //alert("hola");
-  var form = this;
 
   var formData = new FormData($('#frm-nuevaPersona')[0]);
 
@@ -423,15 +452,18 @@ function guardarPersona(){
     dataType: 'JSON',
     processData: false,
     contentType: false,
-    url: '<?= base_url()?>/guardarPersona',
     data:formData,
+    url: '<?= base_url()?>/guardarPersona',
     success: function(resp) {
             console.log(resp);
             alert("guardado");
             $('#nueva_persona').modal('hide');
             $('#frm-nuevaPersona')[0].reset();
             limpiaForm('#nueva_persona');
-        },
+    },
+    error: function(result){
+      console.log("error");
+    } 
     });
 }
 
@@ -440,7 +472,6 @@ function guardarPersona(){
 function validarForm(){ 
   ban=1;
   if(ban){
-
     /* Datos Generales */
       if($('#apellidos').val() == ''){
          $('#apellidos').addClass('is-invalid');
@@ -466,7 +497,7 @@ function validarForm(){
          $('#curp').addClass('is-valid');  
       } 
     
-       if($('#genero').val() == 'false'){
+       if($('#genero').val() == null){
          $('#genero').addClass('is-invalid');
          ban=0;
       }else{
@@ -482,7 +513,7 @@ function validarForm(){
          $('#fechaNacimiento').addClass('is-valid');
       }
     
-      if($('#paisNacimiento').val() == 'false'){
+      if($('#paisNacimiento').val() == null){
          $('#paisNacimiento').addClass('is-invalid');
          ban=0;
       }else{
@@ -490,21 +521,21 @@ function validarForm(){
          $('#paisNacimiento').addClass('is-valid');
       }
     
-      if($('#estadoCivil').val() == 'false'){
+      if($('#estadoCivil').val() == null){
          $('#estadoCivil').addClass('is-invalid');
          ban=0;
       }else{
          $('#estadoCivil').removeClass('is-invalid');
          $('#estadoCivil').addClass('is-valid');
       }
-      if($('#nacionalidad').val() == 'false'){
+      if($('#nacionalidad').val() == null){
          $('#nacionalidad').addClass('is-invalid');
          ban=0;
       }else{
          $('#nacionalidad').removeClass('is-invalid');
          $('#nacionalidad').addClass('is-valid');
       }
-      if($('#escolaridad').val() == ''){
+      if($('#escolaridad').val() == null){
          $('#escolaridad').addClass('is-invalid');
          ban=0;
       }else{
@@ -584,7 +615,7 @@ function limpiaForm(formulario){
   $(formulario).find(".is-invalid").removeClass().addClass('form-control');
 }
 
-function verPersona(){
+function verPersona(e){
     $('#btn-accion').hide();
     $('#mdl-title').html('Persona');
     $('#frm-nuevaPersona').find('.form-control').prop('disabled', true);
@@ -592,6 +623,31 @@ function verPersona(){
     $('#btn-asociarPosicion').prop('hidden', false);
     $('#nueva_persona').modal('show');
     $('#btn-habilitarPersona').prop('hidden', true);
+
+    var tr = $(e).closest('tr');
+    var json = $(tr).data('json');
+    $('#nueva_persona #apellidos').val(json.apellidos);
+    $('#nueva_persona #nombres').val(json.nombres);
+    $('#nueva_persona #curp').val(json.curp);
+    $('#nueva_persona #pers_id').val(json.pers_id);
+    $('#nueva_persona #genero').val(json.gene_id);
+    $('#nueva_persona #telefono').val(json.telefono);
+    $('#nueva_persona #correo').val(json.email);
+    $('#nueva_persona #numeroExterior').val(json.num_exterior);
+    $('#nueva_persona #numeroInterior').val(json.num_interior);
+    $('#nueva_persona #ocupacion').val(json.ocupacion);
+    $('#nueva_persona #calle').val(json.calle);
+    $('#nueva_persona #CodigoColonia').val(json.cod_postal);
+    $('#nueva_persona #escolaridad').val(json.educ_id);
+    $('#nueva_persona #estadoCivil').val(json.esci_id);
+    $('#nueva_persona #nacionalidad').val(json.naci_id);
+    $('#nueva_persona #paisNacimiento').val(json.pana_id);
+    const aux = json.fec_nacimiento.split('-');
+    console.log(`${aux[2]}/${aux[1]}/${aux[0]}`);
+    //$('#nueva_persona #fechaNacimiento').val(`${aux[2]}/${aux[1]}/${aux[0]}`);
+    $('#nueva_persona #fechaNacimiento').val(json.fec_nacimiento);
+
+    console.log($('#nueva_persona #pers_id').val());
 
 }
 
@@ -607,10 +663,10 @@ function habilitaEditarPersona(){
 }
 
 function editarPersona(){
-  var form = this;
 
   var formData = new FormData($('#frm-nuevaPersona')[0]);
 
+  formData.append("pers_id",$('#nueva_persona #pers_id').val());
   if(!validarForm()) return;
 
   $.ajax({
@@ -626,7 +682,10 @@ function editarPersona(){
             $('#nueva_persona').modal('hide');
             $('#frm-nuevaPersona')[0].reset();
             limpiaForm('#nueva_persona');
-        },
+    },
+    complete: function() {
+      
+    }
     });
 }
 

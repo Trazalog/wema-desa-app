@@ -29,7 +29,15 @@ $routes->setAutoRoute(true);
  * --------------------------------------------------------------------
  */
 
- $routes->get('/persona', '\Modules\wema\Controllers\Persona::index');
+
+ /// CODIGO PARA QUE BUSQUE LAS RUTAS DESDE LA CARPETA ROUTES DENTRO DE MODULES
+ foreach(glob(APPPATH . 'modules/*', GLOB_ONLYDIR) as $item_dir) {
+    if(file_exists($item_dir . '/Config/Routes.php')) {
+       require_once($item_dir . '/Config/Routes.php');
+    }
+  }
+
+ //$routes->get('/persona', '\Modules\wema\Controllers\Persona::index');
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
 //$routes->get('/', 'Home::index');
