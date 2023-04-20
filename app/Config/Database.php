@@ -31,12 +31,12 @@ class Database extends Config
      * @var array
      */
     public $default = [
-        'DSN'      => '',
-        'hostname' => 'localhost',
-        'username' => '',
-        'password' => '',
-        'database' => '',
-        'DBDriver' => 'MySQLi',
+        'DSN'      => 'pgsql:host=10.142.0.13;port=5432;dbname=tools_prod_t',
+        'hostname' => '10.142.0.13',
+        'username' => 'postgres',
+        'password' => '!Password00',
+        'database' => 'tools_prod_t',
+        'DBDriver' => 'Postgre',//'MySQLi'
         'DBPrefix' => '',
         'pConnect' => false,
         'DBDebug'  => (ENVIRONMENT !== 'production'),
@@ -47,7 +47,7 @@ class Database extends Config
         'compress' => false,
         'strictOn' => false,
         'failover' => [],
-        'port'     => 3306,
+        'port'     => 5432,
     ];
 
     /**

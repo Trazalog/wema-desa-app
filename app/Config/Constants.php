@@ -82,3 +82,11 @@ $base = "http://" . $_SERVER['HTTP_HOST'];
 $base .= str_replace(basename($_SERVER['SCRIPT_NAME']), "", $_SERVER['SCRIPT_NAME']);
 //$base .= "public";
 define('base_url', $base);
+
+
+
+/* CONEXIONES SERVICIOS */
+define('HOST', 'http://10.142.0.13:8280');
+
+define('REST_PERSONA', HOST.'/services/PersonaDataService');
+define('REST_CORE', HOST.'/services/CoreWEMADataService');
