@@ -3,48 +3,33 @@
 namespace Modules\wema\Controllers; 
 use App\Controllers\BaseController;
 use Modules\wema\Models\Personas; 
+use Modules\wema\Models\Generales; 
 
 
 class Persona extends BaseController
 {
-    public function index()
+    public function __construct()
     {
-        $url = REST_PERSONA."/persona";
-        $aux = $this->REST->callAPI("GET",$url);
+        $this->Personas = new Personas();
+        $this->Generales = new Generales();
+    }
+
+    public function index(){
 
         /* LISTADO PERSONAS */
-        $resp = json_decode($aux['data']);
-        $data['listadoPersonas'] = $resp->personas->persona;
+        $data['listadoPersonas'] = $this->Personas->getPersonas();
 
         /* LISTADO DE GENEROS */
-        $url = REST_PERSONA."/generos";
-        $aux = $this->REST->callAPI("GET",$url);
-        $resp = json_decode($aux['data']);
-        $data['listadoGeneros'] = $resp->generos->genero;
+        $data['listadoGeneros'] = $this->Generales->getTabla("generos");
 
         /* LISTADO PAISES */
-        $url = REST_PERSONA."/paises";
-        $aux = $this->REST->callAPI("GET",$url);
-        $resp = json_decode($aux['data']);
-        $data['listadoPaises'] = $resp->paises->pais;
+        $data['listadoPaises'] = $this->Generales->getTabla("paises");
 
         /* LISTADO ESTADO CIVIL */
-        $url = REST_PERSONA."/estadocivil";
-        $aux = $this->REST->callAPI("GET",$url);
-        $resp = json_decode($aux['data']);
-        $data['listadoEstadoCivil'] = $resp->estadosciviles->estadocivil;
+        $data['listadoEstadoCivil'] = $this->Generales->getTabla("estados_civiles");
       
-         /* LISTADO ESTADO CIVIL */
-         $url = REST_PERSONA."/escolaridad";
-         $aux = $this->REST->callAPI("GET",$url);
-         $resp = json_decode($aux['data']);
-         $data['listadoNivelEducativo'] = $resp->niveles_educativos->nivel_educativo;
-
-
-        /* $persona = new Personas();
-        $resp = $persona->getPersona();  */
-        
-        //var_dump($data['listadoPaises']);
+        /* LISTADO NIVELES EDUCATIVOS */
+        $data['listadoNivelEducativo'] = $this->Generales->getTabla("niveles_educativos");
 
         return view('Modules\wema\Views\persona\index',$data);
     }

@@ -89,3 +89,4 @@ define('base_url', $base);
 define('HOST', 'http://10.142.0.13:8280');
 
 define('REST_PERSONA', HOST.'/services/PersonaDataService');
+define('REST_CORE', HOST.'/services/CoreWEMADataService');
