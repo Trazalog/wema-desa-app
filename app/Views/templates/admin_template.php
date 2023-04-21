@@ -1,4 +1,4 @@
-l
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -33,8 +33,8 @@ l
   <script src="<?= base_url()?>/public/plugins/bootstrap-switch/js/bootstrap-switch.min.js"></script>
 
 <!-- Sweet Alert 2 -->
- <script src="<?= base_url()?>/public/plugins/sweetalert2/dist/sweetalert2.all.min.js"></script>
- <script rel="stylesheet" src="<?= base_url()?>/public/plugins/sweetalert2/dist/sweetalert2.min.css"></script> 
+ <script src="<?= base_url()?>/lib/sweetalert2/dist/sweetalert2.all.min.js"></script>
+ <script rel="stylesheet" src="<?= base_url()?>/lib/sweetalert2/dist/sweetalert2.min.css"></script> 
  
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -170,6 +170,15 @@ l
               <i class="far fa-circle nav-icon"></i>
               <p>
                 Persona
+                <!-- <span class="right badge badge-danger">New</span> -->
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="<?= site_url('cuenta') ?>" class="nav-link">
+              <i class="far fa-circle nav-icon"></i>
+              <p>
+                Cuenta
                 <!-- <span class="right badge badge-danger">New</span> -->
               </p>
             </a>

@@ -10,7 +10,7 @@
           <div class="col-sm-7">
             <div class="card">
               <div class="card-body">
-                <nav style="--bs-breadcrumb-divider: '>'; font-size:30px" aria-label="breadcrumb">
+                <nav style=" font-size:30px" aria-label="breadcrumb">
                   <ol class="breadcrumb">
                     <li class="breadcrumb-item active"><a>CONFIANZA Y TECNOLOGIA</a></li>
                     <li class="breadcrumb-item active" aria-current="page">BIMBO S.A de C.V</li>
@@ -18,7 +18,8 @@
                 </nav>
               </div>
             </div>
-          </div><!-- 
+          </div>
+          <!-- 
           <div class="col-sm-4">
           <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
             <div class="callout callout-info btn-outline-primary">
@@ -68,13 +69,16 @@
                   </thead>
                   <tbody>
                     <?php foreach ($listadoPersonas as $key => $persona) {
+                     (strcmp($persona->estado, 'true') == 0) ? $check= '' : $check = 'checked';
                       echo '<tr data-json=\''.json_encode($persona).'\'>';
                       echo'<td>
                               <div class="btn-group"> 
                                 <i class="fa fa-search" style="cursor: pointer;margin: 3px;" title="Ver Detalles" onclick="verPersona(this)"></i>
-                                <div id="habilitarPersona" class="bootstrap-switch-container float-right" style="width: 15px; margin-left: 24px;">
-                                  <input type="checkbox" name="my-checkbox" checked="" data-bootstrap-switch="">
+                                <label class="switch"">
+                                <div class="bootstrap-switch-container float-right" style="width: 15px; margin-left: 24px;" >
+                                  <input type="checkbox" id="habilitarPersona"  name="habilitarPersona" data-bootstrap-switch '.$check.' onclick="habilitarPersona(this)">
                                 </div>
+                                </label>
                               </div>
                             </td>
                             <td></td>
@@ -108,19 +112,21 @@
                 <div class="col-3">
                   <h5 class="modal-title" id="mdl-title">Nueva Persona</h5>
                 </div>
+                <label class="switch">
                 <div id="btn-habilitarPersona" class="bootstrap-switch-container" style="width: 126px; margin-left: -42px;" hidden>
-                    <!-- <span class="bootstrap-switch-handle-on bootstrap-switch-primary" style="width: 42px;"></span> -->
-                    <!-- <span class="bootstrap-switch-label" style="width: 42px;">&nbsp;</span> -->
-                    <!-- <span class="bootstrap-switch-handle-off bootstrap-switch-default" style="width: 42px;"></span> -->
-                    <input type="checkbox" name="my-checkbox" checked="" data-bootstrap-switch="">
+                    <!-- <span class="bootstrap-switch-handle-on bootstrap-switch-primary" style="width: -42px;"></span> 
+                    <span class="bootstrap-switch-label" style="width: 42px;">&nbsp;</span> 
+                    <span class="bootstrap-switch-handle-off bootstrap-switch-default" style="width: -42px;"></span> -->
+                    <input type="checkbox" name="habilitarPersonaEditar" id="habilitarPersonaEditar" data-bootstrap-switch-editar checked onclick="habilitarPersona()">
                 </div>
+                </label>
                 <div class="col-3" >
                     <button type="button" id="btn-editar" class="btn btn-outline-primary btn-block btn-sm" onclick="habilitaEditarPersona()" hidden><i class="fa fa-edit"></i> Editar</button>
                 </div>
                 <div class="col-3" >
                     <button type="button" id="btn-asociarPosicion" class="btn btn-outline-primary btn-block btn-sm" hidden><i class="fas fa-inbox" ></i> Asociar posición</button>
                 </div>
-                <div class="col-3">
+                <div class="col-2">
                 <button type="button" class="close" onclick="limpiaForm('#nueva_persona')" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">×</span>
                 </button>
@@ -603,7 +609,11 @@ function validarForm(){
 }
 
   if(!ban){
-    alert('Complete los Campos Obligatorios (*)');
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'Complete los campos obligatorios!',
+    });
   }
   return ban; 
   
@@ -642,12 +652,25 @@ function verPersona(e){
     $('#nueva_persona #estadoCivil').val(json.esci_id);
     $('#nueva_persona #nacionalidad').val(json.naci_id);
     $('#nueva_persona #paisNacimiento').val(json.pana_id);
-    const aux = json.fec_nacimiento.split('-');
-    console.log(`${aux[2]}/${aux[1]}/${aux[0]}`);
-    //$('#nueva_persona #fechaNacimiento').val(`${aux[2]}/${aux[1]}/${aux[0]}`);
-    $('#nueva_persona #fechaNacimiento').val(json.fec_nacimiento);
+    $('#nueva_persona #fechaNacimiento').val(json.fec_nacimiento.slice(0,10));
 
-    console.log($('#nueva_persona #pers_id').val());
+
+    if(json.estado == 'true')
+    $("[name='habilitarPersonaEditar']").bootstrapSwitch('state', $('#habilitarPersonaEditar').prop('checked',false));
+    /*else
+    $(e).closest("tr").find('input[type="checkbox"]').bootstrapSwitch('state', $('#habilitarPersonaEditar').prop('checked',false)); */
+
+   // $("[name='habilitarPersonaEditar']").bootstrapSwitch('state', $('#habilitarPersonaEditar').prop('checked',false));
+
+   /*  if(json.estado == 'false')
+
+   // bootstrap-switch-id-habilitarPersonaEditar bootstrap-switch bootstrap-switch-wrapper bootstrap-switch-on bootstrap-switch-animate
+    $("[name='habilitarPersonaEditar']").bootstrapSwitch('state', $('#habilitarPersonaEditar').prop('checked',true));
+    else{
+     $('.bootstrap-switch-id-habilitarPersonaEditar').removeClass('bootstrap-switch-on').addClass('bootstrap-switch-id-habilitarPersonaEditar bootstrap-switch bootstrap-switch-wrapper bootstrap-switch-off bootstrap-switch-animate');
+    $("[name='habilitarPersonaEditar']").bootstrapSwitch('state', $('#habilitarPersonaEditar').prop('checked',false));
+    }
+ */
 
 }
 
@@ -660,6 +683,8 @@ function habilitaEditarPersona(){
   $('#btn-editar').prop('hidden', true);
   $('#btn-asociarPosicion').prop('hidden', false);
   $('#btn-asociarPosicion').prop('hidden', true);
+  //$('#habilitarPersonaEditar').prop('checked', true); 
+
 }
 
 function editarPersona(){
@@ -677,23 +702,39 @@ function editarPersona(){
     url: '<?= base_url()?>/editarPersona',
     data:formData,
     success: function(resp) {
-            console.log(resp);
-            alert("Editado");
+            Swal.fire({
+              icon: 'success',
+              title: 'Se edito correctamente!',
+              showConfirmButton: false,
+              timer: 1500
+            });
             $('#nueva_persona').modal('hide');
             $('#frm-nuevaPersona')[0].reset();
             limpiaForm('#nueva_persona');
     },
     complete: function() {
-      
+      window.location.reload();
     }
     });
 }
 
 
 
-$("input[data-bootstrap-switch]").each(function(){
-      $(this).bootstrapSwitch('state', $(this).prop('checked'));
-});
+/* $("input[data-bootstrap-switch]").each(function(){
+    a = $(this).bootstrapSwitch('state', $(this).prop('checked'));
+     //console.log(a);
+     check = $(this).is(':checked');
+     if(check)
+     console.log("hola");
+     else 
+     console.log("no"); 
+}); 
+ */
+$("input[data-bootstrap-switch]").bootstrapSwitch();
+$("[name='habilitarPersonaEditar']").bootstrapSwitch(); /* .each(function(){
+  $(this).bootstrapSwitch('state', $(this).prop('checked',true));
+}); */
+ 
 
 
 //abrir modal agregar adjunto
@@ -740,6 +781,66 @@ $("#formAgregarImagen").submit(function(event) {
     } 
 });
 
+
+function habilitarPersona(e){
+  
+  var tr = $(e).closest('tr');
+  var json = $(tr).data('json');
+  var pers_id = json.pers_id;
+  //debugger;
+  check = json.estado;
+  if(check == 'false'){
+      Swal.fire({
+        title: '¿Está seguro?',
+        text: 'Si deshabilita a la Persona, la misma no aparecerá en algunos reportes o indicadores, y no podrá responder cuestionarios',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si, deshabilitar!'
+      }).then((result) => {
+      if (result.isConfirmed) {
+        $.get('<?= base_url()?>/eliminarPersona/' + pers_id, function (data){
+          Swal.fire(
+              'Deshabilitado!',
+              'El usuario fue deshabilitado.',
+              'success'
+            );
+        })
+      }
+      else{
+        $(e).closest("tr").find('input[type="checkbox"]').bootstrapSwitch('state', $('#habilitarPersona').prop('checked',true));
+      }
+    });    
+  }
+  else{
+    Swal.fire({
+        title: 'Habilitar usuario?',
+        text: "Ten en cuenta que se habilitaras el usuario",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si, habilitar!'
+      }).then((result) => {
+      if (result.isConfirmed) {
+        $.get('<?= base_url()?>/habilitarPersona/' + pers_id, function (data){
+          Swal.fire(
+            'Habilitado!',
+            'El usuario fue habilitado.',
+            'success'
+          );
+        })
+      }
+      else{
+      window.location.reload();
+        $(e).closest("tr").find('input[type="checkbox"]').bootstrapSwitch('state', $('data-bootstrap-switch').prop('checked',false));
+      }
+    });
+  } 
+}
+
+ 
 </script>
 
 <?= $this->endSection() ?>
