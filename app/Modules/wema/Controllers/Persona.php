@@ -114,6 +114,38 @@ class Persona extends BaseController
         } 
        else return $aux;
 
-    }
+}
 
+public function eliminarPersona($pers_id = null){
+
+    $url = REST_PERSONA."/persona";
+
+    $data['delete_persona'] = array(
+        'pers_id' => $pers_id
+    );
+    
+    $aux = $this->REST->callAPI("DELETE",$url, $data);
+
+    if($aux['status']){
+        return json_encode($aux);
+    } 
+   else return $aux;
+}
+
+
+public function habilitarPersona($pers_id = null){
+    $url = REST_PERSONA."/habilitarpersona";
+
+    $data['put_persona'] = array(
+        'pers_id' => $pers_id
+    );
+    
+    $aux = $this->REST->callAPI("PUT",$url, $data);
+
+    if($aux['status']){
+        return json_encode($aux);
+    } 
+   else return $aux;
+}
+    
 }
