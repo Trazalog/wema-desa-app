@@ -19,15 +19,6 @@
               </div>
             </div>
           </div>
-          <!-- 
-          <div class="col-sm-4">
-          <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
-            <div class="callout callout-info btn-outline-primary">
-              <h5>CONFIANZA Y TECNOLOGIA</h5>
-              <p>BIMBO S.A de C.V</p>
-            </div>
-          </div>
-</nav> -->
            <div class="col-sm-3"></div> 
           <div class="col-sm-2">
           <button type="button" class="btn btn-outline-primary btn-block btn-sm"><i class="fa fa-info float-left"></i> Información del Cliente</button>
@@ -74,14 +65,14 @@
                       echo'<td>
                               <div class="btn-group"> 
                                 <i class="fa fa-search" style="cursor: pointer;margin: 3px;" title="Ver Detalles" onclick="verPersona(this)"></i>
-                                <label class="switch"">
+                                <label class="switch" id="miLabel">
                                 <div class="bootstrap-switch-container float-right" style="width: 15px; margin-left: 24px;" >
                                   <input type="checkbox" id="habilitarPersona"  name="habilitarPersona" data-bootstrap-switch '.$check.' onclick="habilitarPersona(this)">
                                 </div>
                                 </label>
                               </div>
                             </td>
-                            <td></td>
+                            <td>'.$persona->estado.'</td>
                             <td>'.$persona->curp.'</td>
                             <td>'.$persona->apellidos.'</td>
                             <td>'.$persona->nombres.'</td>
@@ -112,12 +103,13 @@
                 <div class="col-3">
                   <h5 class="modal-title" id="mdl-title">Nueva Persona</h5>
                 </div>
-                <label class="switch">
-                <div id="btn-habilitarPersona" class="bootstrap-switch-container" style="width: 126px; margin-left: -42px;" hidden>
+                <label class="switch" for="habilitarPersonaEditar">
+                <div id="btn-habilitarPersona" hidden>
                     <!-- <span class="bootstrap-switch-handle-on bootstrap-switch-primary" style="width: -42px;"></span> 
                     <span class="bootstrap-switch-label" style="width: 42px;">&nbsp;</span> 
                     <span class="bootstrap-switch-handle-off bootstrap-switch-default" style="width: -42px;"></span> -->
                     <input type="checkbox" name="habilitarPersonaEditar" id="habilitarPersonaEditar" data-bootstrap-switch-editar checked onclick="habilitarPersona()">
+                    
                 </div>
                 </label>
                 <div class="col-3" >
@@ -172,10 +164,6 @@
                                                 </button>
                                               </div>
                                             </div>
-                                            <!-- <div>
-                                              style="font-size:20px; right:150px; top:60px; color:black"
-                                              <input class="form-control" type="file" id="formFile">
-                                            </div> -->
                                           </div>
                                     </div>
                                  
@@ -357,7 +345,7 @@
       </div>
 
 
-      <!-- Modal Agregar adjunto -->
+      <!-- Modal Agregar imagen -->
 <div class="modal fade" id="modalAgregarImagen">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -371,11 +359,11 @@
             <form id="formAgregarImagen" enctype="multipart/form-data">
                 <div class="modal-body">
                     <input type="hidden" id="idAgregaImagen" name="idAgregaImagen">
-                    <input id="inputImagen" name="inputImagen[]" type="file" class="form-control input-md" multiple>
+                    <input id="inputImagen" name="inputImagen" type="file" class="form-control input-md">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-primary btnAgregarEditar">Agregar</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Agregar</button>
                 </div>
             </form>
         </div>
@@ -384,7 +372,25 @@
 
 <script>
 
+/* var label = document.getElementById('miLabel');
 
+// Seleccionar todos los descendientes de la etiqueta <label>
+var elementos = label.querySelectorAll('*');
+
+// Agregar el evento onclick a cada uno de los descendientes
+for (var i = 0; i < elementos.length; i++) {
+  elementos[i].onclick = function() {
+    // Tu código aquí
+    alert('hola');
+  };
+} */
+
+$('#myLabel').on("click", function() {
+  alert('hola');
+    
+});
+
+/* definicion de datatablet */
   $(function () {
     $("#tabla_personas").DataTable({
       dom: 'lfBtip', //orden de los elementos del datatable
@@ -434,7 +440,7 @@
     }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
   });
 
- 
+ /* Abre modal nueva persona y habilita/deshabilita botones*/
   $("#nueva_persona").on("hide.bs.modal", function() {
     $('#btn-accion').attr('onclick', 'guardarPersona()');
     $('#btn-accion').html('Crear');
@@ -447,10 +453,18 @@
     $('#frm-nuevaPersona')[0].reset();
   }); 
 
-function guardarPersona(){
 
+/* Guarda modal de persona */
+function guardarPersona(){
   var formData = new FormData($('#frm-nuevaPersona')[0]);
 
+  let imagen = document.getElementById("inputImagen").files;
+  if(imagen.lenght!= 0){
+    //let imagen = $('#inputImagen').prop('files')[0]; 
+    formData.append("imagen", imagen);
+  }
+
+  //validacion datos del formulario
   if(!validarForm()) return;
 
   $.ajax({
@@ -461,14 +475,23 @@ function guardarPersona(){
     data:formData,
     url: '<?= base_url()?>/guardarPersona',
     success: function(resp) {
-            console.log(resp);
-            alert("guardado");
+            Swal.fire({
+              icon: 'success',
+              title: 'Guardado correctamente!',
+              showConfirmButton: false,
+              timer: 1500
+            });
             $('#nueva_persona').modal('hide');
             $('#frm-nuevaPersona')[0].reset();
             limpiaForm('#nueva_persona');
     },
     error: function(result){
-      console.log("error");
+      Swal.fire({
+              icon: 'error',
+              title: 'Error al guardar persona!',
+              showConfirmButton: false,
+              timer: 1500
+            });
     } 
     });
 }
@@ -625,6 +648,7 @@ function limpiaForm(formulario){
   $(formulario).find(".is-invalid").removeClass().addClass('form-control');
 }
 
+/* Permite ver los datos de cada persona */
 function verPersona(e){
     $('#btn-accion').hide();
     $('#mdl-title').html('Persona');
@@ -656,24 +680,16 @@ function verPersona(e){
 
 
     if(json.estado == 'true')
-    $("[name='habilitarPersonaEditar']").bootstrapSwitch('state', $('#habilitarPersonaEditar').prop('checked',false));
-    /*else
-    $(e).closest("tr").find('input[type="checkbox"]').bootstrapSwitch('state', $('#habilitarPersonaEditar').prop('checked',false)); */
-
-   // $("[name='habilitarPersonaEditar']").bootstrapSwitch('state', $('#habilitarPersonaEditar').prop('checked',false));
-
-   /*  if(json.estado == 'false')
-
-   // bootstrap-switch-id-habilitarPersonaEditar bootstrap-switch bootstrap-switch-wrapper bootstrap-switch-on bootstrap-switch-animate
-    $("[name='habilitarPersonaEditar']").bootstrapSwitch('state', $('#habilitarPersonaEditar').prop('checked',true));
-    else{
-     $('.bootstrap-switch-id-habilitarPersonaEditar').removeClass('bootstrap-switch-on').addClass('bootstrap-switch-id-habilitarPersonaEditar bootstrap-switch bootstrap-switch-wrapper bootstrap-switch-off bootstrap-switch-animate');
-    $("[name='habilitarPersonaEditar']").bootstrapSwitch('state', $('#habilitarPersonaEditar').prop('checked',false));
+    {
+      $('#habilitarPersonaEditar').prop('checked',false).change();
     }
- */
-
+    else{
+     $('#habilitarPersonaEditar').prop('checked',true).change();
+    }
+    
 }
 
+/*boton que habilita editar los datos de una persona en el modal */
 function habilitaEditarPersona(){
   $('#btn-habilitarPersona').prop('hidden', false);
   $('#btn-accion').show();
@@ -683,15 +699,23 @@ function habilitaEditarPersona(){
   $('#btn-editar').prop('hidden', true);
   $('#btn-asociarPosicion').prop('hidden', false);
   $('#btn-asociarPosicion').prop('hidden', true);
-  //$('#habilitarPersonaEditar').prop('checked', true); 
 
 }
 
+/* Guarda los datos editados de la persona */
 function editarPersona(){
 
   var formData = new FormData($('#frm-nuevaPersona')[0]);
 
+  let imagen = document.getElementById("inputImagen").files;
+  if(imagen.lenght!= 0){
+    formData.append("imagen", imagen);
+  }
+
+ // debugger;
   formData.append("pers_id",$('#nueva_persona #pers_id').val());
+  
+  //validacion datos del formulario
   if(!validarForm()) return;
 
   $.ajax({
@@ -713,6 +737,12 @@ function editarPersona(){
             limpiaForm('#nueva_persona');
     },
     complete: function() {
+      Swal.fire({
+              icon: 'success',
+              title: 'Se edito correctamente!',
+              showConfirmButton: false,
+              timer: 1500
+            });
       window.location.reload();
     }
     });
@@ -730,60 +760,22 @@ function editarPersona(){
      console.log("no"); 
 }); 
  */
+
+ /* inicializacion botones on/off */
 $("input[data-bootstrap-switch]").bootstrapSwitch();
-$("[name='habilitarPersonaEditar']").bootstrapSwitch(); /* .each(function(){
-  $(this).bootstrapSwitch('state', $(this).prop('checked',true));
-}); */
+$("[name='habilitarPersonaEditar']").bootstrapSwitch();
  
 
 
-//abrir modal agregar adjunto
+/* abrir modal agregar imagen */
 $(document).on("click", ".agregaImagen", function() {
-    $('#modalAgregarImagen').modal('show');
+  $('#modalAgregarImagen').modal('show');
   event.preventDefault();
-  $( window ).scroll(function() {
-  
-});
+  $("#nueva_persona").css('overflow-y', 'auto');//habilita el scroll de nuevo
 });
 
-//agregar adjunto
-$("#formAgregarImagen").submit(function(event) {
-
- 
-  event.preventDefault(); 
-  $( window ).scroll(function() {
-  
-});
-    $('#modalAgregarImagen').modal('hide');
-
-    if (document.getElementById("inputImagen").files.length == 0) {
-      alert('error');
-        $('#error').fadeIn('slow');
-    } else {
-        $('#error').fadeOut('slow'); 
-        var formData = new FormData($("#formAgregarImagen")[0]);
-        
-         $.ajax({
-                cache: false,
-                contentType: false,
-                data: formData,
-                dataType: 'json',
-                processData: false,
-                type: 'POST',
-                url: '<?= base_url()?>/guardarPersona',
-            })
-            .done(function(data) {
-              alert("Agregado");
-            })
-            .error(function(result) {
-                console.error(result);
-            }); 
-    } 
-});
-
-
-function habilitarPersona(e){
-  
+/* permite habilitar o deshabilitar una persona */
+function habilitarPersona(e){  
   var tr = $(e).closest('tr');
   var json = $(tr).data('json');
   var pers_id = json.pers_id;
@@ -809,7 +801,7 @@ function habilitarPersona(e){
         })
       }
       else{
-        $(e).closest("tr").find('input[type="checkbox"]').bootstrapSwitch('state', $('#habilitarPersona').prop('checked',true));
+        $(e).closest("tr").find('input[type="checkbox"]').prop('checked',true).change();
       }
     });    
   }
@@ -833,8 +825,7 @@ function habilitarPersona(e){
         })
       }
       else{
-      window.location.reload();
-        $(e).closest("tr").find('input[type="checkbox"]').bootstrapSwitch('state', $('data-bootstrap-switch').prop('checked',false));
+        $(e).closest("tr").find('input[type="checkbox"]').prop('checked',false).change();
       }
     });
   } 

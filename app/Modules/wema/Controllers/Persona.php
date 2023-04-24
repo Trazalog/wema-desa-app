@@ -81,6 +81,10 @@ class Persona extends BaseController
 
         $url = REST_PERSONA."/persona";
         
+        $pdf_factura = $request->getFile('imagen');
+
+        var_dump($pdf_factura); 
+
         $data['put_persona'] = array(
             'pers_id'=> $request->getPost('pers_id'),
             'apellidos' => $request->getPost('apellidos'),
