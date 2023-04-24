@@ -103,12 +103,10 @@
                 <div class="col-3">
                   <h5 class="modal-title" id="mdl-title">Nueva Persona</h5>
                 </div>
-                <label class="switch" for="habilitarPersonaEditar">
+                <label class="switch">
                 <div id="btn-habilitarPersona" hidden>
-                    <!-- <span class="bootstrap-switch-handle-on bootstrap-switch-primary" style="width: -42px;"></span> 
-                    <span class="bootstrap-switch-label" style="width: 42px;">&nbsp;</span> 
-                    <span class="bootstrap-switch-handle-off bootstrap-switch-default" style="width: -42px;"></span> -->
-                    <input type="checkbox" name="habilitarPersonaEditar" id="habilitarPersonaEditar" data-bootstrap-switch-editar checked onclick="habilitarPersona()">
+                    
+                    <input type="checkbox" name="habilitarPersonaEditar" id="habilitarPersonaEditar" data-bootstrap-switch-editar checked onclick="habilitarPersonaEditar()">
                     
                 </div>
                 </label>
@@ -371,24 +369,6 @@
 </div>
 
 <script>
-
-/* var label = document.getElementById('miLabel');
-
-// Seleccionar todos los descendientes de la etiqueta <label>
-var elementos = label.querySelectorAll('*');
-
-// Agregar el evento onclick a cada uno de los descendientes
-for (var i = 0; i < elementos.length; i++) {
-  elementos[i].onclick = function() {
-    // Tu código aquí
-    alert('hola');
-  };
-} */
-
-$('#myLabel').on("click", function() {
-  alert('hola');
-    
-});
 
 /* definicion de datatablet */
   $(function () {
@@ -660,6 +640,7 @@ function verPersona(e){
 
     var tr = $(e).closest('tr');
     var json = $(tr).data('json');
+    $('#nueva_persona #pers_id').val(json.pers_id);
     $('#nueva_persona #apellidos').val(json.apellidos);
     $('#nueva_persona #nombres').val(json.nombres);
     $('#nueva_persona #curp').val(json.curp);
@@ -748,24 +729,9 @@ function editarPersona(){
     });
 }
 
-
-
-/* $("input[data-bootstrap-switch]").each(function(){
-    a = $(this).bootstrapSwitch('state', $(this).prop('checked'));
-     //console.log(a);
-     check = $(this).is(':checked');
-     if(check)
-     console.log("hola");
-     else 
-     console.log("no"); 
-}); 
- */
-
  /* inicializacion botones on/off */
 $("input[data-bootstrap-switch]").bootstrapSwitch();
 $("[name='habilitarPersonaEditar']").bootstrapSwitch();
- 
-
 
 /* abrir modal agregar imagen */
 $(document).on("click", ".agregaImagen", function() {
@@ -831,7 +797,61 @@ function habilitarPersona(e){
   } 
 }
 
- 
+/* habilitar/deshabilitar persona desde modal ver persona */
+function habilitarPersonaEditar(){
+  var pers_id = $('#pers_id').val();
+  if(!$('#habilitarPersonaEditar').prop('checked'))
+  {
+    Swal.fire({
+        title: 'Habilitar usuario?',
+        text: "Ten en cuenta que se habilitaras el usuario",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si, habilitar!'
+      }).then((result) => {
+      if (result.isConfirmed) {
+        $.get('<?= base_url()?>/habilitarPersona/' + pers_id, function (data){
+          Swal.fire(
+            'Habilitado!',
+            'El usuario fue habilitado.',
+            'success'
+          );
+        })
+        $('#habilitarPersonaEditar').prop('checked',true).change();
+      }
+      else{
+        $('#habilitarPersonaEditar').prop('checked',false).change();
+      }
+    });
+  }
+  else{
+    Swal.fire({
+        title: '¿Está seguro?',
+        text: 'Si deshabilita a la Persona, la misma no aparecerá en algunos reportes o indicadores, y no podrá responder cuestionarios',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si, deshabilitar!'
+      }).then((result) => {
+      if (result.isConfirmed) {
+        $.get('<?= base_url()?>/eliminarPersona/' + pers_id, function (data){
+          Swal.fire(
+            'Deshabilitado!',
+            'El usuario fue deshabilitado.',
+            'success'
+          );
+        })
+        $('#habilitarPersonaEditar').prop('checked',false).change();
+      }
+      else{
+        $('#habilitarPersonaEditar').prop('checked',true).change();
+      }
+    });
+  }
+}
 </script>
 
 <?= $this->endSection() ?>
