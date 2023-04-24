@@ -29,11 +29,11 @@
   <link rel="stylesheet" href="<?= base_url()?>/public/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="<?= base_url()?>/public/dist/css/adminlte.min.css">
+
+  <link rel="stylesheet" href="<?= base_url()?>/public/dist/css/stylesTrazalog.css">
+
   <!-- Bootstrap Switch -->
   <script src="<?= base_url()?>/public/plugins/bootstrap-switch/js/bootstrap-switch.min.js"></script>
-
-  <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
-<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
 
 <!-- Sweet Alert 2 -->
  <script src="<?= base_url()?>/lib/sweetalert2/dist/sweetalert2.all.min.js"></script>

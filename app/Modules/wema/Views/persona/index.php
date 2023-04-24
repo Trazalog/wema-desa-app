@@ -2,22 +2,15 @@
 <?php $this->extend('templates/admin_template') ?>
 
 <?= $this->section('content') ?>
-
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <div class="container-fluid">
         <div class="row mb-2"> 
           <div class="col-sm-7">
-            <div class="card">
-              <div class="card-body">
-                <nav style=" font-size:30px" aria-label="breadcrumb">
-                  <ol class="breadcrumb">
-                    <li class="breadcrumb-item active"><a>CONFIANZA Y TECNOLOGIA</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">BIMBO S.A de C.V</li>
-                  </ol>
-                </nav>
-              </div>
-            </div>
+            <ul class="breadcrumb">
+			        <li class="completed" ><a href="javascript:void(0);">CONFIANZA Y TECNOLOGIA</a></li>
+			        <li class="active"><a href="javascript:void(0);">BIMBO S.A de C.V.</a></li>
+		        </ul>
           </div>
            <div class="col-sm-3"></div> 
           <div class="col-sm-2">
@@ -27,12 +20,6 @@
         <div class="row mb-2">
           <div class="col-sm-8">
             <h1>Personas</h1>
-          </div>
-          <div class="col-sm-4">
-            <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Personas</li>
-            </ol>
           </div>
         </div>
       </div><!-- /.container-fluid -->
