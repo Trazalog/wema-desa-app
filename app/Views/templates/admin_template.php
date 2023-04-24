@@ -31,14 +31,16 @@
   <link rel="stylesheet" href="<?= base_url()?>/public/dist/css/adminlte.min.css">
   <!-- Bootstrap Switch -->
   <script src="<?= base_url()?>/public/plugins/bootstrap-switch/js/bootstrap-switch.min.js"></script>
-
+  <!-- Plugin checkboxs into toggles -->
   <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
-<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
-
-<!-- Sweet Alert 2 -->
- <script src="<?= base_url()?>/lib/sweetalert2/dist/sweetalert2.all.min.js"></script>
- <script rel="stylesheet" src="<?= base_url()?>/lib/sweetalert2/dist/sweetalert2.min.css"></script> 
- 
+  <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+  <!-- Sweet Alert 2 -->
+  <script src="<?= base_url()?>/lib/sweetalert2/dist/sweetalert2.all.min.js"></script>
+  <link rel="stylesheet" src="<?= base_url()?>/lib/sweetalert2/dist/sweetalert2.min.css">
+  <!-- Sweet Alert 2 -->
+  <script src="<?= base_url()?>/lib/notificaciones.js"></script>
+  <!-- Masonry Plugin -->
+  <script src="<?= base_url()?>/public/plugins/masonry/masonry.pkgd.min.js"></script>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">

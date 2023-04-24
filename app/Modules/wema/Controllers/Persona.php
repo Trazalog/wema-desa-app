@@ -13,7 +13,11 @@ class Persona extends BaseController
         $this->Personas = new Personas();
         $this->Generales = new Generales();
     }
-
+    /**
+        * Carga pantalla principal de ABM personas
+        * @param  
+        * @return view index.php
+	*/
     public function index(){
 
         /* LISTADO PERSONAS */
@@ -34,12 +38,14 @@ class Persona extends BaseController
         return view('Modules\wema\Views\persona\index',$data);
     }
 
-
+    /**
+        * Recibe request con datos de persona para ALTA
+        * @param  array datos persona
+        * @return array response servicio
+	*/
     public function guardarPersona(){
 
         $request = \Config\Services::request();
-
-        $url = REST_PERSONA."/persona";
         
         $data['post_persona'] = array(
             
@@ -54,7 +60,7 @@ class Persona extends BaseController
             'num_exterior' =>  $request->getPost('numeroExterior'),
             'cod_postal' =>  $request->getPost('CodigoColonia'),
             'num_interior' => $request->getPost('numeroInterior'),
-            'usr_app_alta' =>   '',
+            'usr_app_alta' =>  userNick(),
             'usr_app_ult_modif' =>   '',
             'gene_id' =>  $request->getPost('genero'),
             'pana_id' =>  $request->getPost('paisNacimiento'),
@@ -62,17 +68,13 @@ class Persona extends BaseController
             'naci_id' =>  $request->getPost('nacionalidad'),
             'educ_id' =>  $request->getPost('escolaridad'),
             'ubic_id' =>  $request->getPost('nacionalidad'),
-            'clie_id' =>  "3",
-            'imagen' => "", 
+            'clie_id' =>  $request->getPost('clie_id'),
+            'imagen' => $request->getFile('imagen'), 
         );
 
-        $aux = $this->REST->callAPI("POST",$url, $data);
+        $resp = $this->Personas->guardarPersona($data);
         
-
-        if($aux['status']){
-            return json_encode($aux);
-        } 
-       else return $aux;
+        return json_encode($resp);
 
     }
 

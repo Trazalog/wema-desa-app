@@ -129,6 +129,7 @@
             <div class="modal-body">
             <form id="frm-nuevaPersona">
               <input id="pers_id" name="pers_id" type="text" disabled hidden>
+              <input id="clie_id" name="clie_id" type="text" hidden value="3">
                         <div class="row" style="margin-top:-7px">
                           <div class="col">
                             <div class="card card-light">
@@ -151,22 +152,21 @@
                                         </div>
                                     </div>
                                     <div class="col-md-4">
-                                          <div class="form-group icon">
-                                            <label>Imagen </label>
-                                            <div class="small-box" style="position:initial;">
-                                              <div class="icon" >
-                                                <i class="fas fa-user" style="right:250px;"></i>
-                                                <button class="btn btn-sm float-right" style="margin-top:-20px;margin-right:150px">
-                                                  <i href="<?base_url()?>/public/dist/img/user2-160x160.jpg" target="_blank" class="fas fa-eye"></i>
-                                                </button>
-                                                <button class="btn btn-sm float-right agregaImagen" style="margin-top:-5px;margin-right:150px">
-                                                  <i class="fas fa-upload"></i>
-                                                </button>
-                                              </div>
-                                            </div>
-                                          </div>
+                                      <div class="form-group icon">
+                                        <label>Imagen </label>
+                                        <div class="small-box" style="position:initial;">
+                                          <!-- <i class="fas fa-user" style="right:250px;"></i> -->
+                                          <img id="imagenUsuario" src="<?=base_url()?>/public/dist/img/user2-160x160.jpg"/>
+                                          <button class="btn btn-sm" style="/*margin-top:-20px;margin-right:150px*/">
+                                            <i href="<?base_url()?>/public/dist/img/user2-160x160.jpg" target="_blank" class="fas fa-eye"></i>
+                                          </button>
+                                          <button class="btn btn-sm agregaImagen" style="/*margin-top:-5px;margin-right:150px*/">
+                                            <i class="fas fa-upload"></i>
+                                          </button>
+                                        </div>
+                                      </div>
                                     </div>
-                                 
+                                    <div class="clearfix"></div>
                                     <div class="col-md-4">
                                       <div class="form-group">
                                           <label>CURP<strong class="text-danger">*</strong>: </label>
@@ -186,8 +186,8 @@
                                           </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
-                                    </div>
+                                    <!-- <div class="col-md-4">
+                                    </div> -->
                                     
                                     <div class="col-md-4">
                                       <div class="form-group">
@@ -359,7 +359,7 @@
             <form id="formAgregarImagen" enctype="multipart/form-data">
                 <div class="modal-body">
                     <input type="hidden" id="idAgregaImagen" name="idAgregaImagen">
-                    <input id="inputImagen" name="inputImagen" type="file" class="form-control input-md">
+                    <input id="inputImagen" name="inputImagen" type="file" class="form-control input-md" onclick="cargaVistaPrevia(this)">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
@@ -475,25 +475,19 @@ function guardarPersona(){
     data:formData,
     url: '<?= base_url()?>/guardarPersona',
     success: function(resp) {
-            Swal.fire({
-              icon: 'success',
-              title: 'Guardado correctamente!',
-              showConfirmButton: false,
-              timer: 1500
-            });
-            $('#nueva_persona').modal('hide');
-            $('#frm-nuevaPersona')[0].reset();
-            limpiaForm('#nueva_persona');
+      if(resp.status){
+        notificar(notiSuccess);
+        $('#nueva_persona').modal('hide');
+        $('#frm-nuevaPersona')[0].reset();
+        limpiaForm('#nueva_persona');
+      }else{
+        notificar(notiError);
+      }
     },
     error: function(result){
-      Swal.fire({
-              icon: 'error',
-              title: 'Error al guardar persona!',
-              showConfirmButton: false,
-              timer: 1500
-            });
-    } 
-    });
+      notificar(notiError);
+    }
+  });
 }
 
 
@@ -632,11 +626,7 @@ function validarForm(){
 }
 
   if(!ban){
-    Swal.fire({
-      icon: 'error',
-      title: 'Error',
-      text: 'Complete los campos obligatorios!',
-    });
+    notificar(notiObligatoriedad);
   }
   return ban; 
   
@@ -726,23 +716,16 @@ function editarPersona(){
     url: '<?= base_url()?>/editarPersona',
     data:formData,
     success: function(resp) {
-            Swal.fire({
-              icon: 'success',
-              title: 'Se edito correctamente!',
-              showConfirmButton: false,
-              timer: 1500
-            });
-            $('#nueva_persona').modal('hide');
-            $('#frm-nuevaPersona')[0].reset();
-            limpiaForm('#nueva_persona');
+      notificar(notiSuccess);
+      $('#nueva_persona').modal('hide');
+      $('#frm-nuevaPersona')[0].reset();
+      limpiaForm('#nueva_persona');
+    },
+    error: () => {
+      notificar(notiError);
     },
     complete: function() {
-      Swal.fire({
-              icon: 'success',
-              title: 'Se edito correctamente!',
-              showConfirmButton: false,
-              timer: 1500
-            });
+      notificar(notiSuccess);
       window.location.reload();
     }
     });
@@ -830,7 +813,20 @@ function habilitarPersona(e){
     });
   } 
 }
+function cargaVistaPrevia(input){
+  if(input.files && input.files[0]){
+      // var idImagen = $(input).attr('id');
+      var reader = new FileReader();
 
+      reader.addEventListener("load", function (e) {
+          $('#imagenUsuario').css('background-image', 'url('+e.target.result +')');
+          $('#imagenUsuario').hide();
+          $('#imagenUsuario').fadeIn(850);   
+      }, false);
+
+      reader.readAsDataURL(input.files[0]);
+  }
+}
  
 </script>
 

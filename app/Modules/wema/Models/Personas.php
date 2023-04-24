@@ -29,4 +29,18 @@ class Personas extends Model{
 
         return $data->personas->persona;
     }
+    /**
+        * Alta de una persona en core.personas
+        * @param array $data datos persona
+        * @return array listado de personas en core.personas
+	*/
+    public function guardarPersona($data){
+        log_message('debug','#TRAZA | WEMA-DESA-APP | Model | Personas | guardarPersona()');
+
+        $url = REST_PERSONA."/persona";
+
+        $aux = $this->REST->callAPI("POST",$url, $data);
+
+        return $aux;
+    }
 }
