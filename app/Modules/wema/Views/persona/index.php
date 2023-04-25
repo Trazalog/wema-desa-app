@@ -117,31 +117,41 @@
               <input id="clie_id" name="clie_id" type="text" hidden value="3">
                         <div class="row" style="margin-top:-7px">
                           <div class="col">
-                            <div class="card card-light">
+                            <div class="card card-info">
                               <div class="card-header">
                                 <h2 class="card-title">Datos Generales</h2>
                               </div><!-- fin card title -->
                                <div class="car-body">
                                 <div class="container">
-                                  <div class="row">
+                                  <div class="row align-items-center mt-3">
                                     <div class="col-md-4 ">
                                       <div class="form-group">
-                                        <label>Apellidos<strong class="text-danger">*</strong>: </label>
-                                        <input type="text" class="form-control" id="apellidos" name="apellidos">
+                                        <label>Apellidos <strong class="text-danger">*</strong>: </label>
+                                        <div class="input-group">
+                                          <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                          </div>
+                                          <input type="text" class="form-control" id="apellidos" name="apellidos">
+                                        </div>
                                       </div>
                                     </div>
                                     <div class="col-md-4">
-                                        <div class="form-group">
+                                      <div class="form-group">
                                         <label>Nombres <strong class="text-danger">*</strong>: </label>
-                                        <input type="text" class="form-control" id="nombres" name="nombres">
+                                        <div class="input-group">
+                                          <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                          </div>
+                                          <input type="text" class="form-control" id="nombres" name="nombres">
                                         </div>
+                                      </div>
                                     </div>
-                                    <div class="col-md-4">
-                                      <div class="form-group icon">
-                                        <label>Imagen </label>
-                                        <div class="small-box" style="position:initial;">
+                                    <div class="col-md-3 centrar">
+                                      <div class="form-group">
+                                        <!-- <label>Imagen </label> -->
+                                        <div class="" style="position:initial;">
                                           <!-- <i class="fas fa-user" style="right:250px;"></i> -->
-                                          <img id="imagenUsuario" src="<?=base_url()?>/public/dist/img/user2-160x160.jpg"/>
+                                          <img id="imagenUsuario" class="profile-user-img img-fluid img-circle" src="<?=base_url()?>/public/dist/img/user2-160x160.jpg"/>
                                           <button class="btn btn-sm" style="/*margin-top:-20px;margin-right:150px*/">
                                             <i href="<?base_url()?>/public/dist/img/user2-160x160.jpg" target="_blank" class="fas fa-eye"></i>
                                           </button>
@@ -151,24 +161,33 @@
                                         </div>
                                       </div>
                                     </div>
-                                    <div class="clearfix"></div>
                                     <div class="col-md-4">
                                       <div class="form-group">
-                                          <label>CURP<strong class="text-danger">*</strong>: </label>
+                                        <label>CURP<strong class="text-danger">*</strong>: </label>
+                                        <div class="input-group">
+                                          <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-id-card"></i></span>
+                                          </div>
                                           <input type="text" class="form-control" id="curp" name="curp">
+                                        </div>
                                       </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                          <label>Genero <strong class="text-danger">*</strong>: </label>
-                                          <select name="genero" id="genero" class="form-control">
-                                            <option value="" selected disabled> - Seleccionar - </option>
-                                            <?php 
-                                              foreach ($listadoGeneros as $key => $gen) {
-                                                echo "<option value='$gen->tabl_id'>$gen->valor</option>";
-                                              }
-                                            ?>
-                                          </select>
+                                          <label>Género <strong class="text-danger">*</strong>: </label>
+                                          <div class="input-group">
+                                            <div class="input-group-prepend">
+                                              <span class="input-group-text"><i class="fas fa-genderless"></i></span>
+                                            </div>
+                                            <select name="genero" id="genero" class="form-control">
+                                              <option value="" selected disabled> - Seleccionar - </option>
+                                              <?php 
+                                                foreach ($listadoGeneros as $key => $gen) {
+                                                  echo "<option value='$gen->tabl_id'>$gen->valor</option>";
+                                                }
+                                              ?>
+                                            </select>
+                                          </div>
                                         </div>
                                     </div>
                                     <!-- <div class="col-md-4">
@@ -176,14 +195,23 @@
                                     
                                     <div class="col-md-4">
                                       <div class="form-group">
-                                          <label>Fecha de Nacimiento<strong class="text-danger">*</strong>: </label>
-                                         <input type="date" class="form-control float-left" id="fechaNacimiento" name="fechaNacimiento"> 
+                                        <label>Fecha de Nacimiento<strong class="text-danger">*</strong>: </label>
+                                        <div class="input-group">
+                                          <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-birthday-cake"></i></span>
+                                          </div>
+                                          <input type="date" class="form-control float-left" id="fechaNacimiento" name="fechaNacimiento">
+                                        </div>
                                       </div>
                                     </div>
 
                                     <div class="col-md-4">
                                       <div class="form-group">
-                                          <label>Pais de nacimiento<strong class="text-danger">*</strong>: </label>
+                                        <label>Pais de nacimiento<strong class="text-danger">*</strong>: </label>
+                                        <div class="input-group">
+                                          <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-globe"></i></span>
+                                          </div>
                                           <select name="paisNacimiento" id="paisNacimiento" class="form-control">
                                             <option value="" selected disabled> - Seleccionar - </option>
                                             <?php 
@@ -192,11 +220,16 @@
                                               }
                                             ?>
                                           </select>
+                                        </div>
                                       </div>
                                     </div>
                                     <div class="col-md-4">
                                       <div class="form-group">
-                                          <label>Estado Civil<strong class="text-danger">*</strong>: </label>
+                                        <label>Estado Civil <strong class="text-danger">*</strong>: </label>
+                                        <div class="input-group">
+                                          <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-ring"></i></span>
+                                          </div>
                                           <select name="estadoCivil" id="estadoCivil" class="form-control">
                                             <option value="" selected disabled> - Seleccionar - </option>
                                             <?php 
@@ -205,12 +238,17 @@
                                               }
                                             ?>
                                           </select>
+                                        </div>
                                       </div>
                                     </div>
 
                                     <div class="col-md-4">
                                       <div class="form-group">
-                                          <label>Nacionalidad<strong class="text-danger">*</strong>: </label>
+                                        <label>Nacionalidad<strong class="text-danger">*</strong>: </label>
+                                        <div class="input-group">
+                                          <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-globe-americas"></i></span>
+                                          </div>
                                           <select name="nacionalidad" id="nacionalidad" class="form-control">
                                             <option value="" selected disabled> - Seleccionar - </option>
                                             <?php 
@@ -219,12 +257,17 @@
                                               }
                                             ?>
                                           </select>
+                                        </div>
                                       </div>
                                     </div>
 
                                     <div class="col-md-4">
                                       <div class="form-group">
-                                          <label>Escolaridad<strong class="text-danger">*</strong>: </label>
+                                        <label>Escolaridad<strong class="text-danger">*</strong>: </label>
+                                        <div class="input-group">
+                                          <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-graduation-cap"></i></span>
+                                          </div>
                                           <select name="escolaridad" id="escolaridad" class="form-control">
                                             <option value="" selected disabled> - Seleccionar - </option>
                                             <?php 
@@ -233,12 +276,18 @@
                                               }
                                             ?>
                                           </select>
+                                        </div>
                                       </div>
                                     </div>
                                     <div class="col-md-4">
                                       <div class="form-group">
-                                          <label>Ocupacion<strong class="text-danger">*</strong>: </label>
+                                        <label>Ocupacion<strong class="text-danger">*</strong>: </label>
+                                        <div class="input-group">
+                                          <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-briefcase"></i></span>
+                                          </div>
                                           <input type="text" class="form-control" id="ocupacion" name="ocupacion">
+                                        </div>
                                       </div>
                                     </div>
                                   </div>
@@ -251,13 +300,13 @@
 
                         <div class="row">
                           <div class="col">
-                            <div class="card card-light" style="margin-bottom: 0rem;">
+                            <div class="card card-info" style="margin-bottom: 0rem;">
                               <div class="card-header">
                                 <h2 class="card-title">Datos de Contacto</h2>
                               </div><!-- fin card title -->
                                <div class="car-body">
                                 <div class="container">
-                                  <div class="row">
+                                  <div class="row mt-3">
                                     <div class="col-md-4">
                                       <div class="form-group">
                                         <label>Teléfono <strong class="text-danger">*</strong>: </label>
@@ -282,7 +331,12 @@
                                     <div class="col-md-4">
                                           <div class="form-group">
                                             <label>Calle <strong class="text-danger">*</strong>: </label>
-                                            <input type="text" class="form-control" id="calle" name="calle">
+                                            <div class="input-group">
+                                              <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="fas fa-road"></i></span>
+                                              </div>
+                                              <input type="text" class="form-control" id="calle" name="calle">
+                                            </div>
                                           </div>
                                     </div>
                                 
@@ -290,20 +344,35 @@
                                     <div class="col-md-4">
                                       <div class="form-group">
                                           <label>Número Exterior<strong class="text-danger">*</strong>: </label>
-                                          <input type="text" class="form-control" id="numeroExterior" name="numeroExterior">
+                                          <div class="input-group">
+                                            <div class="input-group-prepend">
+                                              <span class="input-group-text"><i class="fas fa-list-ol"></i></span>
+                                            </div>
+                                            <input type="text" class="form-control" id="numeroExterior" name="numeroExterior">
+                                          </div>
                                       </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
                                           <label>Número Interior <strong class="text-danger">*</strong>: </label>
-                                          <input type="text" class="form-control" id="numeroInterior" name="numeroInterior">
+                                          <div class="input-group">
+                                            <div class="input-group-prepend">
+                                              <span class="input-group-text"><i class="fas fa-list-ol"></i></span>
+                                            </div>
+                                            <input type="text" class="form-control" id="numeroInterior" name="numeroInterior">
+                                          </div>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
-                                        <div class="form-group">
-                                          <label>Codigo Postal / Colonia <strong class="text-danger">*</strong>: </label>
-                                          <input type="text" class="form-control" id="CodigoColonia" name="CodigoColonia">
-                                        </div>
+                                      <div class="form-group">
+                                        <label>Codigo Postal / Colonia <strong class="text-danger">*</strong>: </label>
+                                        <div class="input-group">
+                                          <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-list-ol"></i></span>
+                                          </div>
+                                        <input type="text" class="form-control" id="CodigoColonia" name="CodigoColonia">
+                                      </div>
+                                      </div>
                                     </div>
                                     
                                   </div>
