@@ -151,7 +151,7 @@
                                         <!-- <label>Imagen </label> -->
                                         <div class="" style="position:initial;">
                                           <!-- <i class="fas fa-user" style="right:250px;"></i> -->
-                                          <img id="imagenUsuario" class="profile-user-img img-fluid img-circle" src="<?=base_url()?>/public/dist/img/user2-160x160.jpg"/>
+                                          <img id="imagenUsuario" class="profile-user-img img-fluid img-circle" style="height: 100px; width: 100px" src="<?=base_url()?>/public/dist/img/user2-160x160.jpg" alt="<?=base_url()?>/public/dist/img/user2-160x160.jpg"/>
                                           <button class="btn btn-sm" style="/*margin-top:-20px;margin-right:150px*/">
                                             <i href="<?base_url()?>/public/dist/img/user2-160x160.jpg" target="_blank" class="fas fa-eye"></i>
                                           </button>
@@ -413,11 +413,11 @@
             <form id="formAgregarImagen" enctype="multipart/form-data">
                 <div class="modal-body">
                     <input type="hidden" id="idAgregaImagen" name="idAgregaImagen">
-                    <input id="inputImagen" name="inputImagen" type="file" class="form-control input-md" onclick="cargaVistaPrevia(this)">
+                    <input id="inputImagen" name="inputImagen" type="file" class="form-control input-md">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">Agregar</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="cargaVistaPrevia()">Agregar</button>
                 </div>
             </form>
         </div>
@@ -496,7 +496,7 @@ function guardarPersona(){
 
   let imagen = document.getElementById("inputImagen").files;
   if(imagen.lenght!= 0){
-    //let imagen = $('#inputImagen').prop('files')[0]; 
+    let imagen = $('#inputImagen').prop('files')[0]; 
     formData.append("imagen", imagen);
   }
 
@@ -736,10 +736,10 @@ function editarPersona(){
 
   let imagen = document.getElementById("inputImagen").files;
   if(imagen.lenght!= 0){
-    formData.append("imagen", imagen);
+    let imagenFile = $('#inputImagen').prop('files')[0]; 
+    formData.append("imagen", imagenFile);
   }
 
- // debugger;
   formData.append("pers_id",$('#nueva_persona #pers_id').val());
   
   //validacion datos del formulario
@@ -753,17 +753,22 @@ function editarPersona(){
     url: '<?= base_url()?>/editarPersona',
     data:formData,
     success: function(resp) {
-      notificar(notiSuccess);
-      $('#nueva_persona').modal('hide');
-      $('#frm-nuevaPersona')[0].reset();
-      limpiaForm('#nueva_persona');
+      if(resp.status){
+        notificar(notiSuccess);
+        $('#nueva_persona').modal('hide');
+        $('#frm-nuevaPersona')[0].reset();
+        limpiaForm('#nueva_persona');
+        window.location.reload();
+      }else{
+        notificar(notiError);
+      }
     },
     error: () => {
       notificar(notiError);
     },
     complete: function() {
       notificar(notiSuccess);
-      window.location.reload();
+      // window.location.reload();
     }
     });
 }
@@ -784,7 +789,6 @@ function habilitarPersona(e){
   var tr = $(e).closest('tr');
   var json = $(tr).data('json');
   var pers_id = json.pers_id;
-  //debugger;
   check = json.estado;
   if(check == 'false'){
       Swal.fire({
@@ -835,18 +839,18 @@ function habilitarPersona(e){
     });
   } 
 }
-function cargaVistaPrevia(input){
-  if(input.files && input.files[0]){
-      // var idImagen = $(input).attr('id');
+function cargaVistaPrevia(){
+  var input = $('#inputImagen').prop('files');
+  if(input && input[0]){
       var reader = new FileReader();
 
       reader.addEventListener("load", function (e) {
-          $('#imagenUsuario').css('background-image', 'url('+e.target.result +')');
+          $('#imagenUsuario').prop('src', e.target.result);
           $('#imagenUsuario').hide();
           $('#imagenUsuario').fadeIn(850);   
       }, false);
 
-      reader.readAsDataURL(input.files[0]);
+      reader.readAsDataURL(input[0]);
   }
 }
  
