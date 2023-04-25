@@ -23,7 +23,6 @@ class Personas extends Model{
         log_message('debug','#TRAZA | WEMA-DESA-APP | Model | Personas | getPersonas()');
 
         $url = REST_PERSONA.'/persona';
-
         $aux = $this->REST->callAPI("GET",$url);
         $data = json_decode($aux['data']);
 
@@ -38,7 +37,6 @@ class Personas extends Model{
         log_message('debug','#TRAZA | WEMA-DESA-APP | Model | Personas | guardarPersona()');
 
         $url = REST_PERSONA."/persona";
-
         $aux = $this->REST->callAPI("POST",$url, $data);
 
         return $aux;
@@ -52,7 +50,6 @@ class Personas extends Model{
         log_message('debug','#TRAZA | WEMA-DESA-APP | Model | Personas | editarPersona()');
 
         $url = REST_PERSONA."/persona";
-
         $aux = $this->REST->callAPI("PUT",$url, $data);
 
         return $aux;

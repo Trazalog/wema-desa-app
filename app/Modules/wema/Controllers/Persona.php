@@ -78,11 +78,13 @@ class Persona extends BaseController
         return json_encode($resp);
 
     }
-
+    /**
+        * Recibe request con datos de persona para EDITAR
+        * @param  array datos persona
+        * @return array response servicio
+	*/
     public function editarPersona(){
         $request = \Config\Services::request();
-
-        $url = REST_PERSONA."/persona";
         
         $fotoPerfil = $request->getFile('imagen');
 
@@ -115,8 +117,7 @@ class Persona extends BaseController
         $resp = $this->Personas->editarPersona($data);
 
         return $resp;
-
-}
+    }
 
 public function eliminarPersona($pers_id = null){
 
