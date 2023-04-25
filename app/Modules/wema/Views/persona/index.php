@@ -146,7 +146,7 @@
                                         </div>
                                       </div>
                                     </div>
-                                    <div class="col-md-3 centrar">
+                                    <div class="col-md-4 centrar">
                                       <div class="form-group">
                                         <!-- <label>Imagen </label> -->
                                         <div class="" style="position:initial;">
@@ -163,7 +163,7 @@
                                     </div>
                                     <div class="col-md-4">
                                       <div class="form-group">
-                                        <label>CURP<strong class="text-danger">*</strong>: </label>
+                                        <label>CURP <strong class="text-danger">*</strong>: </label>
                                         <div class="input-group">
                                           <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-id-card"></i></span>
@@ -195,7 +195,7 @@
                                     
                                     <div class="col-md-4">
                                       <div class="form-group">
-                                        <label>Fecha de Nacimiento<strong class="text-danger">*</strong>: </label>
+                                        <label>Fecha de Nacimiento <strong class="text-danger">*</strong>: </label>
                                         <div class="input-group">
                                           <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-birthday-cake"></i></span>
@@ -207,7 +207,7 @@
 
                                     <div class="col-md-4">
                                       <div class="form-group">
-                                        <label>Pais de nacimiento<strong class="text-danger">*</strong>: </label>
+                                        <label>País de nacimiento <strong class="text-danger">*</strong>: </label>
                                         <div class="input-group">
                                           <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-globe"></i></span>
@@ -388,8 +388,8 @@
             </div><!-- fin modal-body -->
             <div class="modal-footer ">
               <div class="col-mt-1 col-12 justify-content-center" style="margin-top:-5px">
-                <button type="button" class="btn btn-secondary float-left" data-dismiss="modal" onclick="limpiaForm('#nueva_persona')" >Cancelar</button>
-                <button type="button" class="btn btn-success float-left" id='btn-accion' style="margin-left: 5px;" onclick="guardarPersona()">Crear</button>
+                <button type="button" class="btn btn-secondary float-right" data-dismiss="modal" onclick="limpiaForm('#nueva_persona')" >Cancelar</button>
+                <button type="button" class="btn btn-info float-right" id='btn-accion' style="margin-left: 5px;" onclick="guardarPersona()">Crear</button>
               </div>
             </div>
           </div>
