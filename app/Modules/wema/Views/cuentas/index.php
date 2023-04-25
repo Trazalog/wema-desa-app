@@ -48,6 +48,7 @@
                                 <div class="bootstrap-switch-container float-right" style="width: 15px; margin-left: 24px;" >
                                   <input type="checkbox" id=""  name="" data-bootstrap-switch  onclick="">
                                 </div>
+                                <i class="fa fa-users" style="cursor: pointer;margin: 3px;" title="Ver Detalles"></i>
                                 </label>
                               </div>
                     </td>

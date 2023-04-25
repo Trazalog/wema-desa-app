@@ -2,22 +2,15 @@
 <?php $this->extend('templates/admin_template') ?>
 
 <?= $this->section('content') ?>
-
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <div class="container-fluid">
         <div class="row mb-2"> 
           <div class="col-sm-7">
-            <div class="card">
-              <div class="card-body">
-                <nav style=" font-size:30px" aria-label="breadcrumb">
-                  <ol class="breadcrumb">
-                    <li class="breadcrumb-item active"><a>CONFIANZA Y TECNOLOGIA</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">BIMBO S.A de C.V</li>
-                  </ol>
-                </nav>
-              </div>
-            </div>
+            <ul class="breadcrumb">
+			        <li class="completed" ><a href="javascript:void(0);">CONFIANZA Y TECNOLOGIA</a></li>
+			        <li class="active"><a href="javascript:void(0);">BIMBO S.A de C.V.</a></li>
+		        </ul>
           </div>
            <div class="col-sm-3"></div> 
           <div class="col-sm-2">
@@ -27,12 +20,6 @@
         <div class="row mb-2">
           <div class="col-sm-8">
             <h1>Personas</h1>
-          </div>
-          <div class="col-sm-4">
-            <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Personas</li>
-            </ol>
           </div>
         </div>
       </div><!-- /.container-fluid -->
@@ -103,12 +90,10 @@
                 <div class="col-3">
                   <h5 class="modal-title" id="mdl-title">Nueva Persona</h5>
                 </div>
-                <label class="switch" for="habilitarPersonaEditar">
+                <label class="switch">
                 <div id="btn-habilitarPersona" hidden>
-                    <!-- <span class="bootstrap-switch-handle-on bootstrap-switch-primary" style="width: -42px;"></span> 
-                    <span class="bootstrap-switch-label" style="width: 42px;">&nbsp;</span> 
-                    <span class="bootstrap-switch-handle-off bootstrap-switch-default" style="width: -42px;"></span> -->
-                    <input type="checkbox" name="habilitarPersonaEditar" id="habilitarPersonaEditar" data-bootstrap-switch-editar checked onclick="habilitarPersona()">
+                    
+                    <input type="checkbox" name="habilitarPersonaEditar" id="habilitarPersonaEditar" data-bootstrap-switch-editar checked onclick="habilitarPersonaEditar()">
                     
                 </div>
                 </label>
@@ -372,24 +357,6 @@
 
 <script>
 
-/* var label = document.getElementById('miLabel');
-
-// Seleccionar todos los descendientes de la etiqueta <label>
-var elementos = label.querySelectorAll('*');
-
-// Agregar el evento onclick a cada uno de los descendientes
-for (var i = 0; i < elementos.length; i++) {
-  elementos[i].onclick = function() {
-    // Tu código aquí
-    alert('hola');
-  };
-} */
-
-$('#myLabel').on("click", function() {
-  alert('hola');
-    
-});
-
 /* definicion de datatablet */
   $(function () {
     $("#tabla_personas").DataTable({
@@ -650,6 +617,7 @@ function verPersona(e){
 
     var tr = $(e).closest('tr');
     var json = $(tr).data('json');
+    $('#nueva_persona #pers_id').val(json.pers_id);
     $('#nueva_persona #apellidos').val(json.apellidos);
     $('#nueva_persona #nombres').val(json.nombres);
     $('#nueva_persona #curp').val(json.curp);
@@ -731,24 +699,9 @@ function editarPersona(){
     });
 }
 
-
-
-/* $("input[data-bootstrap-switch]").each(function(){
-    a = $(this).bootstrapSwitch('state', $(this).prop('checked'));
-     //console.log(a);
-     check = $(this).is(':checked');
-     if(check)
-     console.log("hola");
-     else 
-     console.log("no"); 
-}); 
- */
-
  /* inicializacion botones on/off */
 $("input[data-bootstrap-switch]").bootstrapSwitch();
 $("[name='habilitarPersonaEditar']").bootstrapSwitch();
- 
-
 
 /* abrir modal agregar imagen */
 $(document).on("click", ".agregaImagen", function() {
@@ -828,6 +781,61 @@ function cargaVistaPrevia(input){
   }
 }
  
+/* habilitar/deshabilitar persona desde modal ver persona */
+function habilitarPersonaEditar(){
+  var pers_id = $('#pers_id').val();
+  if(!$('#habilitarPersonaEditar').prop('checked'))
+  {
+    Swal.fire({
+        title: 'Habilitar usuario?',
+        text: "Ten en cuenta que se habilitaras el usuario",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si, habilitar!'
+      }).then((result) => {
+      if (result.isConfirmed) {
+        $.get('<?= base_url()?>/habilitarPersona/' + pers_id, function (data){
+          Swal.fire(
+            'Habilitado!',
+            'El usuario fue habilitado.',
+            'success'
+          );
+        })
+        $('#habilitarPersonaEditar').prop('checked',true).change();
+      }
+      else{
+        $('#habilitarPersonaEditar').prop('checked',false).change();
+      }
+    });
+  }
+  else{
+    Swal.fire({
+        title: '¿Está seguro?',
+        text: 'Si deshabilita a la Persona, la misma no aparecerá en algunos reportes o indicadores, y no podrá responder cuestionarios',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si, deshabilitar!'
+      }).then((result) => {
+      if (result.isConfirmed) {
+        $.get('<?= base_url()?>/eliminarPersona/' + pers_id, function (data){
+          Swal.fire(
+            'Deshabilitado!',
+            'El usuario fue deshabilitado.',
+            'success'
+          );
+        })
+        $('#habilitarPersonaEditar').prop('checked',false).change();
+      }
+      else{
+        $('#habilitarPersonaEditar').prop('checked',true).change();
+      }
+    });
+  }
+}
 </script>
 
 <?= $this->endSection() ?>

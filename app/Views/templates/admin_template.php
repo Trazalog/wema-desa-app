@@ -29,6 +29,9 @@
   <link rel="stylesheet" href="<?= base_url()?>/public/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="<?= base_url()?>/public/dist/css/adminlte.min.css">
+
+  <link rel="stylesheet" href="<?= base_url()?>/public/dist/css/stylesTrazalog.css">
+
   <!-- Bootstrap Switch -->
   <script src="<?= base_url()?>/public/plugins/bootstrap-switch/js/bootstrap-switch.min.js"></script>
   <!-- Plugin checkboxs into toggles -->

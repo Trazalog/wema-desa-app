@@ -1,0 +1,84 @@
+
+/* Estilos propios de trazalog */
+
+/* Estilo de breadcrumb*/
+.breadcrumb {
+    padding: 0px;
+	background: #D4D4D4;
+	list-style: none; 
+	overflow: hidden;
+    margin-top: 5px;
+}
+.breadcrumb>li+li:before {
+	padding: 0;
+}
+.breadcrumb li { 
+	float: left;
+    border:#007bff 3px solid;
+}
+.breadcrumb li.active a {
+	background: brown;                  
+	background: #ffffff ;
+ 
+}
+.breadcrumb li.completed a {
+	background: brown;                   /* fallback color */
+	background: rgb(236, 233, 233);
+}
+.breadcrumb li.active a:after {
+	border: 0px solid #ffffff;
+}  
+.breadcrumb li.completed a:after {
+	border-left: 30px solid rgb(236, 233, 233);
+} 
+
+.breadcrumb li a {
+	color: #007bff;
+	text-decoration: none;
+    font-size: 25px; 
+	padding: 20px 0 20px 45px;
+	position: relative; 
+	display: block;
+	float: left;
+}
+.breadcrumb li a:after { 
+	content: " "; 
+	display: block; 
+	width: 0; 
+	height: 0;
+	border-top: 50px solid transparent;           
+	border-bottom: 50px solid transparent;
+	border-left: 30px solid rgb(197, 197, 197);
+	position: absolute;
+	top: 50%;
+	margin-top: -50px; 
+	left: 100%;
+	z-index: 2; 
+}	
+/* .breadcrumb li a:before { 
+	content: " "; 
+	display: block; 
+	width: 0; 
+	height: 0;
+	border-top: 50px solid transparent;           
+	border-bottom: 50px solid transparent;
+	border-left: 30px solid transparent;
+	position: absolute;
+	top: 50%;
+	margin-top: -50px; 
+	margin-left: 1px;
+	left: 100%;
+	z-index: 1; 
+} */
+
+.breadcrumb li:first-child a {
+	padding-left: 15px;
+}
+
+.breadcrumb li:nth-child(2) a {
+	padding-right: 15px;
+}
+.breadcrumb li a:hover { background: #ffffff  ; }
+.breadcrumb li a:hover:after { border-left-color: #ffffff   !important; }
+
+/*Fin Estilo de breadcrumb*/
