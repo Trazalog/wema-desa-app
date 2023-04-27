@@ -69,7 +69,8 @@ class Persona extends BaseController
             'educ_id' =>  $request->getPost('escolaridad'),
             'ubic_id' =>  $request->getPost('nacionalidad'),
             'clie_id' =>  $request->getPost('clie_id'),
-            'imagen' => $request->getFile('imagen'), 
+            'imagen' => !empty($fotoPerfil) ? base64_encode(file_get_contents($fotoPerfil->path)) : '',
+            'nom_imagen' => !empty($fotoPerfil) ? $fotoPerfil->originalName : ''
         );
 
         $resp = $this->Personas->guardarPersona($data);
@@ -77,15 +78,15 @@ class Persona extends BaseController
         return json_encode($resp);
 
     }
-
+    /**
+        * Recibe request con datos de persona para EDITAR
+        * @param  array datos persona
+        * @return array response servicio
+	*/
     public function editarPersona(){
         $request = \Config\Services::request();
-
-        $url = REST_PERSONA."/persona";
         
-        $pdf_factura = $request->getFile('imagen');
-
-        var_dump($pdf_factura); 
+        $fotoPerfil = $request->getFile('imagen');
 
         $data['put_persona'] = array(
             'pers_id'=> $request->getPost('pers_id'),
@@ -108,19 +109,15 @@ class Persona extends BaseController
             'naci_id' =>  $request->getPost('nacionalidad'),
             'educ_id' =>  $request->getPost('escolaridad'),
             'ubic_id' =>  $request->getPost('nacionalidad'),
-            'clie_id' =>  "3",
-            'imagen' => "", 
+            'clie_id' =>  $request->getPost('clie_id'),
+            'imagen' => $fotoPerfil->isValid() ? base64_encode(file_get_contents($fotoPerfil->getTempName())) : '',
+            'nom_imagen' => $fotoPerfil->isValid() ? $fotoPerfil->getName() : ''
         );
 
-        $aux = $this->REST->callAPI("PUT",$url, $data);
-        
+        $resp = $this->Personas->editarPersona($data);
 
-        if($aux['status']){
-            return json_encode($aux);
-        } 
-       else return $aux;
-
-}
+        return $resp;
+    }
 
 public function eliminarPersona($pers_id = null){
 
