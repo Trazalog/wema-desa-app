@@ -44,9 +44,10 @@ class Persona extends BaseController
         * @return array response servicio
 	*/
     public function guardarPersona(){
-
         $request = \Config\Services::request();
-        
+
+        $fotoPerfil = $request->getFile('imagen');
+
         $data['post_persona'] = array(
             
             'apellidos' => $request->getPost('apellidos'),
@@ -69,8 +70,8 @@ class Persona extends BaseController
             'educ_id' =>  $request->getPost('escolaridad'),
             'ubic_id' =>  $request->getPost('nacionalidad'),
             'clie_id' =>  $request->getPost('clie_id'),
-            'imagen' => !empty($fotoPerfil) ? base64_encode(file_get_contents($fotoPerfil->path)) : '',
-            'nom_imagen' => !empty($fotoPerfil) ? $fotoPerfil->originalName : ''
+            'imagen' => $fotoPerfil->isValid() ? base64_encode(file_get_contents($fotoPerfil->getTempName())) : '',
+            'nom_imagen' => $fotoPerfil->isValid() ? $fotoPerfil->getName() : ''
         );
 
         $resp = $this->Personas->guardarPersona($data);
