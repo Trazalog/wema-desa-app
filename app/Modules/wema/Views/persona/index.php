@@ -704,7 +704,11 @@ function verPersona(e){
     $('#nueva_persona #nacionalidad').val(json.naci_id);
     $('#nueva_persona #paisNacimiento').val(json.pana_id);
     $('#nueva_persona #fechaNacimiento').val(json.fec_nacimiento.slice(0,10));
-
+    if(json.nom_imagen){
+      var codificacion = obtenerExtension(json.nom_imagen);
+      debugger;
+      $('#imagenUsuario').attr('src', codificacion + json.imagen);
+    }
 
     if(json.estado == 'true')
     {
