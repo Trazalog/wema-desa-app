@@ -42,6 +42,8 @@
   <link rel="stylesheet" src="<?= base_url()?>/lib/sweetalert2/dist/sweetalert2.min.css">
   <!-- Sweet Alert 2 -->
   <script src="<?= base_url()?>/lib/notificaciones.js"></script>
+  <!--scripts Generales -->
+  <script src="<?= base_url()?>/lib/scriptsGenerales.js"></script>
   <!-- Masonry Plugin -->
   <script src="<?= base_url()?>/public/plugins/masonry/masonry.pkgd.min.js"></script>
 </head>
@@ -178,7 +180,6 @@
               <i class="far fa-circle nav-icon"></i>
               <p>
                 Persona
-                <!-- <span class="right badge badge-danger">New</span> -->
               </p>
             </a>
           </li>
@@ -187,7 +188,14 @@
               <i class="far fa-circle nav-icon"></i>
               <p>
                 Cuenta
-                <!-- <span class="right badge badge-danger">New</span> -->
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="<?= site_url('cliente') ?>" class="nav-link">
+              <i class="far fa-circle nav-icon"></i>
+              <p>
+                Clientes
               </p>
             </a>
           </li>
@@ -281,8 +289,7 @@
 <script src="<?= base_url()?>/public/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
 
 <!-- lenguaje datatable NO FUNCA-->
-<!-- <script src="https://cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json"></script> -->
-
+<!-- <script src="https://cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json"></script>  -->
 
 
 </body>

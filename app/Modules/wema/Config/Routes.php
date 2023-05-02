@@ -11,9 +11,19 @@ if(!isset($routes)) {
  $routes->post('/editarPersona', '\Modules\wema\Controllers\Persona::editarPersona');
  $routes->get('/eliminarPersona/(:num)', '\Modules\wema\Controllers\Persona::eliminarPersona/$1');
  $routes->get('/habilitarPersona/(:num)', '\Modules\wema\Controllers\Persona::habilitarPersona/$1');
+ $routes->post('/getPersonas', '\Modules\wema\Controllers\Persona::getPersonas');
+
+
 
 
 /* RUTAS CUENTAS */
 $routes->get('/cuenta', '\Modules\wema\Controllers\Cuenta::index');
+$routes->post('/guardarCliente', '\Modules\wema\Controllers\Cliente::guardarCliente');
+
+
+
+/* RUTAS CLIENTE */
+$routes->get('/cliente', '\Modules\wema\Controllers\Cliente::index');
+
 
 // $routes->get('/filemanager/(:any)', 'Modules\Filemanager\Controllers\Filemanager::index');
