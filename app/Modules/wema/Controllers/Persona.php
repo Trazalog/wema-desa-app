@@ -35,6 +35,7 @@ class Persona extends BaseController
         /* LISTADO NIVELES EDUCATIVOS */
         $data['listadoNivelEducativo'] = $this->Generales->getTabla("niveles_educativos");
 
+
         return view('Modules\wema\Views\persona\index',$data);
     }
 
@@ -70,8 +71,8 @@ class Persona extends BaseController
             'educ_id' =>  $request->getPost('escolaridad'),
             'ubic_id' =>  $request->getPost('nacionalidad'),
             'clie_id' =>  $request->getPost('clie_id'),
-            'imagen' => $fotoPerfil->isValid() ? base64_encode(file_get_contents($fotoPerfil->getTempName())) : '',
-            'nom_imagen' => $fotoPerfil->isValid() ? $fotoPerfil->getName() : ''
+            'imagen' => !empty($_FILES['imagen']['name'])  ? base64_encode(file_get_contents($fotoPerfil->getTempName())) : '',
+            'nom_imagen' => !empty($_FILES['imagen']['name'])  ? $fotoPerfil->getName() : ''
         );
 
         $resp = $this->Personas->guardarPersona($data);
@@ -87,7 +88,7 @@ class Persona extends BaseController
     public function editarPersona(){
         $request = \Config\Services::request();
         
-        $fotoPerfil = $request->getFile('imagen');
+        $fotoPerfil = $request->getFile('imagen'); 
 
         $data['put_persona'] = array(
             'pers_id'=> $request->getPost('pers_id'),
@@ -111,8 +112,8 @@ class Persona extends BaseController
             'educ_id' =>  $request->getPost('escolaridad'),
             'ubic_id' =>  $request->getPost('nacionalidad'),
             'clie_id' =>  $request->getPost('clie_id'),
-            'imagen' => $fotoPerfil->isValid() ? base64_encode(file_get_contents($fotoPerfil->getTempName())) : '',
-            'nom_imagen' => $fotoPerfil->isValid() ? $fotoPerfil->getName() : ''
+            'imagen' => !empty($_FILES['imagen']['name'])  ? base64_encode(file_get_contents($fotoPerfil->getTempName())) : '',
+            'nom_imagen' => !empty($_FILES['imagen']['name'])  ? $fotoPerfil->getName() : ''
         );
 
         $resp = $this->Personas->editarPersona($data);
@@ -120,6 +121,12 @@ class Persona extends BaseController
         return $resp;
     }
 
+
+    /**
+        * Recibe id de la persona a eliminar
+        * @param  $pers_id
+        * @return array response servicio
+	*/
 public function eliminarPersona($pers_id = null){
 
     $url = REST_PERSONA."/persona";
@@ -136,7 +143,11 @@ public function eliminarPersona($pers_id = null){
    else return $aux;
 }
 
-
+  /**
+        * Recibe id de la persona a habilitar
+        * @param  $pers_id
+        * @return array response servicio
+	*/
 public function habilitarPersona($pers_id = null){
     $url = REST_PERSONA."/habilitarpersona";
 
@@ -151,5 +162,18 @@ public function habilitarPersona($pers_id = null){
     } 
    else return $aux;
 }
-    
+
+
+/**
+        * 
+        * @param  array datos persona
+        * @return array response servicio
+*/
+
+public function getPersonas(){
+    $resp = $this->Personas->getPersonas();
+    return json_encode($resp);
+}
+
+
 }

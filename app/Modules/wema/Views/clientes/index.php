@@ -11,18 +11,17 @@
              <!-- <button type="button" class="completed"><i class="fa fa-folder"></i></button> -->
 			        <li class="completed" ><a><i class="fa fa-folder-open"></i></a></li>
 			        <li class="completed" ><a>CONFIANZA Y TECNOLOGIA</a></li>
-			        <li class="active"><a>BIMBO S.A de C.V.</a></li>
 		        </ul> 
         
           </div>
            <div class="col-sm-3"></div> 
           <div class="col-sm-2">
-          <button type="button" class="btn btn-outline-primary btn-block btn-sm"><i class="fa fa-info float-left"></i> Información del Cliente</button>
+          <button type="button" class="btn btn-outline-primary btn-block btn-sm"><i class="fa fa-info float-left"></i> Información de la cuenta</button>
           </div>
         </div>
         <div class="row mb-2">
           <div class="col-sm-8">
-            <h1>Personas</h1>
+            <h1>Clientes</h1>
           </div>
         </div>
       </div><!-- /.container-fluid -->
@@ -33,7 +32,7 @@
           <div class="col-12">
             <div class="card">
               <div class="card-header">
-                <h3 class="card-title">Tabla de Personas</h3>
+                <h3 class="card-title">Tabla de Clientes</h3>
               </div>
               <!-- /.card-header -->
               <div class="card-body">
@@ -42,37 +41,31 @@
                   <thead>
                   <tr>
                     <th>Acciones</th>
-                    <th>Imagen</th>
-                    <th>CURP</th>
-                    <th>Apellidos</th>
-                    <th>Nombres</th>
+                    <th>Logo</th>
+                    <th>Tipo</th>
+                    <th>RFC</th>
+                    <th>Nombre Cliente</th>
+                    <th>Tipo Persona</th>
                   </tr>
                   </thead>
                   <tbody>
-                    <?php foreach ($listadoPersonas as $key => $persona) {
-                      /* imagen de perfil */
-                      if($persona->imagen) 
-                      {$src = imagePerfil($persona->imagen, $persona->nom_imagen); $class = "img-circle elevation-2"; $style = "height: 3rem; width: 3.9rem";}
-                      else{ $src = ""; $class = ""; $style = "";  }
-                     (strcmp($persona->estado, 'true') == 0) ? $check= '' : $check = 'checked';
-                      echo '<tr data-json=\''.json_encode($persona).'\'>';
-                      echo'<td>
-                              <div class="btn-group"> 
-                                <i class="fa fa-search" style="cursor: pointer;margin: 3px;" title="Ver Detalles" onclick="verPersona(this)"></i>
+                    <td><div class="btn-group"> 
+                                <i class="fa fa-search" style="cursor: pointer;margin: 3px;" title="Ver Detalles" onclick="verCliente(this)"></i>
+                                <i class="fa fa-users" style="cursor: pointer;margin: 3px;" title="Ver personas" ></i>
                                 <label class="switch" id="miLabel">
-                                <div class="bootstrap-switch-container float-right" style="width: 15px; margin-left: 24px;" >
-                                  <input type="checkbox" id="habilitarPersona"  name="habilitarPersona" data-bootstrap-switch '.$check.'>
-                                </div>
+                                  <div class="bootstrap-switch-container float-right" style="width: 10px; margin-left: 20px;" >
+                                    <input type="checkbox" id="habilitarPersona"  name="habilitarPersona" data-bootstrap-switch>
+                                  </div>
                                 </label>
                               </div>
-                            </td>
-                            <td style="text-align: center"><img src="'. $src .'" class="'.$class.'" style="'.$style.'"/></td>
-                            <td>'.$persona->curp.'</td>
-                            <td>'.$persona->apellidos.'</td>
-                            <td>'.$persona->nombres.'</td>
-                    </tr>
-                    ';
-                    }?>
+                      </td>
+                  <td>
+                    <img src="<?= base_url()?>/public/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image" style="height: auto; width: 2.1rem;">
+                    </td>
+                    <td>Alianza</td>
+                    <td> 45231254565615</td>
+                    <td>Confianza y Tecnologia</td>
+                    <td>Moral</td>
                   </tbody>
                 </table>
               </div>
@@ -90,28 +83,33 @@
 
 
     <!-- MODAL NUEVA PERSONA -->
-    <div class="modal fade right" id="nueva_persona" aria-modal="true" role="dialog">
+    <div class="modal fade right" id="nuevo_cliente" aria-modal="true" role="dialog">
         <div class="modal-dialog modal-xl">
           <div class="modal-content">
             <div class="modal-header">
-                <div class="col-3">
-                  <h5 class="modal-title" id="mdl-title">Nueva Persona</h5>
+                <div class="col-2">
+                  <h5 class="modal-title" id="mdl-title">Nuevo Cliente</h5>
                 </div>
-                <label class="switch">
-                <div id="btn-habilitarPersona" hidden>
-                    
-                    <input type="checkbox" name="habilitarPersonaEditar" id="habilitarPersonaEditar" data-bootstrap-switch-editar checked onclick="habilitarPersonaEditar()">
-                    
+                <label class="switch" >
+                <div id="btn-habilitarCliente" hidden>
+                    <input type="checkbox" name="habilitarPersonaEditar" id="habilitarPersonaEditar" data-bootstrap-switch-editar checked onclick="habilitarClienteEditar()">   
                 </div>
                 </label>
-                <div class="col-3" >
-                    <button type="button" id="btn-editar" class="btn btn-outline-primary btn-block btn-sm" onclick="habilitaEditarPersona()" hidden><i class="fa fa-edit"></i> Editar</button>
+                <div class="col-2" >
+                    <button type="button" id="btn-editar" class="btn btn-outline-primary btn-block btn-sm" onclick="habilitaEditarCliente()" hidden><i class="fa fa-edit"></i> Editar </button>
                 </div>
-                <div class="col-3" >
-                    <button type="button" id="btn-asociarPosicion" class="btn btn-outline-primary btn-block btn-sm" hidden><i class="fas fa-inbox" ></i> Asociar posición</button>
+                <div class="col-2" >
+                    <button type="button" id="btn-personas" class="btn btn-outline-primary btn-block btn-sm" hidden><i class="fas fa-users"></i> Personas </button>
                 </div>
-                <div class="col-2">
-                <button type="button" class="close" onclick="limpiaForm('#nueva_persona')" data-dismiss="modal" aria-label="Close">
+                <div class="col-2" >
+                    <button type="button" id="btn-organigrama" class="btn btn-outline-primary btn-block btn-sm" hidden><i class="fas fa-sitemap" ></i> Organigrama </button>
+                </div>
+                
+                <div class="col-2" >
+                    <button type="button" id="btn-cuestionario" class="btn btn-outline-primary btn-block btn-sm" hidden><i class="fas fa-clipboard" ></i> Cuestionarios </button>
+                </div>
+                <div class="col-1">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="limpiaForm('#nuevo_cliente')">
                   <span aria-hidden="true">×</span>
                 </button>
                 </div>
@@ -119,7 +117,7 @@
             </div>
 
             <div class="modal-body">
-            <form id="frm-nuevaPersona">
+            <form id="frm-nuevoCliente">
               <input id="pers_id" name="pers_id" type="text" disabled hidden>
               <input id="clie_id" name="clie_id" type="text" hidden value="3">
                         <div class="row" style="margin-top:-7px">
@@ -133,43 +131,129 @@
                                   <div class="row align-items-center mt-3">
                                     <div class="col-md-4 ">
                                       <div class="form-group">
-                                        <p id="persona_id" style="margin-top: -19px;margin-bottom: -7px; font-style: italic;" hidden></p>
-                                        <label>Apellidos <strong class="text-danger">*</strong>: </label>
+                                        <p id="cliente_id" style="margin-top: -19px;margin-bottom: -7px; font-style: italic;" hidden></p>
+                                        <label>Nombre Comercial <strong class="text-danger">*</strong>: </label>
                                         <div class="input-group">
                                           <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-user"></i></span>
                                           </div>
-                                          <input type="text" class="form-control" id="apellidos" name="apellidos">
+                                          <input type="text" class="form-control" id="nombreComercial" name="nombreComercial">
                                         </div>
                                       </div>
                                     </div>
                                     <div class="col-md-4">
-                                      <div class="form-group">
-                                        <label>Nombres <strong class="text-danger">*</strong>: </label>
-                                        <div class="input-group">
-                                          <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                        <div class="form-group">
+                                          <label>Tipo Cliente <strong class="text-danger">*</strong>: </label>
+                                          <div class="input-group">
+                                            <div class="input-group-prepend">
+                                              <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                            </div>
+                                            <select name="tipoCliente" id="tipoCliente" class="form-control">
+                                              <option value="" selected disabled> - Seleccionar - </option>
+                                              <?php 
+                                                foreach ($tipoCliente as $key => $cli) {
+                                                  echo "<option value='$cli->tabl_id'>$cli->valor</option>";
+                                                }
+                                              ?>
+                                            </select>
                                           </div>
-                                          <input type="text" class="form-control" id="nombres" name="nombres">
                                         </div>
-                                      </div>
                                     </div>
                                     <div class="col-md-4 centrar">
                                       <div class="form-group">
                                         <!-- <label>Imagen </label> -->
                                         <div class="" style="position:initial;">
                                           <!-- <i class="fas fa-user" style="right:250px;"></i> -->
-                                          <img id="imagenUsuario" class="profile-user-img img-fluid img-circle" style="height: 100px; width: 100px"  >
+                                          <img id="logoCliente" class="profile-user-img img-fluid img-circle" src="<?=base_url()?>/public/dist/img/user2-160x160.jpg"/>
                                           <button class="btn btn-sm" style="/*margin-top:-20px;margin-right:150px*/">
-                                            <a id="verImagen" target="_blank" class="fas fa-eye"></a>
+                                            <i href="<?base_url()?>/public/dist/img/user2-160x160.jpg" target="_blank" class="fas fa-eye"></i>
                                           </button>
-                                          <button class="btn btn-sm agregaImagen" style="/*margin-top:-5px;margin-right:150px*/">
+                                          <button class="btn btn-sm agregaLogo" style="/*margin-top:-5px;margin-right:150px*/">
                                             <i class="fas fa-upload"></i>
                                           </button>
                                         </div>
                                       </div>
                                     </div>
                                     <div class="col-md-4">
+                                      <div class="form-group">
+                                        <label>RFC <strong class="text-danger">*</strong>: </label>
+                                        <div class="input-group">
+                                          <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-id-card"></i></span>
+                                          </div>
+                                          <input type="text" class="form-control" id="rfc" name="rfc">
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                          <label>Nacionalidad <strong class="text-danger">*</strong>: </label>
+                                          <div class="input-group">
+                                            <div class="input-group-prepend">
+                                              <span class="input-group-text"><i class="fas fa-globe-americas"></i></span>
+                                            </div>
+                                            <select name="nacionalidad" id="nacionalidad" class="form-control">
+                                              <option value="" selected disabled> - Seleccionar - </option>
+                                              <?php 
+                                              foreach ($listadoPaises as $key => $pa) {
+                                                echo "<option value='$pa->tabl_id'>$pa->valor</option>";
+                                              }
+                                            ?>
+                                            </select>
+                                          </div>
+                                        </div>
+                                    </div>
+                                    <!-- <div class="col-md-4">
+                                    </div> -->
+                                    
+                                    <div class="col-md-4">
+                                      <div class="form-group">
+                                        <label>Tipo de Persona <strong class="text-danger">*</strong>: </label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                              <span class="input-group-text"><i class="fas fa-genderless"></i></span>
+                                            </div>
+                                            <select name="tipoPersona" id="tipoPersona" class="form-control">
+                                              <option value="" selected disabled> - Seleccionar - </option>
+                                              <?php 
+                                              foreach ($tipoPersona as $key => $pers) {
+                                                echo "<option value='$pers->tabl_id'>$pers->valor</option>";
+                                              }
+                                            ?>
+                                            </select>
+                                          </div>
+                                      </div>
+                                    </div>
+
+                                    <!-- inputs persona moral -->
+                                    <div class="col-md-8" id="col_razon" hidden>
+                                      <div class="form-group">
+                                        <label id="razonSocialLabel">Razón Social <strong class="text-danger">*</strong>: </label>
+                                        <div class="input-group">
+                                          <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-wallet"></i></span>
+                                          </div>
+                                          <input type="text" name="razonSocial" id="razonSocial" class="form-control"> 
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div class="col-md-4" id="col_representante" hidden>
+                                      <div class="form-group">
+                                        <label>Representante Legal <strong class="text-danger">*</strong>: </label>
+                                        <div class="input-group">
+                                          <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-balance-scale"></i></span>
+                                          </div>
+                                          <input type="text" name="representanteLegal" id="representanteLegal" class="form-control">  
+                                       
+                                        </div>
+                                      </div>
+                                    </div>
+
+
+                                    <!-- inputs persona fisica -->
+                                  
+                                    <div class="col-md-4" id="col_curp" hidden>
                                       <div class="form-group">
                                         <label>CURP <strong class="text-danger">*</strong>: </label>
                                         <div class="input-group">
@@ -180,7 +264,32 @@
                                         </div>
                                       </div>
                                     </div>
-                                    <div class="col-md-4">
+
+                                    <div class="col-md-4" id="col_nombres" hidden>
+                                      <div class="form-group">
+                                        <label>Nombres <strong class="text-danger">*</strong>: </label>
+                                        <div class="input-group">
+                                          <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                          </div>
+                                          <input type="text" class="form-control" id="nombres" name="nombres">
+                                        </div>
+                                      </div>
+                                    </div>
+
+                                    <div class="col-md-4" id="col_apellidos"  hidden>
+                                      <div class="form-group">
+                                        <label>Apellidos <strong class="text-danger">*</strong>: </label>
+                                        <div class="input-group">
+                                          <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                          </div>
+                                          <input type="text" class="form-control" id="apellidos" name="apellidos">
+                                        </div>
+                                      </div>
+                                    </div>
+
+                                    <div class="col-md-4" id="col_genero"  hidden>
                                         <div class="form-group">
                                           <label>Género <strong class="text-danger">*</strong>: </label>
                                           <div class="input-group">
@@ -198,10 +307,8 @@
                                           </div>
                                         </div>
                                     </div>
-                                    <!-- <div class="col-md-4">
-                                    </div> -->
-                                    
-                                    <div class="col-md-4">
+
+                                    <div class="col-md-4" id="col_fechaNacimiento"  hidden>
                                       <div class="form-group">
                                         <label>Fecha de Nacimiento <strong class="text-danger">*</strong>: </label>
                                         <div class="input-group">
@@ -213,7 +320,7 @@
                                       </div>
                                     </div>
 
-                                    <div class="col-md-4">
+                                    <div class="col-md-4" id="col_paisNacimiento"  hidden>
                                       <div class="form-group">
                                         <label>País de nacimiento <strong class="text-danger">*</strong>: </label>
                                         <div class="input-group">
@@ -231,63 +338,8 @@
                                         </div>
                                       </div>
                                     </div>
-                                    <div class="col-md-4">
-                                      <div class="form-group">
-                                        <label>Estado Civil <strong class="text-danger">*</strong>: </label>
-                                        <div class="input-group">
-                                          <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="fas fa-ring"></i></span>
-                                          </div>
-                                          <select name="estadoCivil" id="estadoCivil" class="form-control">
-                                            <option value="" selected disabled> - Seleccionar - </option>
-                                            <?php 
-                                              foreach ($listadoEstadoCivil as $key => $civil) {
-                                                echo "<option value='$civil->tabl_id'>$civil->valor</option>";
-                                              }
-                                            ?>
-                                          </select>
-                                        </div>
-                                      </div>
-                                    </div>
 
-                                    <div class="col-md-4">
-                                      <div class="form-group">
-                                        <label>Nacionalidad<strong class="text-danger">*</strong>: </label>
-                                        <div class="input-group">
-                                          <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="fas fa-globe-americas"></i></span>
-                                          </div>
-                                          <select name="nacionalidad" id="nacionalidad" class="form-control">
-                                            <option value="" selected disabled> - Seleccionar - </option>
-                                            <?php 
-                                              foreach ($listadoPaises as $key => $pa) {
-                                                echo "<option value='$pa->tabl_id'>$pa->valor</option>";
-                                              }
-                                            ?>
-                                          </select>
-                                        </div>
-                                      </div>
-                                    </div>
-
-                                    <div class="col-md-4">
-                                      <div class="form-group">
-                                        <label>Escolaridad<strong class="text-danger">*</strong>: </label>
-                                        <div class="input-group">
-                                          <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="fas fa-graduation-cap"></i></span>
-                                          </div>
-                                          <select name="escolaridad" id="escolaridad" class="form-control">
-                                            <option value="" selected disabled> - Seleccionar - </option>
-                                            <?php 
-                                              foreach ($listadoNivelEducativo as $key => $esco) {
-                                                echo "<option value='$esco->tabl_id'>$esco->valor</option>";
-                                              }
-                                            ?>
-                                          </select>
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-4" id="col_ocupacion" hidden>
                                       <div class="form-group">
                                         <label>Ocupacion<strong class="text-danger">*</strong>: </label>
                                         <div class="input-group">
@@ -298,7 +350,7 @@
                                         </div>
                                       </div>
                                     </div>
-                                  </div>
+                                  
 
                                 </div><!-- fin content-->
                               </div><!-- fin car-body-->
@@ -396,8 +448,8 @@
             </div><!-- fin modal-body -->
             <div class="modal-footer ">
               <div class="col-mt-1 col-12 justify-content-center" style="margin-top:-5px">
-                <button type="button" class="btn btn-secondary float-right" data-dismiss="modal" onclick="limpiaForm('#nueva_persona')" >Cancelar</button>
-                <button type="button" class="btn btn-info float-right" id='btn-accion' style="margin-left: 5px;" onclick="guardarPersona()">Crear</button>
+                <button type="button" class="btn btn-secondary float-right" data-dismiss="modal" onclick="limpiaForm('#nuevo_cliente')" >Cancelar</button>
+                <button type="button" class="btn btn-info float-right" id='btn-accion' style="margin-left: 5px;" onclick="guardarCliente()">Crear</button>
               </div>
             </div>
           </div>
@@ -405,10 +457,10 @@
         </div>
         <!-- /.modal-dialog -->
       </div>
-
+  </div>
 
       <!-- Modal Agregar imagen -->
-<div class="modal fade" id="modalAgregarImagen">
+<div class="modal fade" id="modalAgregarLogo">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -418,14 +470,14 @@
                 </button>
             </div>
 
-            <form id="formAgregarImagen" enctype="multipart/form-data">
+            <form id="formAgregarLogo" enctype="multipart/form-data">
                 <div class="modal-body">
-                    <input type="hidden" id="idAgregaImagen" name="idAgregaImagen">
-                    <input id="inputImagen" name="inputImagen" type="file" class="form-control input-md">
+                    <input type="hidden" id="idAgregaLogo" name="idAgregaLogo">
+                    <input id="inputLogo" name="inputImagen" type="file" class="form-control input-md" onclick="cargaVistaPrevia(this)">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="cargaVistaPrevia()">Agregar</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Agregar</button>
                 </div>
             </form>
         </div>
@@ -433,6 +485,7 @@
 </div>
 
 <script>
+
 /* definicion de datatablet */
   $(function () {
     $("#tabla_personas").DataTable({
@@ -472,7 +525,7 @@
                       className: 'btn btn-dark btn-sm'
                     },  */
                     {
-                      text: '<a class="text-light" data-toggle="modal" data-target="#nueva_persona"> Agregar </a>',
+                      text: '<a class="text-light" data-toggle="modal" data-target="#nuevo_cliente"> Agregar </a>',
                       style: 'margin-left:10px',
                       className: 'btn btn-info btn-sm agregar',
                       /* action: function ( e, dt, node, config ) {
@@ -480,50 +533,100 @@
                       } */
                     }
                   ],
-    })/* .buttons().container().appendTo('#tabla_personas .col-md-6:eq(0)'); */
+    })
   });
 
- /* Abre modal nueva persona y habilita/deshabilita botones*/
-  $("#nueva_persona").on("hide.bs.modal", function() {
-    $('#btn-accion').attr('onclick', 'guardarPersona()');
+ /* Abre modal nuevo cliente y habilita/deshabilita botones*/
+  $("#nuevo_cliente").on("hide.bs.modal", function() {
+    $('#btn-accion').attr('onclick', 'guardarCliente()');
     $('#btn-accion').html('Crear');
-    $('#mdl-title').html('Nueva Persona');
-    $('#frm-nuevaPersona').find('.form-control').prop('disabled', false);
+    $('#mdl-title').html('Nuevo Cliente');
+    $('#frm-nuevoCliente').find('.form-control').prop('disabled', false);
     $('#btn-editar').prop('hidden', true);
-    $('#btn-asociarPosicion').prop('hidden', true);
-    $('#btn-habilitarPersona').prop('hidden', true);
+    $('#btn-personas').prop('hidden', true);
+    $('#btn-organigrama').prop('hidden', true);
+    $('#btn-cuestionario').prop('hidden', true);
+    $('#btn-habilitarCliente').prop('hidden', true);
     $('#btn-accion').show();
-    $('#persona_id').prop('hidden', true);
-    $('#frm-nuevaPersona')[0].reset();
-    $("imagenUsuario").removeAttr("src","");
-  }); 
+    $('#frm-nuevoCliente')[0].reset();
 
 
-/* Guarda modal de persona */
-function guardarPersona(){
-  var formData = new FormData($('#frm-nuevaPersona')[0]);
+  });
+  
+  /* oculta/muestra inputs de modal agregar cliente */
+  $('#tipoPersona').on("change",function(){
 
-  let imagen = document.getElementById("inputImagen").files;
-  if(imagen.lenght!= 0){
-    let imagenFile = $('#inputImagen').prop('files')[0]; 
-    formData.append("imagen", imagenFile);
+    /* botones persona fisica */
+    if($('#tipoPersona').val() == 'tipos_personasFisica'){
+      activaBotonesClientesFisicos();
+    }
+
+    /* botones persona moral */
+    if($('#tipoPersona').val() == 'tipos_personasMoral'){
+      activaBotonesClientesMoral();
+    }
+
+  });
+
+  /* oculta/muestra inputs de modal agregar cliente */
+  $('#miLabel').on("change",function(){
+    alert('holaa')
+  });
+  
+
+  /* avtiva botones para cliente fisico */
+  function activaBotonesClientesFisicos(){
+      $('#col_razon').prop('hidden', true);
+      $('#col_representante').prop('hidden', true);
+
+      $('#col_curp').prop('hidden', false);
+      $('#col_nombres').prop('hidden', false);
+      $('#col_apellidos').prop('hidden', false);
+      $('#col_genero').prop('hidden', false);
+      $('#col_fechaNacimiento').prop('hidden', false);
+      $('#col_paisNacimiento').prop('hidden', false);
+      $('#col_ocupacion').prop('hidden', false);
+  }
+
+  /* activa botones para cliente moral */
+  function activaBotonesClientesMoral(){
+      $('#col_razon').prop('hidden', false);
+      $('#col_representante').prop('hidden', false);
+
+      $('#col_curp').prop('hidden', true);
+      $('#col_nombres').prop('hidden', true);
+      $('#col_apellidos').prop('hidden', true);
+      $('#col_genero').prop('hidden', true);
+      $('#col_fechaNacimiento').prop('hidden', true);
+      $('#col_paisNacimiento').prop('hidden', true);
+      $('#col_ocupacion').prop('hidden', true);
+  }
+
+/* Guarda modal de Clientes */
+function guardarCliente(){
+  var formData = new FormData($('#frm-nuevoCliente')[0]);
+
+  let logo = document.getElementById("inputLogo").files;
+  if(logo.lenght!= 0){
+    //let imagen = $('#inputImagen').prop('files')[0]; 
+    formData.append("logo", logo);
   }
 
   //validacion datos del formulario
   if(!validarForm()) return;
-debugger;
+
   $.ajax({
     type:'POST',
     dataType: 'JSON',
     processData: false,
     contentType: false,
     data:formData,
-    url: '<?= base_url()?>/guardarPersona',
+    url: '<?= base_url()?>/guardarCliente',
     success: function(resp) {
       if(resp.status){
         notificar(notiSuccess);
-        $('#nueva_persona').modal('hide');
-        $('#frm-nuevaPersona')[0].reset();
+        $('#nuevo_cliente').modal('hide');
+        $('#frm-nuevoCliente')[0].reset();
         limpiaForm('#nueva_persona');
       }else{
         notificar(notiError);
@@ -541,61 +644,31 @@ function validarForm(){
   ban=1;
   if(ban){
     /* Datos Generales */
-      if($('#apellidos').val() == ''){
-         $('#apellidos').addClass('is-invalid');
+
+      if($('#nombreComercial').val() == ''){
+         $('#nombreComercial').addClass('is-invalid');
          ban=0;
       }else{
-         $('#apellidos').removeClass('is-invalid');
-         $('#apellidos').addClass('is-valid');
+         $('#nombreComercial').removeClass('is-invalid');
+         $('#nombreComercial').addClass('is-valid');
       }
-    
-      if($('#nombres').val() == ''){
-         $('#nombres').addClass('is-invalid');
+
+      if($('#tipoCliente').val() == null){
+         $('#tipoCliente').addClass('is-invalid');
          ban=0;
       }else{
-         $('#nombres').removeClass('is-invalid');
-         $('#nombres').addClass('is-valid');
+         $('#tipoCliente').removeClass('is-invalid');
+         $('#tipoCliente').addClass('is-valid');
       }
-    
-       if($('#curp').val() == ''){
-         $('#curp').addClass('is-invalid');
+
+      if($('#rfc').val() == ''){
+         $('#rfc').addClass('is-invalid');
          ban=0;
       }else{
-         $('#curp').removeClass('is-invalid');
-         $('#curp').addClass('is-valid');  
-      } 
-    
-       if($('#genero').val() == null){
-         $('#genero').addClass('is-invalid');
-         ban=0;
-      }else{
-         $('#genero').removeClass('is-invalid');
-         $('#genero').addClass('is-valid');
-      } 
-    
-      if($('#fechaNacimiento').val() == ''){
-         $('#fechaNacimiento').addClass('is-invalid');
-         ban=0;
-      }else{
-         $('#fechaNacimiento').removeClass('is-invalid');
-         $('#fechaNacimiento').addClass('is-valid');
+         $('#rfc').removeClass('is-invalid');
+         $('#rfc').addClass('is-valid');
       }
-    
-      if($('#paisNacimiento').val() == null){
-         $('#paisNacimiento').addClass('is-invalid');
-         ban=0;
-      }else{
-         $('#paisNacimiento').removeClass('is-invalid');
-         $('#paisNacimiento').addClass('is-valid');
-      }
-    
-      if($('#estadoCivil').val() == null){
-         $('#estadoCivil').addClass('is-invalid');
-         ban=0;
-      }else{
-         $('#estadoCivil').removeClass('is-invalid');
-         $('#estadoCivil').addClass('is-valid');
-      }
+
       if($('#nacionalidad').val() == null){
          $('#nacionalidad').addClass('is-invalid');
          ban=0;
@@ -603,22 +676,96 @@ function validarForm(){
          $('#nacionalidad').removeClass('is-invalid');
          $('#nacionalidad').addClass('is-valid');
       }
-      if($('#escolaridad').val() == null){
-         $('#escolaridad').addClass('is-invalid');
+
+      if($('#tipoPersona').val() == null){
+         $('#tipoPersona').addClass('is-invalid');
          ban=0;
       }else{
-         $('#escolaridad').removeClass('is-invalid');
-         $('#escolaridad').addClass('is-valid');
+         $('#tipoPersona').removeClass('is-invalid');
+         $('#tipoPersona').addClass('is-valid');
       }
 
-      if($('#ocupacion').val() == ''){
-         $('#ocupacion').addClass('is-invalid');
-         ban=0;
-      }else{
-         $('#ocupacion').removeClass('is-invalid');
-         $('#ocupacion').addClass('is-valid');
+      /* validacion inputs persona moral */
+      if($('#tipoPersona').val() == 'tipos_personasMoral'){
+
+        if($('#razonSocial').val() == ''){
+          $('#razonSocial').addClass('is-invalid');
+          ban=0;
+        }else{
+          $('#razonSocial').removeClass('is-invalid');
+          $('#razonSocial').addClass('is-valid');
+        }
+
+        if($('#representanteLegal').val() == ''){
+          $('#representanteLegal').addClass('is-invalid');
+          ban=0;
+        }else{
+          $('#representanteLegal').removeClass('is-invalid');
+          $('#representanteLegal').addClass('is-valid');
+        }
+
       }
 
+      /* validacion inputs persona fisica */
+      if($('#tipoPersona').val() == 'tipos_personasFisica'){
+
+        if($('#curp').val() == ''){
+           $('#curp').addClass('is-invalid');
+           ban=0;
+        }else{
+           $('#curp').removeClass('is-invalid');
+           $('#curp').addClass('is-valid');  
+        } 
+
+        if($('#nombres').val() == ''){
+           $('#nombres').addClass('is-invalid');
+           ban=0;
+        }else{
+           $('#nombres').removeClass('is-invalid');
+           $('#nombres').addClass('is-valid');
+        }
+
+        if($('#apellidos').val() == ''){
+           $('#apellidos').addClass('is-invalid');
+           ban=0;
+        }else{
+           $('#apellidos').removeClass('is-invalid');
+           $('#apellidos').addClass('is-valid');
+        }
+
+        if($('#genero').val() == null){
+           $('#genero').addClass('is-invalid');
+           ban=0;
+        }else{
+           $('#genero').removeClass('is-invalid');
+           $('#genero').addClass('is-valid');
+        } 
+
+        if($('#fechaNacimiento').val() == ''){
+           $('#fechaNacimiento').addClass('is-invalid');
+           ban=0;
+        }else{
+           $('#fechaNacimiento').removeClass('is-invalid');
+           $('#fechaNacimiento').addClass('is-valid');
+        }
+
+        if($('#paisNacimiento').val() == null){
+           $('#paisNacimiento').addClass('is-invalid');
+           ban=0;
+        }else{
+           $('#paisNacimiento').removeClass('is-invalid');
+           $('#paisNacimiento').addClass('is-valid');
+        }
+
+        if($('#ocupacion').val() == ''){
+           $('#ocupacion').addClass('is-invalid');
+           ban=0;
+        }else{
+           $('#ocupacion').removeClass('is-invalid');
+           $('#ocupacion').addClass('is-valid');
+        }
+
+      }
 
       /* Datos de Contacto */
       if($('#telefono').val() == ''){
@@ -681,56 +828,51 @@ function validarForm(){
 function limpiaForm(formulario){
   $(formulario).find(".is-valid").removeClass().addClass('form-control');
   $(formulario).find(".is-invalid").removeClass().addClass('form-control');
-  $("imagenUsuario").removeAttr("src","");
+
+  /* oculto todos los botones */
+      $('#col_razon').prop('hidden', true);
+      $('#col_representante').prop('hidden', true);
+      $('#col_curp').prop('hidden', true);
+      $('#col_nombres').prop('hidden', true);
+      $('#col_apellidos').prop('hidden', true);
+      $('#col_genero').prop('hidden', true);
+      $('#col_fechaNacimiento').prop('hidden', true);
+      $('#col_paisNacimiento').prop('hidden', true);
+      $('#col_ocupacion').prop('hidden', true);
 }
 
 /* Permite ver los datos de cada persona */
-function verPersona(e){
-    $('#btn-accion').hide();
-    $('#mdl-title').html('Persona');
-    $('#frm-nuevaPersona').find('.form-control').prop('disabled', true);
-    $('#btn-editar').prop('hidden', false);
-    $('#btn-asociarPosicion').prop('hidden', false);
-    $('#nueva_persona').modal('show');
-    $('#btn-habilitarPersona').prop('hidden', true);
-    $('#persona_id').prop('hidden', false);
+function verCliente(e){
 
-    var tr = $(e).closest('tr');
+   /*  var tr = $(e).closest('tr');
+    var json = $(tr).data('json'); */
+
+
+    $('#btn-accion').hide();
+    $('#mdl-title').html('Cliente');
+    $('#frm-nuevoCliente').find('.form-control').prop('disabled', true);
+    $('#btn-editar').prop('hidden', false);
+    $('#btn-personas').prop('hidden', false);
+    $('#btn-organigrama').prop('hidden', false);
+    $('#btn-cuestionario').prop('hidden', false); 
+
+    var tipe_id='tipos_personasFisica';
+
+    if(tipe_id == 'tipos_personasMoral'){
+      activaBotonesClientesMoral();
+    }
+
+    if(tipe_id == 'tipos_personasFisica'){
+     activaBotonesClientesFisicos();
+    }
+
+    $('#nuevo_cliente').modal('show');
+    $('#btn-habilitarPersona').prop('hidden', true); 
+
+  /*   var tr = $(e).closest('tr');
     var json = $(tr).data('json');
     $('#nueva_persona #pers_id').val(json.pers_id);
-    $('#nueva_persona #apellidos').val(json.apellidos);
-    $('#nueva_persona #nombres').val(json.nombres);
-    $('#nueva_persona #curp').val(json.curp);
-    $('#nueva_persona #pers_id').val(json.pers_id);
-    $('#nueva_persona #genero').val(json.gene_id);
-    $('#nueva_persona #telefono').val(json.telefono);
-    $('#nueva_persona #correo').val(json.email);
-    $('#nueva_persona #numeroExterior').val(json.num_exterior);
-    $('#nueva_persona #numeroInterior').val(json.num_interior);
-    $('#nueva_persona #ocupacion').val(json.ocupacion);
-    $('#nueva_persona #calle').val(json.calle);
-    $('#nueva_persona #CodigoColonia').val(json.cod_postal);
-    $('#nueva_persona #escolaridad').val(json.educ_id);
-    $('#nueva_persona #estadoCivil').val(json.esci_id);
-    $('#nueva_persona #nacionalidad').val(json.naci_id);
-    $('#nueva_persona #paisNacimiento').val(json.pana_id);
-    $('#nueva_persona #fechaNacimiento').val(json.fec_nacimiento.slice(0,10));
-    $('#nueva_persona #persona_id').text( "(id: " + json.pers_id + ")");
-    if(json.nom_imagen){
-      var codificacion = obtenerExtension(json.nom_imagen);
 
-      /* decodificacion imagen base64 */
-      var decodedData = window.atob(json.imagen);
-
-      $('#verImagen').attr('href', codificacion + decodedData);
-
-      $('#imagenUsuario').attr('src', codificacion + decodedData);
-    }
-    else{
-      $('#verImagen').attr('href', '');
-
-      $('#imagenUsuario').attr('src', '');
-    }
 
     if(json.estado == 'true')
     {
@@ -738,38 +880,44 @@ function verPersona(e){
     }
     else{
      $('#habilitarPersonaEditar').prop('checked',true).change();
-    }
+    } */
     
 }
 
 /*boton que habilita editar los datos de una persona en el modal */
-function habilitaEditarPersona(){
-  $('#btn-habilitarPersona').prop('hidden', false);
+function habilitaEditarCliente(){
+
+  $('#btn-editar').prop('hidden', true);
+  $('#btn-personas').prop('hidden', true);
+  $('#btn-organigrama').prop('hidden', true);
+  $('#btn-cuestionario').prop('hidden', true); 
+
+  $('#btn-habilitarCliente').prop('hidden', false);
   $('#btn-accion').show();
   $('#btn-accion').html('Modificar');
-  $('#btn-accion').attr('onclick', 'editarPersona()');
-  $('#frm-nuevaPersona').find('.form-control').prop('disabled', false);
+  $('#btn-accion').attr('onclick', 'editarCliente()');
+  $('#frm-nuevoCliente').find('.form-control').prop('disabled', false);
   $('#btn-editar').prop('hidden', true);
-  $('#btn-asociarPosicion').prop('hidden', false);
-  $('#btn-asociarPosicion').prop('hidden', true);
 
 }
 
 /* Guarda los datos editados de la persona */
-function editarPersona(){
+function editarCliente(){
 
   var formData = new FormData($('#frm-nuevaPersona')[0]);
+
   let imagen = document.getElementById("inputImagen").files;
-  if($('#inputImagen')[0].files.length !== 0 ){
-    let imagenFile = $('#inputImagen').prop('files')[0]; 
-    formData.append("imagen", imagenFile);
-    debugger;
+  if(imagen.lenght!= 0){
+    //img = $('#inputImagen').prop('files')[0];
+    formData.append("imagen", imagen);
   }
 
+ // debugger;
   formData.append("pers_id",$('#nueva_persona #pers_id').val());
   
   //validacion datos del formulario
   if(!validarForm()) return;
+
   $.ajax({
     type:'POST',
     dataType: 'JSON',
@@ -778,53 +926,38 @@ function editarPersona(){
     url: '<?= base_url()?>/editarPersona',
     data:formData,
     success: function(resp) {
-      if(resp.status){
-        notificar(notiSuccess);
-        $('#nueva_persona').modal('hide');
-        $('#frm-nuevaPersona')[0].reset();
-        limpiaForm('#nueva_persona');
-      }else{
-        notificar(notiError);
-      }
+      notificar(notiSuccess);
+      $('#nueva_persona').modal('hide');
+      $('#frm-nuevaPersona')[0].reset();
+      limpiaForm('#nueva_persona');
     },
     error: () => {
       notificar(notiError);
     },
     complete: function() {
       notificar(notiSuccess);
-      $('#nueva_persona').modal('hide');
-      $('#frm-nuevaPersona')[0].reset();
-      limpiaForm('#nueva_persona');
-      actualizaTablaPersonas();
-      // window.location.reload();
+      window.location.reload();
     }
     });
 }
 
  /* inicializacion botones on/off */
-$("input[data-bootstrap-switch]").bootstrapSwitch({
-  onSwitchChange:function(e, state){
-    var tr = $(e.target).closest('tr');
-    var json = $(tr).data('json');
-    console.log(json);
-    habilitarPersona(json, e.target);   
-  }
-});
-
-
+$("input[data-bootstrap-switch]").bootstrapSwitch();
 $("[name='habilitarPersonaEditar']").bootstrapSwitch();
 
 /* abrir modal agregar imagen */
-$(document).on("click", ".agregaImagen", function() {
-  $('#modalAgregarImagen').modal('show');
+$(document).on("click", ".agregaLogo", function() {
+  $('#modalAgregarLogo').modal('show');
   event.preventDefault();
-  $("#nueva_persona").css('overflow-y', 'auto');//habilita el scroll de nuevo
+  $("#nuevo_cliente").css('overflow-y', 'auto');//habilita el scroll de nuevo
 });
 
 /* permite habilitar o deshabilitar una persona */
-function habilitarPersona(json, tag){
-  event.preventDefault();  
+function habilitarPersona(e){  
+  var tr = $(e).closest('tr');
+  var json = $(tr).data('json');
   var pers_id = json.pers_id;
+  //debugger;
   check = json.estado;
   if(check == 'false'){
       Swal.fire({
@@ -846,7 +979,7 @@ function habilitarPersona(json, tag){
         })
       }
       else{
-        $(tag).closest("tr").find('input[type="checkbox"]').prop('checked',true).change();
+        $(e).closest("tr").find('input[type="checkbox"]').prop('checked',true).change();
       }
     });    
   }
@@ -870,23 +1003,23 @@ function habilitarPersona(json, tag){
         })
       }
       else{
-        $(tag).closest("tr").find('input[type="checkbox"]').prop('checked',false).change();
+        $(e).closest("tr").find('input[type="checkbox"]').prop('checked',false).change();
       }
     });
   } 
 }
-function cargaVistaPrevia(){
-  var input = $('#inputImagen').prop('files');
-  if(input && input[0]){
+function cargaVistaPrevia(input){
+  if(input.files && input.files[0]){
+      // var idImagen = $(input).attr('id');
       var reader = new FileReader();
 
       reader.addEventListener("load", function (e) {
-          $('#imagenUsuario').prop('src', e.target.result);
-          $('#imagenUsuario').hide();
-          $('#imagenUsuario').fadeIn(850);   
+          $('#logoCliente').css('background-image', 'url('+e.target.result +')');
+          $('#logoCliente').hide();
+          $('#logoCliente').fadeIn(850);   
       }, false);
 
-      reader.readAsDataURL(input[0]);
+      reader.readAsDataURL(input.files[0]);
   }
 }
  
@@ -945,72 +1078,11 @@ function habilitarPersonaEditar(){
     });
   }
 }
-
-/* actualiza tabla personas */
-function actualizaTablaPersonas(){
-  $.ajax({
-        type: 'POST',
-        cache: false,
-        dataType: "json",
-        url: "<?= base_url()?>/getPersonas",
-  success:function(data){
-
-    tabla = $('#tabla_personas').DataTable();
-    tabla.clear().draw();
-
-    $.each(data, function (i, value) {
-
-    //activar o desactivar checked
-    if(value.estado == 'true'){
-      check= '';
-    }
-    else {
-      check = 'checked';
-    }
-
-    //estilos imagen perfil
-    if(value.imagen){
-            var ext = obtenerExtension(value.nom_imagen);
-            /* decodificacion imagen base64 */
-            var decodedData = window.atob(value.imagen);
-            var src = ext + decodedData;
-            clase="img-circle elevation-2" ;
-            estilo="height: 3rem; width: 3.9rem";
-          }
-          else{
-            src= '';
-            estilo='';
-            clase='';
-          }
-
-      fila="<tr data-json= '"+ JSON.stringify(value) +"'>" +
-          '<td>'+
-            '<div class="btn-group"> '+
-            '<i class="fa fa-search" style="cursor: pointer;margin: 3px;" title="Ver Detalles" onclick="verPersona(this)"></i>'+
-             '<label class="switch" id="miLabel">'+
-             '<div class="bootstrap-switch-container float-right" style="width: 15px; margin-left: 24px;" >'+
-               '<input type="checkbox" id="habilitarPersona"  name="habilitarPersona" data-bootstrap-switch onclick="habilitarPersona(this)" '+ check +'>'+
-             '</div>'+
-             '</label>'+
-            '</div>'+
-          '</td>'+
-            
-          '<td style="text-align: center"><img src="'+ src +'" class="'+clase+'" style="'+estilo+'"/></td>'+
-
-          '<td>'+ value.curp +'</td>'+
-          '<td>'+ value.apellidos +'</td>'+
-          '<td>'+ value.nombres +'</td>'+
-          '</tr>';
-          tabla.row.add($(fila)).draw();
-    });
-        //inicio de checkbox-switch  
-        $("input[data-bootstrap-switch]").bootstrapSwitch();
-      
-  }   
-  });
-}
 </script>
 
 <?= $this->endSection() ?>
+
+
+
 
 

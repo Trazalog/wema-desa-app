@@ -49,5 +49,7 @@ class BaseController extends Controller
         // Preload any models, libraries, etc, here.
         $this->REST = new REST();
         // E.g.: $this->session = \Config\Services::session();
+
+        helper('admin_helper');
     }
 }
