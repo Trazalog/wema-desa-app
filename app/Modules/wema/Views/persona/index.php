@@ -66,7 +66,7 @@
                                 </label>
                               </div>
                             </td>
-                            <td style="text-align: center"><img src="'. $src .'" class="'.$class.'" style="'.$style.'"/></td>
+                            <td class="centrar"><img src="'. $src .'" class="'.$class.'" style="'.$style.'"/></td>
                             <td>'.$persona->curp.'</td>
                             <td>'.$persona->apellidos.'</td>
                             <td>'.$persona->nombres.'</td>
@@ -139,7 +139,7 @@
                                           <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-user"></i></span>
                                           </div>
-                                          <input type="text" class="form-control" id="apellidos" name="apellidos">
+                                          <input type="text" class="form-control requerido" id="apellidos" name="apellidos">
                                         </div>
                                       </div>
                                     </div>
@@ -150,7 +150,7 @@
                                           <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-user"></i></span>
                                           </div>
-                                          <input type="text" class="form-control" id="nombres" name="nombres">
+                                          <input type="text" class="form-control requerido" id="nombres" name="nombres">
                                         </div>
                                       </div>
                                     </div>
@@ -176,7 +176,7 @@
                                           <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-id-card"></i></span>
                                           </div>
-                                          <input type="text" class="form-control" id="curp" name="curp">
+                                          <input type="text" class="form-control requerido" id="curp" name="curp">
                                         </div>
                                       </div>
                                     </div>
@@ -187,7 +187,7 @@
                                             <div class="input-group-prepend">
                                               <span class="input-group-text"><i class="fas fa-genderless"></i></span>
                                             </div>
-                                            <select name="genero" id="genero" class="form-control">
+                                            <select name="genero" id="genero" class="form-control requerido">
                                               <option value="" selected disabled> - Seleccionar - </option>
                                               <?php 
                                                 foreach ($listadoGeneros as $key => $gen) {
@@ -208,7 +208,7 @@
                                           <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-birthday-cake"></i></span>
                                           </div>
-                                          <input type="date" class="form-control float-left" id="fechaNacimiento" name="fechaNacimiento">
+                                          <input type="date" class="form-control float-left requerido" id="fechaNacimiento" name="fechaNacimiento">
                                         </div>
                                       </div>
                                     </div>
@@ -220,7 +220,7 @@
                                           <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-globe"></i></span>
                                           </div>
-                                          <select name="paisNacimiento" id="paisNacimiento" class="form-control">
+                                          <select name="paisNacimiento" id="paisNacimiento" class="form-control requerido">
                                             <option value="" selected disabled> - Seleccionar - </option>
                                             <?php 
                                               foreach ($listadoPaises as $key => $pa) {
@@ -238,7 +238,7 @@
                                           <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-ring"></i></span>
                                           </div>
-                                          <select name="estadoCivil" id="estadoCivil" class="form-control">
+                                          <select name="estadoCivil" id="estadoCivil" class="form-control requerido">
                                             <option value="" selected disabled> - Seleccionar - </option>
                                             <?php 
                                               foreach ($listadoEstadoCivil as $key => $civil) {
@@ -257,7 +257,7 @@
                                           <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-globe-americas"></i></span>
                                           </div>
-                                          <select name="nacionalidad" id="nacionalidad" class="form-control">
+                                          <select name="nacionalidad" id="nacionalidad" class="form-control requerido">
                                             <option value="" selected disabled> - Seleccionar - </option>
                                             <?php 
                                               foreach ($listadoPaises as $key => $pa) {
@@ -276,7 +276,7 @@
                                           <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-graduation-cap"></i></span>
                                           </div>
-                                          <select name="escolaridad" id="escolaridad" class="form-control">
+                                          <select name="escolaridad" id="escolaridad" class="form-control requerido">
                                             <option value="" selected disabled> - Seleccionar - </option>
                                             <?php 
                                               foreach ($listadoNivelEducativo as $key => $esco) {
@@ -294,7 +294,7 @@
                                           <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-briefcase"></i></span>
                                           </div>
-                                          <input type="text" class="form-control" id="ocupacion" name="ocupacion">
+                                          <input type="text" class="form-control requerido" id="ocupacion" name="ocupacion">
                                         </div>
                                       </div>
                                     </div>
@@ -322,7 +322,7 @@
                                           <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-phone"></i></span>
                                           </div>
-                                          <input id="telefono" type="text" name="telefono" class="form-control">
+                                          <input id="telefono" type="text" name="telefono" class="form-control requerido">
                                         </div>
                                       </div>
                                     </div>
@@ -332,7 +332,8 @@
                                         <div class="input-group">
                                           <div class="input-group-prepend">
                                             <span class="input-group-text">@</span>
-                                          </div><input type="text" class="form-control" name="correo" id="correo" >
+                                          </div>
+                                          <input type="text" class="form-control requerido" name="correo" id="correo" >
                                         </div>
                                         </div>
                                     </div>
@@ -343,7 +344,7 @@
                                               <div class="input-group-prepend">
                                                 <span class="input-group-text"><i class="fas fa-road"></i></span>
                                               </div>
-                                              <input type="text" class="form-control" id="calle" name="calle">
+                                              <input type="text" class="form-control requerido" id="calle" name="calle">
                                             </div>
                                           </div>
                                     </div>
@@ -356,7 +357,7 @@
                                             <div class="input-group-prepend">
                                               <span class="input-group-text"><i class="fas fa-list-ol"></i></span>
                                             </div>
-                                            <input type="text" class="form-control" id="numeroExterior" name="numeroExterior">
+                                            <input type="text" class="form-control requerido" id="numeroExterior" name="numeroExterior">
                                           </div>
                                       </div>
                                     </div>
@@ -367,7 +368,7 @@
                                             <div class="input-group-prepend">
                                               <span class="input-group-text"><i class="fas fa-list-ol"></i></span>
                                             </div>
-                                            <input type="text" class="form-control" id="numeroInterior" name="numeroInterior">
+                                            <input type="text" class="form-control requerido" id="numeroInterior" name="numeroInterior">
                                           </div>
                                         </div>
                                     </div>
@@ -378,7 +379,7 @@
                                           <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-list-ol"></i></span>
                                           </div>
-                                        <input type="text" class="form-control" id="CodigoColonia" name="CodigoColonia">
+                                        <input type="text" class="form-control requerido" id="CodigoColonia" name="CodigoColonia">
                                       </div>
                                       </div>
                                     </div>
@@ -510,8 +511,7 @@ function guardarPersona(){
   }
 
   //validacion datos del formulario
-  if(!validarForm()) return;
-debugger;
+  if(!validaForm('#frm-nuevaPersona')) return;
   $.ajax({
     type:'POST',
     dataType: 'JSON',
@@ -533,155 +533,6 @@ debugger;
       notificar(notiError);
     }
   });
-}
-
-
-/* Validacion de formulario */
-function validarForm(){ 
-  ban=1;
-  if(ban){
-    /* Datos Generales */
-      if($('#apellidos').val() == ''){
-         $('#apellidos').addClass('is-invalid');
-         ban=0;
-      }else{
-         $('#apellidos').removeClass('is-invalid');
-         $('#apellidos').addClass('is-valid');
-      }
-    
-      if($('#nombres').val() == ''){
-         $('#nombres').addClass('is-invalid');
-         ban=0;
-      }else{
-         $('#nombres').removeClass('is-invalid');
-         $('#nombres').addClass('is-valid');
-      }
-    
-       if($('#curp').val() == ''){
-         $('#curp').addClass('is-invalid');
-         ban=0;
-      }else{
-         $('#curp').removeClass('is-invalid');
-         $('#curp').addClass('is-valid');  
-      } 
-    
-       if($('#genero').val() == null){
-         $('#genero').addClass('is-invalid');
-         ban=0;
-      }else{
-         $('#genero').removeClass('is-invalid');
-         $('#genero').addClass('is-valid');
-      } 
-    
-      if($('#fechaNacimiento').val() == ''){
-         $('#fechaNacimiento').addClass('is-invalid');
-         ban=0;
-      }else{
-         $('#fechaNacimiento').removeClass('is-invalid');
-         $('#fechaNacimiento').addClass('is-valid');
-      }
-    
-      if($('#paisNacimiento').val() == null){
-         $('#paisNacimiento').addClass('is-invalid');
-         ban=0;
-      }else{
-         $('#paisNacimiento').removeClass('is-invalid');
-         $('#paisNacimiento').addClass('is-valid');
-      }
-    
-      if($('#estadoCivil').val() == null){
-         $('#estadoCivil').addClass('is-invalid');
-         ban=0;
-      }else{
-         $('#estadoCivil').removeClass('is-invalid');
-         $('#estadoCivil').addClass('is-valid');
-      }
-      if($('#nacionalidad').val() == null){
-         $('#nacionalidad').addClass('is-invalid');
-         ban=0;
-      }else{
-         $('#nacionalidad').removeClass('is-invalid');
-         $('#nacionalidad').addClass('is-valid');
-      }
-      if($('#escolaridad').val() == null){
-         $('#escolaridad').addClass('is-invalid');
-         ban=0;
-      }else{
-         $('#escolaridad').removeClass('is-invalid');
-         $('#escolaridad').addClass('is-valid');
-      }
-
-      if($('#ocupacion').val() == ''){
-         $('#ocupacion').addClass('is-invalid');
-         ban=0;
-      }else{
-         $('#ocupacion').removeClass('is-invalid');
-         $('#ocupacion').addClass('is-valid');
-      }
-
-
-      /* Datos de Contacto */
-      if($('#telefono').val() == ''){
-         $('#telefono').addClass('is-invalid');
-         ban=0;
-      }else{
-         $('#telefono').removeClass('is-invalid');
-         $('#telefono').addClass('is-valid');
-      }
-
-      if($('#correo').val() == ''){
-         $('#correo').addClass('is-invalid');
-         ban=0;
-      }else{
-         $('#correo').removeClass('is-invalid');
-         $('#correo').addClass('is-valid');
-      }
-
-      if($('#calle').val() == ''){
-         $('#calle').addClass('is-invalid');
-         ban=0;
-      }else{
-         $('#calle').removeClass('is-invalid');
-         $('#calle').addClass('is-valid');
-      }
-
-      if($('#numeroExterior').val() == ''){
-         $('#numeroExterior').addClass('is-invalid');
-         ban=0;
-      }else{
-         $('#numeroExterior').removeClass('is-invalid');
-         $('#numeroExterior').addClass('is-valid');
-      }
-
-      if($('#numeroInterior').val() == ''){
-         $('#numeroInterior').addClass('is-invalid');
-         ban=0;
-      }else{
-         $('#numeroInterior').removeClass('is-invalid');
-         $('#numeroInterior').addClass('is-valid');
-      }
-
-      if($('#CodigoColonia').val() == ''){
-         $('#CodigoColonia').addClass('is-invalid');
-         ban=0;
-      }else{
-         $('#CodigoColonia').removeClass('is-invalid');
-         $('#CodigoColonia').addClass('is-valid');
-      }
-}
-
-  if(!ban){
-    notificar(notiObligatoriedad);
-  }
-  return ban; 
-  
-}
-
-/* Elimina los estilos de los input correctos-incorrectos */
-function limpiaForm(formulario){
-  $(formulario).find(".is-valid").removeClass().addClass('form-control');
-  $(formulario).find(".is-invalid").removeClass().addClass('form-control');
-  $("imagenUsuario").removeAttr("src","");
 }
 
 /* Permite ver los datos de cada persona */
@@ -763,13 +614,12 @@ function editarPersona(){
   if($('#inputImagen')[0].files.length !== 0 ){
     let imagenFile = $('#inputImagen').prop('files')[0]; 
     formData.append("imagen", imagenFile);
-    debugger;
   }
 
   formData.append("pers_id",$('#nueva_persona #pers_id').val());
   
   //validacion datos del formulario
-  if(!validarForm()) return;
+  if(!validaForm('#frm-nuevaPersona')) return;
   $.ajax({
     type:'POST',
     dataType: 'JSON',
@@ -778,6 +628,7 @@ function editarPersona(){
     url: '<?= base_url()?>/editarPersona',
     data:formData,
     success: function(resp) {
+      debugger;
       if(resp.status){
         notificar(notiSuccess);
         $('#nueva_persona').modal('hide');
@@ -788,10 +639,12 @@ function editarPersona(){
       }
     },
     error: () => {
+      debugger;
       notificar(notiError);
     },
     complete: function() {
-      notificar(notiSuccess);
+      debugger;
+      // notificar(notiSuccess);
       $('#nueva_persona').modal('hide');
       $('#frm-nuevaPersona')[0].reset();
       limpiaForm('#nueva_persona');
@@ -995,7 +848,7 @@ function actualizaTablaPersonas(){
             '</div>'+
           '</td>'+
             
-          '<td style="text-align: center"><img src="'+ src +'" class="'+clase+'" style="'+estilo+'"/></td>'+
+          '<td class="centrar"><img src="'+ src +'" class="'+clase+'" style="'+estilo+'"/></td>'+
 
           '<td>'+ value.curp +'</td>'+
           '<td>'+ value.apellidos +'</td>'+

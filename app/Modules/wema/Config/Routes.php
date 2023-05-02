@@ -12,7 +12,7 @@ if(!isset($routes)) {
  $routes->get('/eliminarPersona/(:num)', '\Modules\wema\Controllers\Persona::eliminarPersona/$1');
  $routes->get('/habilitarPersona/(:num)', '\Modules\wema\Controllers\Persona::habilitarPersona/$1');
  $routes->post('/getPersonas', '\Modules\wema\Controllers\Persona::getPersonas');
-
+ $routes->get('/persona/entrevista', '\Modules\wema\Controllers\Persona::cargarEntrevista');
 
 
 
