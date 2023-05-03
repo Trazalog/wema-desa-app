@@ -40,10 +40,12 @@
   <!-- Sweet Alert 2 -->
   <script src="<?= base_url()?>/lib/sweetalert2/dist/sweetalert2.all.min.js"></script>
   <link rel="stylesheet" src="<?= base_url()?>/lib/sweetalert2/dist/sweetalert2.min.css">
-  <!-- Sweet Alert 2 -->
+  <!-- Scripts para Notificaciones -->
   <script src="<?= base_url()?>/lib/notificaciones.js"></script>
-  <!--scripts Generales -->
+  <!--Scripts Generales -->
   <script src="<?= base_url()?>/lib/scriptsGenerales.js"></script>
+  <!--Scripts para Formularios -->
+  <script src="<?= base_url()?>/lib/forms.js"></script>
   <!-- Masonry Plugin -->
   <script src="<?= base_url()?>/public/plugins/masonry/masonry.pkgd.min.js"></script>
 </head>
@@ -196,6 +198,14 @@
               <i class="far fa-circle nav-icon"></i>
               <p>
                 Clientes
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="<?= site_url('persona/entrevista') ?>" class="nav-link">
+              <i class="far fa-circle nav-icon"></i>
+              <p>
+                Entrevista
               </p>
             </a>
           </li>

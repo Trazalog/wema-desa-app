@@ -77,7 +77,7 @@ class Persona extends BaseController
 
         $resp = $this->Personas->guardarPersona($data);
         
-        return json_encode($resp);
+        echo json_encode($resp);
 
     }
     /**
@@ -118,62 +118,63 @@ class Persona extends BaseController
 
         $resp = $this->Personas->editarPersona($data);
 
-        return $resp;
+        echo json_encode($resp);
     }
-
-
     /**
         * Recibe id de la persona a eliminar
         * @param  $pers_id
         * @return array response servicio
 	*/
-public function eliminarPersona($pers_id = null){
+    public function eliminarPersona($pers_id = null){
 
-    $url = REST_PERSONA."/persona";
+        $url = REST_PERSONA."/persona";
 
-    $data['delete_persona'] = array(
-        'pers_id' => $pers_id
-    );
-    
-    $aux = $this->REST->callAPI("DELETE",$url, $data);
+        $data['delete_persona'] = array(
+            'pers_id' => $pers_id
+        );
+        
+        $aux = $this->REST->callAPI("DELETE",$url, $data);
 
-    if($aux['status']){
-        return json_encode($aux);
-    } 
-   else return $aux;
-}
-
-  /**
+        if($aux['status']){
+            return json_encode($aux);
+        }else return $aux;
+    }
+    /**
         * Recibe id de la persona a habilitar
         * @param  $pers_id
         * @return array response servicio
-	*/
-public function habilitarPersona($pers_id = null){
-    $url = REST_PERSONA."/habilitarpersona";
+    */
+    public function habilitarPersona($pers_id = null){
+        $url = REST_PERSONA."/habilitarpersona";
 
-    $data['put_persona'] = array(
-        'pers_id' => $pers_id
-    );
-    
-    $aux = $this->REST->callAPI("PUT",$url, $data);
+        $data['put_persona'] = array(
+            'pers_id' => $pers_id
+        );
+        
+        $aux = $this->REST->callAPI("PUT",$url, $data);
 
-    if($aux['status']){
-        return json_encode($aux);
-    } 
-   else return $aux;
-}
-
-
-/**
+        if($aux['status']){
+            return json_encode($aux);
+        } 
+    else return $aux;
+    }
+    /**
         * 
         * @param  array datos persona
         * @return array response servicio
-*/
-
-public function getPersonas(){
-    $resp = $this->Personas->getPersonas();
-    return json_encode($resp);
-}
-
+    */
+    public function getPersonas(){
+        $resp = $this->Personas->getPersonas();
+        return json_encode($resp);
+    }
+    /**
+        * Carga pantalla con entrevistas para personas
+        * @param  
+        * @return view entrevistas.php
+	*/
+    public function cargarEntrevista(){
+        $data['listadoPersonas'] = $this->Personas->getPersonas();
+        return view('Modules\wema\Views\persona\entrevistas',$data);    
+    }
 
 }
