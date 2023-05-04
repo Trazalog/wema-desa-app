@@ -36,7 +36,7 @@ class BaseController extends Controller
      *
      * @var array
      */
-    protected $helpers = ['session'];
+    protected $helpers = ['session', 'admin'];
 
     /**
      * Constructor.
@@ -50,6 +50,5 @@ class BaseController extends Controller
         $this->REST = new REST();
         // E.g.: $this->session = \Config\Services::session();
 
-        helper('admin_helper');
     }
 }

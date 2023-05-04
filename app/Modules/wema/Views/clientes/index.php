@@ -37,35 +37,52 @@
               <!-- /.card-header -->
               <div class="card-body">
                 
-                <table id="tabla_personas" class="table table-bordered table-striped">
+                <table id="tabla_clientes" class="table table-bordered table-striped">
                   <thead>
                   <tr>
                     <th>Acciones</th>
                     <th>Logo</th>
                     <th>Tipo</th>
                     <th>RFC</th>
-                    <th>Nombre Cliente</th>
+                    <th>Nombre Comercial</th>
                     <th>Tipo Persona</th>
                   </tr>
                   </thead>
                   <tbody>
-                    <td><div class="btn-group"> 
-                                <i class="fa fa-search" style="cursor: pointer;margin: 3px;" title="Ver Detalles" onclick="verCliente(this)"></i>
-                                <i class="fa fa-users" style="cursor: pointer;margin: 3px;" title="Ver personas" ></i>
-                                <label class="switch" id="miLabel">
-                                  <div class="bootstrap-switch-container float-right" style="width: 10px; margin-left: 20px;" >
-                                    <input type="checkbox" id="habilitarPersona"  name="habilitarPersona" data-bootstrap-switch>
+                    <?php 
+                      foreach($listadoClientes as $key => $clientes){
+                        /* imagen de perfil */
+                        if($clientes->imagen) 
+                        {
+                          $src = imagePerfil($clientes->imagen, $clientes->nom_imagen); $class = "img-circle elevation-2"; $style = "height: 3rem; width: 3.9rem";
+                        }
+                        else{ 
+                          $src = ""; $class = ""; $style = "";  
+                        }
+
+                        (strcmp($clientes->eliminado, 'true') == 0) ? $check= '' : $check = 'checked';
+
+                        echo '<tr data-json=\''.json_encode($clientes).'\'>';
+                        echo'<td>
+                                <div class="btn-group"> 
+                                  <i class="fa fa-search" style="cursor: pointer;margin: 3px;" title="Ver Detalles" onclick="verCliente(this)"></i>
+                                  <i class="fa fa-users" style="cursor: pointer;margin: 3px;" title="Ver personas" ></i>
+                                  <label class="switch" id="miLabel">
+                                  <div class="bootstrap-switch-container float-right" style="width: 10px; margin-left: 24px;" >
+                                    <input type="checkbox" name="habilitarCliente" data-bootstrap-switch '.$check.'>
                                   </div>
-                                </label>
-                              </div>
-                      </td>
-                  <td>
-                    <img src="<?= base_url()?>/public/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image" style="height: auto; width: 2.1rem;">
-                    </td>
-                    <td>Alianza</td>
-                    <td> 45231254565615</td>
-                    <td>Confianza y Tecnologia</td>
-                    <td>Moral</td>
+                                  </label>
+                                </div>
+                              </td>
+                              <td style="text-align: center"><img src="'. $src .'" class="'.$class.'" style="'.$style.'"/></td>
+                              <td>'.$clientes->tipoCliente.'</td>
+                              <td>'.$clientes->rfc.'</td>
+                              <td>'.$clientes->nombre.'</td>
+                              <td>'.$clientes->tipoPersona.'</td>
+                      </tr>
+                      ';
+                      }
+                    ?>
                   </tbody>
                 </table>
               </div>
@@ -92,7 +109,7 @@
                 </div>
                 <label class="switch" >
                 <div id="btn-habilitarCliente" hidden>
-                    <input type="checkbox" name="habilitarPersonaEditar" id="habilitarPersonaEditar" data-bootstrap-switch-editar checked onclick="habilitarClienteEditar()">   
+                    <input type="checkbox" name="habilitarClienteEditar" data-bootstrap-switch-editar checked onclick="habilitarClienteEditar()">   
                 </div>
                 </label>
                 <div class="col-2" >
@@ -118,8 +135,7 @@
 
             <div class="modal-body">
             <form id="frm-nuevoCliente">
-              <input id="pers_id" name="pers_id" type="text" disabled hidden>
-              <input id="clie_id" name="clie_id" type="text" hidden value="3">
+              <input id="clie_id" name="clie_id" type="text" hidden>
                         <div class="row" style="margin-top:-7px">
                           <div class="col">
                             <div class="card card-info">
@@ -137,7 +153,7 @@
                                           <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-user"></i></span>
                                           </div>
-                                          <input type="text" class="form-control" id="nombreComercial" name="nombreComercial">
+                                          <input type="text" class="form-control requerido" id="nombreComercial" name="nombreComercial">
                                         </div>
                                       </div>
                                     </div>
@@ -148,7 +164,7 @@
                                             <div class="input-group-prepend">
                                               <span class="input-group-text"><i class="fas fa-user"></i></span>
                                             </div>
-                                            <select name="tipoCliente" id="tipoCliente" class="form-control">
+                                            <select name="tipoCliente" id="tipoCliente" class="form-control requerido">
                                               <option value="" selected disabled> - Seleccionar - </option>
                                               <?php 
                                                 foreach ($tipoCliente as $key => $cli) {
@@ -164,9 +180,9 @@
                                         <!-- <label>Imagen </label> -->
                                         <div class="" style="position:initial;">
                                           <!-- <i class="fas fa-user" style="right:250px;"></i> -->
-                                          <img id="logoCliente" class="profile-user-img img-fluid img-circle" src="<?=base_url()?>/public/dist/img/user2-160x160.jpg"/>
-                                          <button class="btn btn-sm" style="/*margin-top:-20px;margin-right:150px*/">
-                                            <i href="<?base_url()?>/public/dist/img/user2-160x160.jpg" target="_blank" class="fas fa-eye"></i>
+                                          <img id="logoCliente" class="profile-user-img img-fluid img-circle" style="height: 100px; width: 100px" >
+                                          <button class="btn btn-sm" >
+                                            <i id="verImagen" class="fas fa-eye"></i>
                                           </button>
                                           <button class="btn btn-sm agregaLogo" style="/*margin-top:-5px;margin-right:150px*/">
                                             <i class="fas fa-upload"></i>
@@ -181,7 +197,7 @@
                                           <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-id-card"></i></span>
                                           </div>
-                                          <input type="text" class="form-control" id="rfc" name="rfc">
+                                          <input type="text" class="form-control requerido" id="rfc" name="rfc">
                                         </div>
                                       </div>
                                     </div>
@@ -192,7 +208,7 @@
                                             <div class="input-group-prepend">
                                               <span class="input-group-text"><i class="fas fa-globe-americas"></i></span>
                                             </div>
-                                            <select name="nacionalidad" id="nacionalidad" class="form-control">
+                                            <select name="nacionalidad" id="nacionalidad" class="form-control requerido">
                                               <option value="" selected disabled> - Seleccionar - </option>
                                               <?php 
                                               foreach ($listadoPaises as $key => $pa) {
@@ -213,7 +229,7 @@
                                             <div class="input-group-prepend">
                                               <span class="input-group-text"><i class="fas fa-genderless"></i></span>
                                             </div>
-                                            <select name="tipoPersona" id="tipoPersona" class="form-control">
+                                            <select name="tipoPersona" id="tipoPersona" class="form-control requerido">
                                               <option value="" selected disabled> - Seleccionar - </option>
                                               <?php 
                                               foreach ($tipoPersona as $key => $pers) {
@@ -226,77 +242,75 @@
                                     </div>
 
                                     <!-- inputs persona moral -->
-                                    <div class="col-md-8" id="col_razon" hidden>
+                                    <div class="col-md-8 col_personaMoral" hidden>
                                       <div class="form-group">
                                         <label id="razonSocialLabel">Razón Social <strong class="text-danger">*</strong>: </label>
                                         <div class="input-group">
                                           <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-wallet"></i></span>
                                           </div>
-                                          <input type="text" name="razonSocial" id="razonSocial" class="form-control"> 
+                                          <input type="text" name="razonSocial" id="razonSocial" class="form-control requerido personaMoral"> 
                                         </div>
                                       </div>
                                     </div>
-                                    <div class="col-md-4" id="col_representante" hidden>
+                                    <div class="col-md-4 col_personaMoral"hidden>
                                       <div class="form-group">
                                         <label>Representante Legal <strong class="text-danger">*</strong>: </label>
                                         <div class="input-group">
                                           <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-balance-scale"></i></span>
                                           </div>
-                                          <input type="text" name="representanteLegal" id="representanteLegal" class="form-control">  
-                                       
+                                          <input type="text" name="representanteLegal" id="representanteLegal" class="form-control requerido personaMoral">  
                                         </div>
                                       </div>
                                     </div>
-
+                                    
 
                                     <!-- inputs persona fisica -->
-                                  
-                                    <div class="col-md-4" id="col_curp" hidden>
+                                    <div class="col-md-4 col_personaFisica"  hidden>
                                       <div class="form-group">
                                         <label>CURP <strong class="text-danger">*</strong>: </label>
                                         <div class="input-group">
                                           <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-id-card"></i></span>
                                           </div>
-                                          <input type="text" class="form-control" id="curp" name="curp">
+                                          <input type="text" class="form-control requerido personaFisica" id="curp" name="curp">
                                         </div>
                                       </div>
                                     </div>
 
-                                    <div class="col-md-4" id="col_nombres" hidden>
+                                    <div class="col-md-4 col_personaFisica" hidden>
                                       <div class="form-group">
                                         <label>Nombres <strong class="text-danger">*</strong>: </label>
                                         <div class="input-group">
                                           <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-user"></i></span>
                                           </div>
-                                          <input type="text" class="form-control" id="nombres" name="nombres">
+                                          <input type="text" class="form-control requerido personaFisica" id="nombres" name="nombres">
                                         </div>
                                       </div>
                                     </div>
 
-                                    <div class="col-md-4" id="col_apellidos"  hidden>
+                                    <div class="col-md-4 col_personaFisica"  hidden>
                                       <div class="form-group">
                                         <label>Apellidos <strong class="text-danger">*</strong>: </label>
                                         <div class="input-group">
                                           <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-user"></i></span>
                                           </div>
-                                          <input type="text" class="form-control" id="apellidos" name="apellidos">
+                                          <input type="text" class="form-control requerido personaFisica" id="apellidos" name="apellidos">
                                         </div>
                                       </div>
                                     </div>
 
-                                    <div class="col-md-4" id="col_genero"  hidden>
+                                    <div class="col-md-4 col_personaFisica"  hidden>
                                         <div class="form-group">
                                           <label>Género <strong class="text-danger">*</strong>: </label>
                                           <div class="input-group">
                                             <div class="input-group-prepend">
                                               <span class="input-group-text"><i class="fas fa-genderless"></i></span>
                                             </div>
-                                            <select name="genero" id="genero" class="form-control">
+                                            <select name="genero" id="genero" class="form-control requerido personaFisica">
                                               <option value="" selected disabled> - Seleccionar - </option>
                                               <?php 
                                                 foreach ($listadoGeneros as $key => $gen) {
@@ -308,26 +322,26 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-md-4" id="col_fechaNacimiento"  hidden>
+                                    <div class="col-md-4 col_personaFisica"  hidden>
                                       <div class="form-group">
                                         <label>Fecha de Nacimiento <strong class="text-danger">*</strong>: </label>
                                         <div class="input-group">
                                           <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-birthday-cake"></i></span>
                                           </div>
-                                          <input type="date" class="form-control float-left" id="fechaNacimiento" name="fechaNacimiento">
+                                          <input type="date" class="form-control float-left requerido personaFisica" id="fechaNacimiento" name="fechaNacimiento">
                                         </div>
                                       </div>
                                     </div>
 
-                                    <div class="col-md-4" id="col_paisNacimiento"  hidden>
+                                    <div class="col-md-4 col_personaFisica"  hidden>
                                       <div class="form-group">
                                         <label>País de nacimiento <strong class="text-danger">*</strong>: </label>
                                         <div class="input-group">
                                           <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-globe"></i></span>
                                           </div>
-                                          <select name="paisNacimiento" id="paisNacimiento" class="form-control">
+                                          <select name="paisNacimiento" id="paisNacimiento" class="form-control requerido personaFisica">
                                             <option value="" selected disabled> - Seleccionar - </option>
                                             <?php 
                                               foreach ($listadoPaises as $key => $pa) {
@@ -339,18 +353,18 @@
                                       </div>
                                     </div>
 
-                                    <div class="col-md-4" id="col_ocupacion" hidden>
+                                    <div class="col-md-4 col_personaFisica"  hidden>
                                       <div class="form-group">
                                         <label>Ocupacion<strong class="text-danger">*</strong>: </label>
                                         <div class="input-group">
                                           <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-briefcase"></i></span>
                                           </div>
-                                          <input type="text" class="form-control" id="ocupacion" name="ocupacion">
+                                          <input type="text" class="form-control requerido personaFisica" id="ocupacion" name="ocupacion">
                                         </div>
                                       </div>
                                     </div>
-                                  
+                                    </section>
 
                                 </div><!-- fin content-->
                               </div><!-- fin car-body-->
@@ -374,7 +388,7 @@
                                           <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-phone"></i></span>
                                           </div>
-                                          <input id="telefono" type="text" name="telefono" class="form-control">
+                                          <input id="telefono" type="text" name="telefono" class="form-control requerido">
                                         </div>
                                       </div>
                                     </div>
@@ -384,7 +398,7 @@
                                         <div class="input-group">
                                           <div class="input-group-prepend">
                                             <span class="input-group-text">@</span>
-                                          </div><input type="text" class="form-control" name="correo" id="correo" >
+                                          </div><input type="text" class="form-control requerido" name="correo" id="correo" >
                                         </div>
                                         </div>
                                     </div>
@@ -395,7 +409,7 @@
                                               <div class="input-group-prepend">
                                                 <span class="input-group-text"><i class="fas fa-road"></i></span>
                                               </div>
-                                              <input type="text" class="form-control" id="calle" name="calle">
+                                              <input type="text" class="form-control requerido" id="calle" name="calle">
                                             </div>
                                           </div>
                                     </div>
@@ -408,7 +422,7 @@
                                             <div class="input-group-prepend">
                                               <span class="input-group-text"><i class="fas fa-list-ol"></i></span>
                                             </div>
-                                            <input type="text" class="form-control" id="numeroExterior" name="numeroExterior">
+                                            <input type="text" class="form-control requerido" id="numeroExterior" name="numeroExterior">
                                           </div>
                                       </div>
                                     </div>
@@ -419,7 +433,7 @@
                                             <div class="input-group-prepend">
                                               <span class="input-group-text"><i class="fas fa-list-ol"></i></span>
                                             </div>
-                                            <input type="text" class="form-control" id="numeroInterior" name="numeroInterior">
+                                            <input type="text" class="form-control requerido" id="numeroInterior" name="numeroInterior">
                                           </div>
                                         </div>
                                     </div>
@@ -430,7 +444,7 @@
                                           <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-list-ol"></i></span>
                                           </div>
-                                        <input type="text" class="form-control" id="CodigoColonia" name="CodigoColonia">
+                                        <input type="text" class="form-control requerido" id="CodigoColonia" name="CodigoColonia">
                                       </div>
                                       </div>
                                     </div>
@@ -488,7 +502,7 @@
 
 /* definicion de datatablet */
   $(function () {
-    $("#tabla_personas").DataTable({
+    $("#tabla_clientes").DataTable({
       dom: 'lfBtip', //orden de los elementos del datatable
       'initComplete': function (settings, json) {
         //estilos botones iniciales
@@ -528,9 +542,6 @@
                       text: '<a class="text-light" data-toggle="modal" data-target="#nuevo_cliente"> Agregar </a>',
                       style: 'margin-left:10px',
                       className: 'btn btn-info btn-sm agregar',
-                      /* action: function ( e, dt, node, config ) {
-                        $('#nueva_cuenta').modal('show');
-                      } */
                     }
                   ],
     })
@@ -538,10 +549,12 @@
 
  /* Abre modal nuevo cliente y habilita/deshabilita botones*/
   $("#nuevo_cliente").on("hide.bs.modal", function() {
+    ocultaColumnasForm();
     $('#btn-accion').attr('onclick', 'guardarCliente()');
     $('#btn-accion').html('Crear');
     $('#mdl-title').html('Nuevo Cliente');
     $('#frm-nuevoCliente').find('.form-control').prop('disabled', false);
+    $('#nuevo_cliente #cliente_id').prop('hidden', true);
     $('#btn-editar').prop('hidden', true);
     $('#btn-personas').prop('hidden', true);
     $('#btn-organigrama').prop('hidden', true);
@@ -549,7 +562,6 @@
     $('#btn-habilitarCliente').prop('hidden', true);
     $('#btn-accion').show();
     $('#frm-nuevoCliente')[0].reset();
-
 
   });
   
@@ -576,30 +588,40 @@
 
   /* avtiva botones para cliente fisico */
   function activaBotonesClientesFisicos(){
-      $('#col_razon').prop('hidden', true);
-      $('#col_representante').prop('hidden', true);
+      /* oculta botones */
+      ocultaColumna('#frm-nuevoCliente', '.col_personaMoral');
+      
+      /* elimina clase requerido */
+      remueveRequerido('#frm-nuevoCliente' ,'.personaMoral');
 
-      $('#col_curp').prop('hidden', false);
-      $('#col_nombres').prop('hidden', false);
-      $('#col_apellidos').prop('hidden', false);
-      $('#col_genero').prop('hidden', false);
-      $('#col_fechaNacimiento').prop('hidden', false);
-      $('#col_paisNacimiento').prop('hidden', false);
-      $('#col_ocupacion').prop('hidden', false);
+      /* muestra botones */
+      muestraColumna('#frm-nuevoCliente', '.col_personaFisica');
+   
+      /* agrega clase requerido */
+      agregaRequerido('#frm-nuevoCliente','.personaFisica');
+
   }
 
   /* activa botones para cliente moral */
   function activaBotonesClientesMoral(){
-      $('#col_razon').prop('hidden', false);
-      $('#col_representante').prop('hidden', false);
+      /* muestra botones */
+      muestraColumna('#frm-nuevoCliente', '.col_personaMoral');
 
-      $('#col_curp').prop('hidden', true);
-      $('#col_nombres').prop('hidden', true);
-      $('#col_apellidos').prop('hidden', true);
-      $('#col_genero').prop('hidden', true);
-      $('#col_fechaNacimiento').prop('hidden', true);
-      $('#col_paisNacimiento').prop('hidden', true);
-      $('#col_ocupacion').prop('hidden', true);
+      /* agrega clase requerido */
+      agregaRequerido('#frm-nuevoCliente','.personaMoral');
+ 
+      /* oculta botones */
+      ocultaColumna('#frm-nuevoCliente', '.col_personaFisica')
+
+      /* remueve clase requerido */
+      remueveRequerido('#frm-nuevoCliente','.personaFisica');
+  }
+
+  function ocultaColumnasForm(){
+    ocultaColumna('#frm-nuevoCliente', '.col_personaMoral');
+    remueveRequerido('#frm-nuevoCliente' ,'.personaMoral');
+    ocultaColumna('#frm-nuevoCliente', '.col_personaFisica');
+    remueveRequerido('#frm-nuevoCliente' ,'.personaFisica');
   }
 
 /* Guarda modal de Clientes */
@@ -608,12 +630,12 @@ function guardarCliente(){
 
   let logo = document.getElementById("inputLogo").files;
   if(logo.lenght!= 0){
-    //let imagen = $('#inputImagen').prop('files')[0]; 
-    formData.append("logo", logo);
+    let imagenFile = $('#inputLogo').prop('files')[0]; 
+    formData.append("imagen", imagenFile);
   }
 
   //validacion datos del formulario
-  if(!validarForm()) return;
+  if(!validaForm('#frm-nuevoCliente')) return;
 
   $.ajax({
     type:'POST',
@@ -627,226 +649,30 @@ function guardarCliente(){
         notificar(notiSuccess);
         $('#nuevo_cliente').modal('hide');
         $('#frm-nuevoCliente')[0].reset();
-        limpiaForm('#nueva_persona');
+        limpiaForm('#nuevo_cliente');
       }else{
         notificar(notiError);
       }
     },
     error: function(result){
       notificar(notiError);
+    },
+    complete: function(result){
+      notificar(notiSuccess);
+      $('#nuevo_cliente').modal('hide');
+      $('#frm-nuevoCliente')[0].reset();
+      limpiaForm('#nuevo_cliente');
+      actualizarTablaCliente();
     }
   });
 }
 
 
-/* Validacion de formulario */
-function validarForm(){ 
-  ban=1;
-  if(ban){
-    /* Datos Generales */
-
-      if($('#nombreComercial').val() == ''){
-         $('#nombreComercial').addClass('is-invalid');
-         ban=0;
-      }else{
-         $('#nombreComercial').removeClass('is-invalid');
-         $('#nombreComercial').addClass('is-valid');
-      }
-
-      if($('#tipoCliente').val() == null){
-         $('#tipoCliente').addClass('is-invalid');
-         ban=0;
-      }else{
-         $('#tipoCliente').removeClass('is-invalid');
-         $('#tipoCliente').addClass('is-valid');
-      }
-
-      if($('#rfc').val() == ''){
-         $('#rfc').addClass('is-invalid');
-         ban=0;
-      }else{
-         $('#rfc').removeClass('is-invalid');
-         $('#rfc').addClass('is-valid');
-      }
-
-      if($('#nacionalidad').val() == null){
-         $('#nacionalidad').addClass('is-invalid');
-         ban=0;
-      }else{
-         $('#nacionalidad').removeClass('is-invalid');
-         $('#nacionalidad').addClass('is-valid');
-      }
-
-      if($('#tipoPersona').val() == null){
-         $('#tipoPersona').addClass('is-invalid');
-         ban=0;
-      }else{
-         $('#tipoPersona').removeClass('is-invalid');
-         $('#tipoPersona').addClass('is-valid');
-      }
-
-      /* validacion inputs persona moral */
-      if($('#tipoPersona').val() == 'tipos_personasMoral'){
-
-        if($('#razonSocial').val() == ''){
-          $('#razonSocial').addClass('is-invalid');
-          ban=0;
-        }else{
-          $('#razonSocial').removeClass('is-invalid');
-          $('#razonSocial').addClass('is-valid');
-        }
-
-        if($('#representanteLegal').val() == ''){
-          $('#representanteLegal').addClass('is-invalid');
-          ban=0;
-        }else{
-          $('#representanteLegal').removeClass('is-invalid');
-          $('#representanteLegal').addClass('is-valid');
-        }
-
-      }
-
-      /* validacion inputs persona fisica */
-      if($('#tipoPersona').val() == 'tipos_personasFisica'){
-
-        if($('#curp').val() == ''){
-           $('#curp').addClass('is-invalid');
-           ban=0;
-        }else{
-           $('#curp').removeClass('is-invalid');
-           $('#curp').addClass('is-valid');  
-        } 
-
-        if($('#nombres').val() == ''){
-           $('#nombres').addClass('is-invalid');
-           ban=0;
-        }else{
-           $('#nombres').removeClass('is-invalid');
-           $('#nombres').addClass('is-valid');
-        }
-
-        if($('#apellidos').val() == ''){
-           $('#apellidos').addClass('is-invalid');
-           ban=0;
-        }else{
-           $('#apellidos').removeClass('is-invalid');
-           $('#apellidos').addClass('is-valid');
-        }
-
-        if($('#genero').val() == null){
-           $('#genero').addClass('is-invalid');
-           ban=0;
-        }else{
-           $('#genero').removeClass('is-invalid');
-           $('#genero').addClass('is-valid');
-        } 
-
-        if($('#fechaNacimiento').val() == ''){
-           $('#fechaNacimiento').addClass('is-invalid');
-           ban=0;
-        }else{
-           $('#fechaNacimiento').removeClass('is-invalid');
-           $('#fechaNacimiento').addClass('is-valid');
-        }
-
-        if($('#paisNacimiento').val() == null){
-           $('#paisNacimiento').addClass('is-invalid');
-           ban=0;
-        }else{
-           $('#paisNacimiento').removeClass('is-invalid');
-           $('#paisNacimiento').addClass('is-valid');
-        }
-
-        if($('#ocupacion').val() == ''){
-           $('#ocupacion').addClass('is-invalid');
-           ban=0;
-        }else{
-           $('#ocupacion').removeClass('is-invalid');
-           $('#ocupacion').addClass('is-valid');
-        }
-
-      }
-
-      /* Datos de Contacto */
-      if($('#telefono').val() == ''){
-         $('#telefono').addClass('is-invalid');
-         ban=0;
-      }else{
-         $('#telefono').removeClass('is-invalid');
-         $('#telefono').addClass('is-valid');
-      }
-
-      if($('#correo').val() == ''){
-         $('#correo').addClass('is-invalid');
-         ban=0;
-      }else{
-         $('#correo').removeClass('is-invalid');
-         $('#correo').addClass('is-valid');
-      }
-
-      if($('#calle').val() == ''){
-         $('#calle').addClass('is-invalid');
-         ban=0;
-      }else{
-         $('#calle').removeClass('is-invalid');
-         $('#calle').addClass('is-valid');
-      }
-
-      if($('#numeroExterior').val() == ''){
-         $('#numeroExterior').addClass('is-invalid');
-         ban=0;
-      }else{
-         $('#numeroExterior').removeClass('is-invalid');
-         $('#numeroExterior').addClass('is-valid');
-      }
-
-      if($('#numeroInterior').val() == ''){
-         $('#numeroInterior').addClass('is-invalid');
-         ban=0;
-      }else{
-         $('#numeroInterior').removeClass('is-invalid');
-         $('#numeroInterior').addClass('is-valid');
-      }
-
-      if($('#CodigoColonia').val() == ''){
-         $('#CodigoColonia').addClass('is-invalid');
-         ban=0;
-      }else{
-         $('#CodigoColonia').removeClass('is-invalid');
-         $('#CodigoColonia').addClass('is-valid');
-      }
-}
-
-  if(!ban){
-    notificar(notiObligatoriedad);
-  }
-  return ban; 
-  
-}
-
-/* Elimina los estilos de los input correctos-incorrectos */
-function limpiaForm(formulario){
-  $(formulario).find(".is-valid").removeClass().addClass('form-control');
-  $(formulario).find(".is-invalid").removeClass().addClass('form-control');
-
-  /* oculto todos los botones */
-      $('#col_razon').prop('hidden', true);
-      $('#col_representante').prop('hidden', true);
-      $('#col_curp').prop('hidden', true);
-      $('#col_nombres').prop('hidden', true);
-      $('#col_apellidos').prop('hidden', true);
-      $('#col_genero').prop('hidden', true);
-      $('#col_fechaNacimiento').prop('hidden', true);
-      $('#col_paisNacimiento').prop('hidden', true);
-      $('#col_ocupacion').prop('hidden', true);
-}
-
 /* Permite ver los datos de cada persona */
 function verCliente(e){
 
-   /*  var tr = $(e).closest('tr');
-    var json = $(tr).data('json'); */
-
+    var tr = $(e).closest('tr');
+    var json = $(tr).data('json'); 
 
     $('#btn-accion').hide();
     $('#mdl-title').html('Cliente');
@@ -855,19 +681,66 @@ function verCliente(e){
     $('#btn-personas').prop('hidden', false);
     $('#btn-organigrama').prop('hidden', false);
     $('#btn-cuestionario').prop('hidden', false); 
+    $('#nuevo_cliente #cliente_id').prop('hidden', false);
 
-    var tipe_id='tipos_personasFisica';
+    /* datos generales */
+    $('#nuevo_cliente #clie_id').val(json.clie_id);
+    $('#nuevo_cliente #cliente_id').text( "(id: " + json.clie_id + ")");
+    $('#nuevo_cliente #nombreComercial').val(json.nombre);
+    $('#nuevo_cliente #tipoCliente').val(json.ticl_id);
+    $('#nuevo_cliente #rfc').val(json.rfc);
+    $('#nuevo_cliente #nacionalidad').val(json.naci_id);
+    $('#nuevo_cliente #tipoPersona').val(json.tipe_id);
 
-    if(tipe_id == 'tipos_personasMoral'){
+    /* datos contacto */
+    $('#nuevo_cliente #telefono').val(json.telefono);
+    $('#nuevo_cliente #correo').val(json.email);
+    $('#nuevo_cliente #calle').val(json.calle);
+    $('#nuevo_cliente #numeroExterior').val(json.num_exterior);
+    $('#nuevo_cliente #numeroInterior').val(json.num_interior);
+    $('#nuevo_cliente #CodigoColonia').val(json.cod_postal);
+
+
+    if(json.tipe_id == 'tipos_personasMoral'){
       activaBotonesClientesMoral();
+      $('#nuevo_cliente #razonSocial').val(json.razon_social);
+      $('#nuevo_cliente #representanteLegal').val(json.representante_legal);
     }
 
-    if(tipe_id == 'tipos_personasFisica'){
+    if(json.tipe_id == 'tipos_personasFisica'){
      activaBotonesClientesFisicos();
+     $('#nuevo_cliente #curp').val(json.curp);
+     $('#nuevo_cliente #nombres').val(json.nombres);
+     $('#nuevo_cliente #apellidos').val(json.apellidos);
+     $('#nuevo_cliente #genero').val(json.gene_id);
+     $('#nuevo_cliente #fechaNacimiento').val(json.fec_nacimiento.slice(0,10));
+     $('#nuevo_cliente #paisNacimiento').val(json.pana_id);
+     $('#nuevo_cliente #ocupacion').val(json.ocupacion);
     }
 
     $('#nuevo_cliente').modal('show');
     $('#btn-habilitarPersona').prop('hidden', true); 
+
+
+    if(json.nom_imagen){
+      var codificacion = obtenerExtension(json.nom_imagen);
+
+      /* decodificacion imagen base64 */
+      var decodedData = window.atob(json.imagen);
+
+      /*Accion ojo de imagen */
+      document.getElementById('verImagen').onclick = function (){
+        event.preventDefault();
+        var newTab = window.open();
+        newTab.document.body.innerHTML = '<img src="'+ codificacion + decodedData +'" >';
+        newTab.document.close();
+      }
+    
+      $('#logoCliente').attr('src', codificacion + decodedData);
+    }
+    else{
+      $('#logoCliente').attr('src', '');
+    }
 
   /*   var tr = $(e).closest('tr');
     var json = $(tr).data('json');
@@ -904,46 +777,115 @@ function habilitaEditarCliente(){
 /* Guarda los datos editados de la persona */
 function editarCliente(){
 
-  var formData = new FormData($('#frm-nuevaPersona')[0]);
+  var formData = new FormData($('#frm-nuevoCliente')[0]);
 
-  let imagen = document.getElementById("inputImagen").files;
-  if(imagen.lenght!= 0){
-    //img = $('#inputImagen').prop('files')[0];
-    formData.append("imagen", imagen);
+  let logo = document.getElementById("inputLogo").files;
+  if(logo.lenght!= 0){
+    let imagenFile = $('#inputLogo').prop('files')[0]; 
+    formData.append("imagen", imagenFile);
   }
 
  // debugger;
-  formData.append("pers_id",$('#nueva_persona #pers_id').val());
-  
+  formData.append("clie_id",$('#frm-nuevoCliente #clie_id').val());
   //validacion datos del formulario
-  if(!validarForm()) return;
+  if(!validaForm('#frm-nuevoCliente')) return;
 
   $.ajax({
     type:'POST',
     dataType: 'JSON',
     processData: false,
     contentType: false,
-    url: '<?= base_url()?>/editarPersona',
+    url: '<?= base_url()?>/editarCliente',
     data:formData,
     success: function(resp) {
       notificar(notiSuccess);
-      $('#nueva_persona').modal('hide');
-      $('#frm-nuevaPersona')[0].reset();
-      limpiaForm('#nueva_persona');
+        $('#nuevo_cliente').modal('hide');
+        $('#frm-nuevoCliente')[0].reset();
+        limpiaForm('#nuevo_cliente');
     },
     error: () => {
       notificar(notiError);
     },
     complete: function() {
       notificar(notiSuccess);
-      window.location.reload();
+      actualizarTablaCliente();
     }
     });
 }
 
- /* inicializacion botones on/off */
-$("input[data-bootstrap-switch]").bootstrapSwitch();
-$("[name='habilitarPersonaEditar']").bootstrapSwitch();
+/* inicializacion botones on/off */
+$("[name='habilitarCliente']").bootstrapSwitch({
+  onSwitchChange:function(e, state){
+  var tr = $(e.target).closest('tr');
+  var json = $(tr).data('json');
+
+  if(!state){
+    Swal.fire({
+      title: '¿Está seguro?',
+      text: 'Si deshabilita al cliente, el mismo no aparecerá en algunos reportes o indicadores, y no podrá asignar cuestionarios a sus Personas asociadas',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Si, deshabilitar!'
+    }).then((result) => {
+    if (result.isConfirmed) {
+      deshabilitaCliente(json.clie_id);
+    }
+    else{
+      //vuelve a el estado original y el ultimo paramaetro es para cortar la ejecucion
+      $(this).bootstrapSwitch('state', !state ,true);
+    }
+    })
+  }
+  else{
+    Swal.fire({
+      title: 'Habilitar cliente?',
+      text: "Ten en cuenta que se habilitaras el cliente",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Si, habilitar!'
+    }).then((result) => {
+    if (result.isConfirmed) {
+      habilitaCliente(json.clie_id);
+    }
+    else{
+      //vuelve a el estado original y el ultimo paramaetro es para cortar la ejecucion
+      $(this).bootstrapSwitch('state', !state ,true);
+    }
+  });
+  } 
+}
+});
+
+$("[name='habilitarClienteEditar']").bootstrapSwitch();
+
+
+/* funcion para deshabilitar una persona */
+function deshabilitaCliente(clie_id){
+  $.get('<?= base_url()?>/eliminarCliente/' + clie_id, function (data){
+          Swal.fire(
+              'Deshabilitado!',
+              'El cliente fue deshabilitado.',
+              'success'
+        );
+  })
+}
+
+
+/* funcion para habilitar una persona */
+function habilitaCliente(clie_id){
+  $.get('<?= base_url()?>/habilitarCliente/' + clie_id, function (data){
+          Swal.fire(
+            'Habilitado!',
+            'El cliente fue habilitado.',
+            'success'
+          );
+  })
+}
+
 
 /* abrir modal agregar imagen */
 $(document).on("click", ".agregaLogo", function() {
@@ -952,62 +894,7 @@ $(document).on("click", ".agregaLogo", function() {
   $("#nuevo_cliente").css('overflow-y', 'auto');//habilita el scroll de nuevo
 });
 
-/* permite habilitar o deshabilitar una persona */
-function habilitarPersona(e){  
-  var tr = $(e).closest('tr');
-  var json = $(tr).data('json');
-  var pers_id = json.pers_id;
-  //debugger;
-  check = json.estado;
-  if(check == 'false'){
-      Swal.fire({
-        title: '¿Está seguro?',
-        text: 'Si deshabilita a la Persona, la misma no aparecerá en algunos reportes o indicadores, y no podrá responder cuestionarios',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Si, deshabilitar!'
-      }).then((result) => {
-      if (result.isConfirmed) {
-        $.get('<?= base_url()?>/eliminarPersona/' + pers_id, function (data){
-          Swal.fire(
-              'Deshabilitado!',
-              'El usuario fue deshabilitado.',
-              'success'
-            );
-        })
-      }
-      else{
-        $(e).closest("tr").find('input[type="checkbox"]').prop('checked',true).change();
-      }
-    });    
-  }
-  else{
-    Swal.fire({
-        title: 'Habilitar usuario?',
-        text: "Ten en cuenta que se habilitaras el usuario",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Si, habilitar!'
-      }).then((result) => {
-      if (result.isConfirmed) {
-        $.get('<?= base_url()?>/habilitarPersona/' + pers_id, function (data){
-          Swal.fire(
-            'Habilitado!',
-            'El usuario fue habilitado.',
-            'success'
-          );
-        })
-      }
-      else{
-        $(e).closest("tr").find('input[type="checkbox"]').prop('checked',false).change();
-      }
-    });
-  } 
-}
+
 function cargaVistaPrevia(input){
   if(input.files && input.files[0]){
       // var idImagen = $(input).attr('id');
@@ -1023,60 +910,114 @@ function cargaVistaPrevia(input){
   }
 }
  
-/* habilitar/deshabilitar persona desde modal ver persona */
-function habilitarPersonaEditar(){
-  var pers_id = $('#pers_id').val();
-  if(!$('#habilitarPersonaEditar').prop('checked'))
-  {
-    Swal.fire({
-        title: 'Habilitar usuario?',
-        text: "Ten en cuenta que se habilitaras el usuario",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Si, habilitar!'
-      }).then((result) => {
-      if (result.isConfirmed) {
-        $.get('<?= base_url()?>/habilitarPersona/' + pers_id, function (data){
-          Swal.fire(
-            'Habilitado!',
-            'El usuario fue habilitado.',
-            'success'
-          );
-        })
-        $('#habilitarPersonaEditar').prop('checked',true).change();
-      }
-      else{
-        $('#habilitarPersonaEditar').prop('checked',false).change();
-      }
+/* Actualiza la tabla sin recargar */
+function actualizarTablaCliente(){
+  $.ajax({
+        type: 'POST',
+        cache: false,
+        dataType: "json",
+        url: "<?= base_url()?>/getClientes",
+  success:function(data){
+
+    tabla = $('#tabla_clientes').DataTable();
+    tabla.clear().draw();
+
+    $.each(data, function (i, value) {
+
+    //activar o desactivar checked
+    if(value.eliminado == 'true'){
+      check= '';
+    }
+    else {
+      check = 'checked';
+    }
+
+    //estilos imagen perfil
+    if(value.imagen){
+            var ext = obtenerExtension(value.nom_imagen);
+            /* decodificacion imagen base64 */
+            var decodedData = window.atob(value.imagen);
+            var src = ext + decodedData;
+            clase="img-circle elevation-2" ;
+            estilo="height: 3rem; width: 3.9rem";
+    }
+    else{
+          src= '';
+          estilo='';
+          clase='';
+    }
+
+      fila="<tr data-json= '"+ JSON.stringify(value) +"'>" +
+          '<td>'+
+            '<div class="btn-group"> '+
+            '<i class="fa fa-search" style="cursor: pointer;margin: 3px;" title="Ver Detalles" onclick="verCliente(this)"></i>'+
+            '<i class="fa fa-users" style="cursor: pointer;margin: 3px;" title="Ver personas" ></i>' +
+             '<label class="switch" id="miLabel">'+
+             '<div class="bootstrap-switch-container float-right" style="width: 15px; margin-left: 24px;" >'+
+               '<input type="checkbox" name="habilitarCliente" data-bootstrap-switch '+ check +'>'+
+             '</div>'+
+             '</label>'+
+            '</div>'+
+          '</td>'+
+            
+          '<td class="centrar"><img src="'+ src +'" class="'+clase+'" style="'+estilo+'"/></td>'+
+
+          '<td>'+ value.tipoCliente +'</td>'+
+          '<td>'+ value.rfc +'</td>'+
+          '<td>'+ value.nombre +'</td>'+
+          '<td>'+ value.tipoPersona +'</td>'+
+          '</tr>';
+          tabla.row.add($(fila)).draw();
     });
-  }
-  else{
-    Swal.fire({
-        title: '¿Está seguro?',
-        text: 'Si deshabilita a la Persona, la misma no aparecerá en algunos reportes o indicadores, y no podrá responder cuestionarios',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Si, deshabilitar!'
-      }).then((result) => {
-      if (result.isConfirmed) {
-        $.get('<?= base_url()?>/eliminarPersona/' + pers_id, function (data){
-          Swal.fire(
-            'Deshabilitado!',
-            'El usuario fue deshabilitado.',
-            'success'
-          );
-        })
-        $('#habilitarPersonaEditar').prop('checked',false).change();
+         /* inicializacion botones on/off */
+      $("[name='habilitarCliente']").bootstrapSwitch({
+        onSwitchChange:function(e, state){
+        var clie_id = $('#clie_id').val();
+        if(!state){
+          Swal.fire({
+            title: '¿Está seguro?',
+            text: 'Si deshabilita al cliente, el mismo no aparecerá en algunos reportes o indicadores, y no podrá asignar cuestionarios a sus Personas asociadas',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Si, deshabilitar!'
+          }).then((result) => {
+          if (result.isConfirmed) {
+            debugger;
+            deshabilitaCliente(clie_id);
+          }
+          else{
+            //vuelve a el estado original y el ultimo paramaetro es para cortar la ejecucion
+            $(this).bootstrapSwitch('state', !state ,true);
+          }
+          })
+        }
+        else{
+          Swal.fire({
+            title: 'Habilitar cliente?',
+            text: "Ten en cuenta que se habilitaras el cliente",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Si, habilitar!'
+          }).then((result) => {
+          if (result.isConfirmed) {
+            habilitaCliente(clie_id);
+          }
+          else{
+            //vuelve a el estado original y el ultimo paramaetro es para cortar la ejecucion
+            $(this).bootstrapSwitch('state', !state ,true);
+          }
+        });
+        } 
       }
-      else{
-        $('#habilitarPersonaEditar').prop('checked',true).change();
-      }
-    });
-  }
+      });
+  
+      
+  }   
+  });
 }
 </script>
 
