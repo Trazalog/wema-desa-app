@@ -29,9 +29,11 @@
   <link rel="stylesheet" href="<?= base_url()?>/public/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="<?= base_url()?>/public/dist/css/adminlte.min.css">
-
+  
   <link rel="stylesheet" href="<?= base_url()?>/public/dist/css/stylesTrazalog.css">
-
+  <!-- Plugin form multiples tabs JS -->
+  <link rel="stylesheet" href="<?= base_url()?>/public/plugins/bs-stepper/css/bs-stepper.min.css">
+  
   <!-- Bootstrap Switch -->
   <script src="<?= base_url()?>/public/plugins/bootstrap-switch/js/bootstrap-switch.min.js"></script>
   <!-- Plugin checkboxs into toggles -->
@@ -202,7 +204,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="<?= site_url('persona/entrevista') ?>" class="nav-link">
+            <a href="<?= site_url('persona/cargarListadoEntrevistados') ?>" class="nav-link">
               <i class="far fa-circle nav-icon"></i>
               <p>
                 Entrevista
@@ -281,6 +283,8 @@
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <!-- <script src="<?= base_url()?>/public/dist/js/pages/dashboard.js"></script> -->
 
+<!-- plugin form multiples tabs JS-->
+<script src="<?= base_url()?>/public/plugins/bs-stepper/js/bs-stepper.min.js"></script>
 
 
 

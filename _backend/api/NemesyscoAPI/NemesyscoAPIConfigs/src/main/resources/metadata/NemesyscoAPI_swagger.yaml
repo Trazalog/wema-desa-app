@@ -1,0 +1,13 @@
+openapi: 3.0.1
+info:
+  title: NemesyscoAPI
+  description: API Definition of NemesyscoAPI
+  version: 1.0.0
+servers:
+- url: http://localhost:8290/nemesysco/connect
+paths:
+  /audios/get:
+    get:
+      responses:
+        default:
+          description: Default response

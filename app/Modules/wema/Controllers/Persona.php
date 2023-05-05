@@ -168,13 +168,84 @@ class Persona extends BaseController
         return json_encode($resp);
     }
     /**
-        * Carga pantalla con entrevistas para personas
+        * Carga pantalla para entrevistar personas
         * @param  
-        * @return view entrevistas.php
+        * @return view listadoPersonas.php
 	*/
-    public function cargarEntrevista(){
+    public function cargarListadoEntrevistados(){
+        log_message('debug','#TRAZA | WEMA-DESA-APP | Controller | Persona | cargarListadoEntrevistados()');
         $data['listadoPersonas'] = $this->Personas->getPersonas();
-        return view('Modules\wema\Views\persona\entrevistas',$data);    
+        return view('Modules\wema\Views\persona\entrevistas\listadoPersonas',$data);    
+    }
+    /**
+        * Pantalla con cuestionario para reazliar entrevista
+        * @param $pers_id id de persona entrevistado
+        * @return view cuestionario.php
+	*/
+    public function initCuestionario($pers_id){
+        log_message('debug','#TRAZA | WEMA-DESA-APP | Controller | Persona | initCuestionario()');
+
+        if(!empty($pers_id)) $data['persona'] = $this->Personas->getPersonaPorId($pers_id);
+
+        $data['cuestionario'] = new \stdClass;
+        $data['cuestionario']->preguntas = array();
+        $data['cuestionario']->preguntas[0] = new \stdClass();
+        $data['cuestionario']->preguntas[0]->titulo = "Economía";
+        $data['cuestionario']->preguntas[0]->descripcion = "Desarrollo de la pregunta N° 1";
+        $data['cuestionario']->preguntas[0]->nota = "Aclaración opcional sobre pregunta N° 1";
+        $data['cuestionario']->preguntas[0]->video = "https://share.synthesia.io/embeds/videos/7afef1d6-1f8b-45ee-961e-e22a6aa94f6f";
+        $data['cuestionario']->preguntas[1] = new \stdClass();
+        $data['cuestionario']->preguntas[1]->titulo = "Gestíon";
+        $data['cuestionario']->preguntas[1]->descripcion = "Desarrollo de la pregunta N° 2";
+        $data['cuestionario']->preguntas[1]->nota = "Aclaración opcional sobre pregunta N° 2";
+        $data['cuestionario']->preguntas[1]->video = "https://share.synthesia.io/embeds/videos/7afef1d6-1f8b-45ee-961e-e22a6aa94f6f";
+        $data['cuestionario']->preguntas[2] = new \stdClass();
+        $data['cuestionario']->preguntas[2]->titulo = "Diseño";
+        $data['cuestionario']->preguntas[2]->descripcion = "Desarrollo de la pregunta N° 3";
+        $data['cuestionario']->preguntas[2]->nota = "Aclaración opcional sobre pregunta N° 3";
+        $data['cuestionario']->preguntas[2]->video = "https://share.synthesia.io/embeds/videos/7afef1d6-1f8b-45ee-961e-e22a6aa94f6f";
+        $data['cuestionario']->preguntas[3] = new \stdClass();
+        $data['cuestionario']->preguntas[3]->titulo = "Cultura";
+        $data['cuestionario']->preguntas[3]->descripcion = "Desarrollo de la pregunta N° 4";
+        $data['cuestionario']->preguntas[3]->nota = "Aclaración opcional sobre pregunta N° 4";
+        $data['cuestionario']->preguntas[3]->video = "https://share.synthesia.io/embeds/videos/7afef1d6-1f8b-45ee-961e-e22a6aa94f6f";
+        $data['cuestionario']->preguntas[4] = new \stdClass();
+        $data['cuestionario']->preguntas[4]->titulo = "Cultura";
+        $data['cuestionario']->preguntas[4]->descripcion = "Desarrollo de la pregunta N° 4";
+        $data['cuestionario']->preguntas[4]->nota = "Aclaración opcional sobre pregunta N° 4";
+        $data['cuestionario']->preguntas[4]->video = "https://share.synthesia.io/embeds/videos/7afef1d6-1f8b-45ee-961e-e22a6aa94f6f";
+        $data['cuestionario']->preguntas[5] = new \stdClass();
+        $data['cuestionario']->preguntas[5]->titulo = "Cultura";
+        $data['cuestionario']->preguntas[5]->descripcion = "Desarrollo de la pregunta N° 4";
+        $data['cuestionario']->preguntas[5]->nota = "Aclaración opcional sobre pregunta N° 4";
+        $data['cuestionario']->preguntas[5]->video = "https://share.synthesia.io/embeds/videos/7afef1d6-1f8b-45ee-961e-e22a6aa94f6f";
+        $data['cuestionario']->preguntas[6] = new \stdClass();
+        $data['cuestionario']->preguntas[6]->titulo = "Cultura";
+        $data['cuestionario']->preguntas[6]->descripcion = "Desarrollo de la pregunta N° 4";
+        $data['cuestionario']->preguntas[6]->nota = "Aclaración opcional sobre pregunta N° 4";
+        $data['cuestionario']->preguntas[6]->video = "https://share.synthesia.io/embeds/videos/7afef1d6-1f8b-45ee-961e-e22a6aa94f6f";
+        $data['cuestionario']->preguntas[7] = new \stdClass();
+        $data['cuestionario']->preguntas[7]->titulo = "Cultura";
+        $data['cuestionario']->preguntas[7]->descripcion = "Desarrollo de la pregunta N° 4";
+        $data['cuestionario']->preguntas[7]->nota = "Aclaración opcional sobre pregunta N° 4";
+        $data['cuestionario']->preguntas[7]->video = "https://share.synthesia.io/embeds/videos/7afef1d6-1f8b-45ee-961e-e22a6aa94f6f";
+        $data['cuestionario']->preguntas[8] = new \stdClass();
+        $data['cuestionario']->preguntas[8]->titulo = "Cultura";
+        $data['cuestionario']->preguntas[8]->descripcion = "Desarrollo de la pregunta N° 4";
+        $data['cuestionario']->preguntas[8]->nota = "Aclaración opcional sobre pregunta N° 4";
+        $data['cuestionario']->preguntas[8]->video = "https://share.synthesia.io/embeds/videos/7afef1d6-1f8b-45ee-961e-e22a6aa94f6f";
+        $data['cuestionario']->preguntas[9] = new \stdClass();
+        $data['cuestionario']->preguntas[9]->titulo = "Cultura";
+        $data['cuestionario']->preguntas[9]->descripcion = "Desarrollo de la pregunta N° 4";
+        $data['cuestionario']->preguntas[9]->nota = "Aclaración opcional sobre pregunta N° 4";
+        $data['cuestionario']->preguntas[9]->video = "https://share.synthesia.io/embeds/videos/7afef1d6-1f8b-45ee-961e-e22a6aa94f6f";
+        $data['cuestionario']->preguntas[10] = new \stdClass();
+        $data['cuestionario']->preguntas[10]->titulo = "Cultura";
+        $data['cuestionario']->preguntas[10]->descripcion = "Desarrollo de la pregunta N° 4";
+        $data['cuestionario']->preguntas[10]->nota = "Aclaración opcional sobre pregunta N° 4";
+        $data['cuestionario']->preguntas[10]->video = "https://share.synthesia.io/embeds/videos/7afef1d6-1f8b-45ee-961e-e22a6aa94f6f";
+        
+        return view('Modules\wema\Views\persona\entrevistas\cuestionario',$data);    
     }
 
 }
