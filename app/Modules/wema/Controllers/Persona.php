@@ -70,7 +70,7 @@ class Persona extends BaseController
             'naci_id' =>  $request->getPost('nacionalidad'),
             'educ_id' =>  $request->getPost('escolaridad'),
             'ubic_id' =>  $request->getPost('nacionalidad'),
-            'clie_id' =>  $request->getPost('clie_id'),
+            'clie_id' =>  empresa(),
             'imagen' => !empty($_FILES['imagen']['name'])  ? base64_encode(file_get_contents($fotoPerfil->getTempName())) : '',
             'nom_imagen' => !empty($_FILES['imagen']['name'])  ? $fotoPerfil->getName() : ''
         );
@@ -111,7 +111,7 @@ class Persona extends BaseController
             'naci_id' =>  $request->getPost('nacionalidad'),
             'educ_id' =>  $request->getPost('escolaridad'),
             'ubic_id' =>  $request->getPost('nacionalidad'),
-            'clie_id' =>  $request->getPost('clie_id'),
+            'clie_id' =>  empresa(),
             'imagen' => !empty($_FILES['imagen']['name'])  ? base64_encode(file_get_contents($fotoPerfil->getTempName())) : '',
             'nom_imagen' => !empty($_FILES['imagen']['name'])  ? $fotoPerfil->getName() : ''
         );

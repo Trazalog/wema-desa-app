@@ -66,7 +66,7 @@
                         echo'<td>
                                 <div class="btn-group"> 
                                   <i class="fa fa-search" style="cursor: pointer;margin: 3px;" title="Ver Detalles" onclick="verCliente(this)"></i>
-                                  <i class="fa fa-users" style="cursor: pointer;margin: 3px;" title="Ver personas" ></i>
+                                  <a style="color:black" href="'.site_url('persona').'"><i class="fa fa-users" style="cursor: pointer;margin: 3px;" title="Ver personas"> </i></a>
                                   <label class="switch" id="miLabel">
                                   <div class="bootstrap-switch-container float-right" style="width: 10px; margin-left: 24px;" >
                                     <input type="checkbox" name="habilitarCliente" data-bootstrap-switch '.$check.'>
@@ -76,7 +76,7 @@
                               </td>
                               <td style="text-align: center"><img src="'. $src .'" class="'.$class.'" style="'.$style.'"/></td>
                               <td>'.$clientes->tipoCliente.'</td>
-                              <td>'.$clientes->rfc.'</td>
+                              <td>'.$clientes->id_tributario.'</td>
                               <td>'.$clientes->nombre.'</td>
                               <td>'.$clientes->tipoPersona.'</td>
                       </tr>
@@ -109,7 +109,7 @@
                 </div>
                 <label class="switch" >
                 <div id="btn-habilitarCliente" hidden>
-                    <input type="checkbox" name="habilitarClienteEditar" data-bootstrap-switch-editar checked onclick="habilitarClienteEditar()">   
+                    <input type="checkbox" name="habilitarClienteEditar" data-bootstrap-switch-editar checked>   
                 </div>
                 </label>
                 <div class="col-2" >
@@ -560,6 +560,7 @@
     $('#btn-organigrama').prop('hidden', true);
     $('#btn-cuestionario').prop('hidden', true);
     $('#btn-habilitarCliente').prop('hidden', true);
+    $('#logoCliente').prop('src', '');
     $('#btn-accion').show();
     $('#frm-nuevoCliente')[0].reset();
 
@@ -637,6 +638,9 @@ function guardarCliente(){
   //validacion datos del formulario
   if(!validaForm('#frm-nuevoCliente')) return;
 
+  if(!rfcValido($('#curp').val()))return;
+
+  debugger;
   $.ajax({
     type:'POST',
     dataType: 'JSON',
@@ -688,7 +692,7 @@ function verCliente(e){
     $('#nuevo_cliente #cliente_id').text( "(id: " + json.clie_id + ")");
     $('#nuevo_cliente #nombreComercial').val(json.nombre);
     $('#nuevo_cliente #tipoCliente').val(json.ticl_id);
-    $('#nuevo_cliente #rfc').val(json.rfc);
+    $('#nuevo_cliente #rfc').val(json.id_tributario);
     $('#nuevo_cliente #nacionalidad').val(json.naci_id);
     $('#nuevo_cliente #tipoPersona').val(json.tipe_id);
 
@@ -740,21 +744,19 @@ function verCliente(e){
     }
     else{
       $('#logoCliente').attr('src', '');
+      document.getElementById('verImagen').onclick = function (){
+        event.preventDefault();
+        var newTab = window.open();
+        newTab.document.body.innerHTML = '<img src="" >';
+        newTab.document.close();
+      }
     }
 
-  /*   var tr = $(e).closest('tr');
-    var json = $(tr).data('json');
-    $('#nueva_persona #pers_id').val(json.pers_id);
-
-
-    if(json.estado == 'true')
-    {
-      $('#habilitarPersonaEditar').prop('checked',false).change();
-    }
-    else{
-     $('#habilitarPersonaEditar').prop('checked',true).change();
-    } */
-    
+    /* botones cabecera on/off */
+    if(json.eliminado == 'true')
+    $("[name='habilitarClienteEditar']").bootstrapSwitch('state', false ,true);
+    else 
+    $("[name='habilitarClienteEditar']").bootstrapSwitch('state', true ,true);
 }
 
 /*boton que habilita editar los datos de una persona en el modal */
@@ -789,6 +791,11 @@ function editarCliente(){
   formData.append("clie_id",$('#frm-nuevoCliente #clie_id').val());
   //validacion datos del formulario
   if(!validaForm('#frm-nuevoCliente')) return;
+
+ 
+  if(!rfcValido($('#rfc').val())){
+    $('#rfc').addClass('is-invalid');
+    return};
 
   $.ajax({
     type:'POST',
@@ -860,8 +867,52 @@ $("[name='habilitarCliente']").bootstrapSwitch({
 }
 });
 
-$("[name='habilitarClienteEditar']").bootstrapSwitch();
 
+/* inicializacion botones on/off */
+$("[name='habilitarClienteEditar']").bootstrapSwitch({
+/* habilitar/deshabilitar personas desde modal editar persona*/
+ onSwitchChange:function(e, state){
+  var clie_id = $('#clie_id').val();
+  if(!state){
+    Swal.fire({
+      title: '¿Está seguro?',
+      text: 'Si deshabilita al cliente, el mismo no aparecerá en algunos reportes o indicadores, y no podrá asignar cuestionarios a sus Personas asociadas',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Si, deshabilitar!'
+    }).then((result) => {
+    if (result.isConfirmed) {
+      deshabilitaCliente(clie_id);
+    }
+    else{
+      //vuelve a el estado original y el ultimo paramaetro es para cortar la ejecucion
+      $(this).bootstrapSwitch('state', !state ,true);
+    }
+    })
+  }
+  else{
+    Swal.fire({
+      title: 'Habilitar cliente?',
+      text: "Ten en cuenta que se habilitaras el cliente",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Si, habilitar!'
+    }).then((result) => {
+    if (result.isConfirmed) {
+      habilitaCliente(clie_id);
+    }
+    else{
+      //vuelve a el estado original y el ultimo paramaetro es para cortar la ejecucion
+      $(this).bootstrapSwitch('state', !state ,true);
+    }
+  });
+  } 
+}
+});
 
 /* funcion para deshabilitar una persona */
 function deshabilitaCliente(clie_id){
@@ -963,7 +1014,7 @@ function actualizarTablaCliente(){
           '<td class="centrar"><img src="'+ src +'" class="'+clase+'" style="'+estilo+'"/></td>'+
 
           '<td>'+ value.tipoCliente +'</td>'+
-          '<td>'+ value.rfc +'</td>'+
+          '<td>'+ value.id_tributario +'</td>'+
           '<td>'+ value.nombre +'</td>'+
           '<td>'+ value.tipoPersona +'</td>'+
           '</tr>';

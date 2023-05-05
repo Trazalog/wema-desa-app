@@ -55,7 +55,7 @@ class Cliente extends BaseController
         $data['post_clientes'] = array(
             
             'nombre' => $request->getPost('nombreComercial'),
-            'id_tributario' => '',
+            'id_tributario' => $request->getPost('rfc'),
             'telefono' =>  $request->getPost('telefono'),
             'email' =>  $request->getPost('correo'),
             'calle' =>  $request->getPost('calle'),
@@ -79,7 +79,6 @@ class Cliente extends BaseController
             'empr_id' =>  '1',
             'imagen' => !empty($_FILES['imagen']['name'])  ? base64_encode(file_get_contents($fotoPerfil->getTempName())) : '',
             'nom_imagen' => !empty($_FILES['imagen']['name'])  ? $fotoPerfil->getName() : '',
-            'rfc' =>  $request->getPost('rfc'),
         );
 
         $resp = $this->Clientes->guardarCliente($data);
@@ -101,7 +100,7 @@ class Cliente extends BaseController
         $data['put_clientes'] = array(
             'clie_id'=> $request->getPost('clie_id'),
             'nombre' => $request->getPost('nombreComercial'),
-            'id_tributario' => '',
+            'id_tributario' =>  $request->getPost('rfc'),
             'telefono' =>  $request->getPost('telefono'),
             'email' =>  $request->getPost('correo'),
             'calle' =>  $request->getPost('calle'),
@@ -125,7 +124,7 @@ class Cliente extends BaseController
             'empr_id' =>  '1',
             'imagen' => !empty($_FILES['imagen']['name'])  ? base64_encode(file_get_contents($fotoPerfil->getTempName())) : '',
             'nom_imagen' => !empty($_FILES['imagen']['name'])  ? $fotoPerfil->getName() : '',
-            'rfc' =>  $request->getPost('rfc'),
+            
         );
 
         $resp = $this->Clientes->editarCliente($data);

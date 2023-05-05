@@ -16,7 +16,7 @@ if(!function_exists('empresa')){
         // $ci =& get_instance();
         // $empr_id  = $ci->session->userdata('empr_id');
         //HARCODE hasta que haya datos de sesión
-        $empr_id = 3;
+        $empr_id = '3';
         return  $empr_id;
     }
 }
