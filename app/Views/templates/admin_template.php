@@ -30,6 +30,24 @@
   <!-- Theme style -->
   <link rel="stylesheet" href="<?= base_url()?>/public/dist/css/adminlte.min.css">
 
+  <link rel="stylesheet" href="<?= base_url()?>/public/dist/css/stylesTrazalog.css">
+
+  <!-- Bootstrap Switch -->
+  <script src="<?= base_url()?>/public/plugins/bootstrap-switch/js/bootstrap-switch.min.js"></script>
+  <!-- Plugin checkboxs into toggles -->
+  <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+  <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+  <!-- Sweet Alert 2 -->
+  <script src="<?= base_url()?>/lib/sweetalert2/dist/sweetalert2.all.min.js"></script>
+  <link rel="stylesheet" src="<?= base_url()?>/lib/sweetalert2/dist/sweetalert2.min.css">
+  <!-- Scripts para Notificaciones -->
+  <script src="<?= base_url()?>/lib/notificaciones.js"></script>
+  <!--Scripts Generales -->
+  <script src="<?= base_url()?>/lib/scriptsGenerales.js"></script>
+  <!--Scripts para Formularios -->
+  <script src="<?= base_url()?>/lib/forms.js"></script>
+  <!-- Masonry Plugin -->
+  <script src="<?= base_url()?>/public/plugins/masonry/masonry.pkgd.min.js"></script>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
@@ -72,64 +90,7 @@
         </div>
       </li>
 
-      <!-- Messages Dropdown Menu -->
-      <li class="nav-item dropdown">
-        <a class="nav-link" data-toggle="dropdown" href="#">
-          <i class="far fa-comments"></i>
-          <span class="badge badge-danger navbar-badge">3</span>
-        </a>
-        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-          <a href="#" class="dropdown-item">
-            <!-- Message Start -->
-            <div class="media">
-              <img src="<?= base_url()?>/public/dist/img/user1-128x128.jpg" alt="User Avatar" class="img-size-50 mr-3 img-circle">
-              <div class="media-body">
-                <h3 class="dropdown-item-title">
-                  Brad Diesel
-                  <span class="float-right text-sm text-danger"><i class="fas fa-star"></i></span>
-                </h3>
-                <p class="text-sm">Call me whenever you can...</p>
-                <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
-              </div>
-            </div>
-            <!-- Message End -->
-          </a>
-          <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item">
-            <!-- Message Start -->
-            <div class="media">
-              <img src="<?= base_url()?>/public/dist/img/user8-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
-              <div class="media-body">
-                <h3 class="dropdown-item-title">
-                  John Pierce
-                  <span class="float-right text-sm text-muted"><i class="fas fa-star"></i></span>
-                </h3>
-                <p class="text-sm">I got your message bro</p>
-                <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
-              </div>
-            </div>
-            <!-- Message End -->
-          </a>
-          <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item">
-            <!-- Message Start -->
-            <div class="media">
-              <img src="<?= base_url()?>/public/dist/img/user3-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
-              <div class="media-body">
-                <h3 class="dropdown-item-title">
-                  Nora Silvester
-                  <span class="float-right text-sm text-warning"><i class="fas fa-star"></i></span>
-                </h3>
-                <p class="text-sm">The subject goes here</p>
-                <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
-              </div>
-            </div>
-            <!-- Message End -->
-          </a>
-          <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item dropdown-footer">See All Messages</a>
-        </div>
-      </li>
+    
       <!-- Notifications Dropdown Menu -->
       <li class="nav-item dropdown">
         <a class="nav-link" data-toggle="dropdown" href="#">
@@ -162,11 +123,11 @@
           <i class="fas fa-expand-arrows-alt"></i>
         </a>
       </li>
-      <li class="nav-item">
+      <!-- <li class="nav-item">
         <a class="nav-link" data-widget="control-sidebar" data-controlsidebar-slide="true" href="#" role="button">
           <i class="fas fa-th-large"></i>
         </a>
-      </li>
+      </li> -->
     </ul>
   </nav>
   <!-- /.navbar -->
@@ -221,7 +182,30 @@
               <i class="far fa-circle nav-icon"></i>
               <p>
                 Persona
-                <!-- <span class="right badge badge-danger">New</span> -->
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="<?= site_url('cuenta') ?>" class="nav-link">
+              <i class="far fa-circle nav-icon"></i>
+              <p>
+                Cuenta
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="<?= site_url('cliente') ?>" class="nav-link">
+              <i class="far fa-circle nav-icon"></i>
+              <p>
+                Clientes
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="<?= site_url('persona/entrevista') ?>" class="nav-link">
+              <i class="far fa-circle nav-icon"></i>
+              <p>
+                Entrevista
               </p>
             </a>
           </li>
@@ -235,14 +219,17 @@
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <?php $this->renderSection('content') ?>
+    <a id="back-to-top" href="#" class="btn btn-primary back-to-top" role="button" aria-label="Scroll to top">
+      <i class="fas fa-chevron-up"></i>
+    </a>
   </div>
   <!-- /.content-wrapper -->
   <footer class="main-footer">
-    <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong>
+    <strong>Copyright &copy; 2014-2023 <a href="https://trazalog.com/">TRAZALOG.COM</a>.</strong>
     All rights reserved.
-    <div class="float-right d-none d-sm-inline-block">
+  <!--   <div class="float-right d-none d-sm-inline-block">
       <b>Version</b> 3.2.0
-    </div>
+    </div> -->
   </footer>
 
   <!-- Control Sidebar -->
@@ -312,7 +299,7 @@
 <script src="<?= base_url()?>/public/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
 
 <!-- lenguaje datatable NO FUNCA-->
-<!-- <script src="https://cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json"></script> -->
+<!-- <script src="https://cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json"></script>  -->
 
 
 </body>
