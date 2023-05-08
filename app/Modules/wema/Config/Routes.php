@@ -18,7 +18,11 @@ if(!isset($routes)) {
 
 /* RUTAS CUENTAS */
 $routes->get('/cuenta', '\Modules\wema\Controllers\Cuenta::index');
-
+$routes->post('/getCuentas', '\Modules\wema\Controllers\Persona::getPersonas');
+/*$routes->post('/guardarCuenta', '\Modules\wema\Controllers\Persona::guardarCuenta');
+$routes->post('/editarCuenta', '\Modules\wema\Controllers\Persona::editarCuenta');
+$routes->get('/eliminarCuenta/(:num)', '\Modules\wema\Controllers\Persona::eliminarCuenta/$1');
+$routes->get('/habilitarCuenta/(:num)', '\Modules\wema\Controllers\Persona::habilitarCuenta/$1');*/
 
 
 /* RUTAS CLIENTE */

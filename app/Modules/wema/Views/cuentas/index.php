@@ -5,19 +5,29 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6">
-            <h1>Cuentas</h1>
+        <div class="row mb-2"> 
+          <div class="col-sm-7">
+             <ul class="breadcrumb">
+             <!-- <button type="button" class="completed"><i class="fa fa-folder"></i></button> -->
+			        <li class="completed" ><a><i class="fa fa-folder-open"></i></a></li>
+			        <li class="completed" ><a>CONFIANZA Y TECNOLOGIA</a></li>
+			        <li class="active"><a>BIMBO S.A de C.V.</a></li>
+		        </ul> 
+        
           </div>
-          <div class="col-sm-6">
-            <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Cuentas</li>
-            </ol>
+           <div class="col-sm-3"></div> 
+          <div class="col-sm-2">
+          <button type="button" class="btn btn-outline-primary btn-block btn-sm"><i class="fa fa-info float-left"></i> Información del Cuentas</button>
+          </div>
+        </div>
+        <div class="row mb-2">
+          <div class="col-sm-8">
+            <h1>Cuentas</h1>
           </div>
         </div>
       </div><!-- /.container-fluid -->
     </section>
+
     <section class="content">
       <div class="container-fluid">
         <div class="row">
@@ -41,26 +51,36 @@
                   </tr>
                   </thead>
                   <tbody>
-                  <tr>
-                    <td><div class="btn-group"> 
-                                <i class="fa fa-search" style="cursor: pointer;margin: 3px;" title="Ver Detalles" onclick="verCuenta(this)"></i>
-                                <label class="switch">
+                  <?php foreach ($listadoCuentas as $key => $persona){
+
+                    /* imagen de perfil */
+                    if($persona->imagen){
+                      $src = imagePerfil($persona->imagen, $persona->nom_imagen); $class = "img-circle elevation-2"; $style = "height: 3rem; width: 3.9rem";}
+                    else{ 
+                      $src = ""; $class = ""; $style = "";  
+                    }
+                    (strcmp($persona->estado, 'true') == 0) ? $check= '' : $check = 'checked';
+                    
+                    echo '<tr data-json=\''.json_encode($persona).'\'>';
+                    echo'<td>
+                            <div class="btn-group"> 
+                              <i class="fa fa-search" style="cursor: pointer;margin: 3px;" title="Ver Detalles" onclick="verCuenta(this);"></i>
+                              <label class="switch">
                                 <div class="bootstrap-switch-container float-right" style="width: 15px; margin-left: 24px;" >
-                                  <input type="checkbox" id=""  name="" data-bootstrap-switch  onclick="">
+                                <input type="checkbox" name="habilitarCuenta" data-bootstrap-switch '.$check.'>
                                 </div>
-                                <i class="fa fa-users" style="cursor: pointer;margin: 3px;" title="Ver Detalles"></i>
-                                </label>
-                              </div>
-                    </td>
-                    <td>
-                    <img src="<?= base_url()?>/public/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image" style="height: auto; width: 2.1rem;">
-                    </td>
-                    <td>Alianza</td>
-                    <td> 45231254565615</td>
-                    <td>Confianza y Tecnologia</td>
-                    <td>Moral</td>
-                  </tr>
-                 
+                                <i class="fa fa-users" style="cursor: pointer;margin: 3px;" title="Ver Listado"  onclick="listadoClienteCuenta(this);"></i>
+                              </label>
+                            </div>
+                          </td>
+                          <td class="centrar"><img src="'. $src .'" class="'.$class.'" style="'.$style.'"/></td>
+                          <td>'.$persona->curp.'</td>
+                          <td>'.$persona->apellidos.'</td>
+                          <td>'.$persona->nombres.'</td>
+                          <td>'.$persona->nombres.'</td>
+                    </tr>';
+                  } 
+                  ?>                
                   </tbody>
                 </table>
               </div>
@@ -85,9 +105,9 @@
                 <div class="col-3">
                   <h5 class="modal-title" id="mdl-title">Nueva Cuenta</h5>
                 </div>
-                <label class="switch" onclick="habilitarCuenta()">
+                <label class="switch" onclick="habilitarCuenta();">
                 <div id="btn-habilitarCuenta" class="bootstrap-switch-container" style="width: 126px; margin-left: -42px;" hidden>
-                    <input type="checkbox" name="my-checkbox"  data-bootstrap-switch onclick="habilitarCuenta()">
+                  <input type="checkbox" name="habilitarCuentaEditar" data-bootstrap-switch-editar checked>
                 </div>
                 </label>
                 <div class="col-3" >
@@ -104,10 +124,10 @@
               
             </div>
             <div class="modal-body">
-            <form id="frm-nueva_cuenta">
+            <form id="frm-nuevaCuenta">
                         <div class="row">
                           <div class="col">
-                            <div class="card card-light">
+                            <div class="card card-info">
                               <div class="card-header">
                                 <h2 class="card-title">Datos Generales</h2>
                               </div><!-- fin card title -->
@@ -194,7 +214,7 @@
 
                         <div class="row">
                           <div class="col">
-                            <div class="card card-light" style="margin-bottom: 0rem;">
+                            <div class="card card-info" style="margin-bottom: 0rem;">
                               <div class="card-header">
                                 <h2 class="card-title">Datos de Contacto</h2>
                               </div><!-- fin card title -->
@@ -263,7 +283,7 @@
             <div class="modal-footer ">
               <div  class="col-mt-1 col-12 justify-content-center" style="margin-top:-5px">
                 <button type="button" class="btn btn-secondary float-left" data-dismiss="modal" onclick='limpiaForm("#nueva_cuenta")'>Cancelar</button>
-                <button type="button" class="btn btn-success float-left" style="margin-left: 5px;" onclick="guardarCuenta()">Crear</button>
+                <button type="button" class="btn btn-success float-left" id="btn-accion-cuenta" style="margin-left: 5px;" onclick="guardarCuenta()">Crear</button>
               </div>
             </div>
           </div>
@@ -288,33 +308,28 @@
       "buttons":  [
                     {
                       extend:"excel",
-                      text:'<i class="fas fa-file-excel"></i><a class="text-light"> Exportar a Excel </a>',
-                      className: 'btn btn-success btn-sm'
+                      text:'<i class="fas fa-file-excel"></i><a class="text-secondary"> Excel </a>',
+                      className: 'btn btn-default btn-sm'
                     },
                     {
                       extend:"pdf", 
-                      text:'<i class="fas fa-file-pdf"></i><a class="text-light"> Exportar a PDF </a>',
-                      className: 'btn btn-danger btn-sm'
+                      text:'<i class="fas fa-file-pdf"></i><a class="text-secondary"> PDF </a>',
+                      className: 'btn btn-default btn-sm'
                     },
                     {
                       extend:"copy",
-                      text:'<i class="fas fa-file"></i><a class="text-light"> Copiar </a>',
-                      className: 'btn btn-secondary btn-sm'
+                      text:'<i class="fas fa-file"></i><a class="text-secondary"> Copiar </a>',
+                      className: 'btn btn-default btn-sm'
                     },
                     {
                       extend:"print",
-                      text:'<i class="fas fa-print"></i><a class="text-light"> Imprimir </a>',
-                      className: 'btn btn-info btn-sm'
+                      text:'<i class="fas fa-print"></i><a class="text-secondary"> Imprimir </a>',
+                      className: 'btn btn-default btn-sm'
                     },
-                   /*  {
-                      extend:"colvis",
-                      text:'<a class="text-light"> Ocultar columnas </a>',
-                      className: 'btn btn-dark btn-sm'
-                    },  */
                     {
                       text: '<a class="text-light" data-toggle="modal" data-target="#nueva_cuenta"> Agregar </a>',
                       style: 'margin-left:10px',
-                      className: 'btn btn-secondary btn-sm agregar',
+                      className: 'btn btn-info btn-sm agregar',
 
                       action: function ( e, dt, node, config ) {
                         
@@ -326,23 +341,52 @@
 
 
   $("#nueva_cuenta").on("hide.bs.modal", function() {
-    $('#btn-accion').attr('onclick', 'guardarPersona()');
-    $('#btn-accion').html('Crear');
+    $('#btn-accion-cuenta').attr('onclick', 'guardarPersona()');
+    $('#btn-accion-cuenta').html('Crear');
     $('#mdl-title').html('Nueva Cuenta');
-    $('#frm-nueva_cuenta').find('.form-control').prop('disabled', false);
+    $('#frm-nuevaCuenta').find('.form-control').prop('disabled', false);
     $('#btn-editar').prop('hidden', true);
     $('#btn-cuenta').prop('hidden', true);
     $('#btn-habilitarCuenta').prop('hidden', true);
-    $('#btn-accion').show();
-    $('#frm-nueva_cuenta')[0].reset();
+    $('#btn-accion-cuenta').show();
+    $('#frm-nuevaCuenta')[0].reset();
   });
 
 function guardarCuenta(){
-  //alert("hola");
-  var formData = new FormData($('#frm-nueva_cuenta')[0]);
+  console.log("guardarCuenta");
+  var formData = new FormData($('#frm-nuevaCuenta')[0]);
   
   console.log(formData);
-  if(!validarForm()) return;
+  if(!validaForm('#frm-nuevaCuenta')) return;
+
+  $.ajax({
+    type:'POST',
+    dataType: 'JSON',
+    processData: false,
+    contentType: false,
+    data:formData,
+    url: '<?= base_url()?>/guardarCuenta',
+    success: function(resp) {
+      if(resp.status){
+        notificar(notiSuccess);
+        $('#nueva_cuenta').modal('hide');
+        $('#frm-nuevaCuenta')[0].reset();
+        limpiaForm('#nueva_cuenta');
+      }else{
+        notificar(notiError);
+      }
+    },
+    error: function(result){
+      notificar(notiError);
+    },
+    complete: function() {
+      notificar(notiSuccess);
+      $('#nueva_cuenta').modal('hide');
+      $('#frm-nuevaCuenta')[0].reset();
+      limpiaForm('#nueva_cuenta');
+      actualizaTablaPersonas();
+    }
+  });
 
 
 }
@@ -466,29 +510,124 @@ function validarForm(){
   return ban; 
 }
 
-$("input[data-bootstrap-switch]").each(function(){
-     a = $(this).bootstrapSwitch('state', $(this).prop('checked'));
-}); 
+/* inicializacion botones on/off  de tabla*/
+$("[name='habilitarCuentaEditar']").bootstrapSwitch({
+  /* habilitar/deshabilitar personas */
+   onSwitchChange:function(e, state){
+    var tr = $(e.target).closest('tr');
+    var json = $(tr).data('json');
+    if(!state){
+      Swal.fire({
+        title: '¿Esta seguro que desea deshabilitar la cuenta?',
+        text: 'Si continua, ningun usuario de la cuenta podra ingresar al sistema, y sus datos desaparecerán de algunos reportes e indicadores',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si, deshabilitar!'
+      }).then((result) => {
+      if (result.isConfirmed) {
+        deshabilitaPersona(json.pers_id);
+      }
+      else{
+        //vuelve a el estado original y el ultimo paramaetro es para cortar la ejecucion
+        $(this).bootstrapSwitch('state', !state ,true);
+      }
+      })
+    }
+    else{
+      Swal.fire({
+        title: '¿Esta seguro que desea habilitar la cuenta?',
+        text: "Ten en cuenta que se habilitaras la cuenta",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si, habilitar!'
+      }).then((result) => {
+      if (result.isConfirmed) {
+        habilitaPersona(json.pers_id);
+      }
+      else{
+        //vuelve a el estado original y el ultimo paramaetro es para cortar la ejecucion
+        $(this).bootstrapSwitch('state', !state ,true);
+      }
+    });
+    } 
+  }
+});
+
+/* inicializacion botones on/off  de tabla*/
+$("[name='habilitarCuenta']").bootstrapSwitch({
+  /* habilitar/deshabilitar personas */
+   onSwitchChange:function(e, state){
+    var tr = $(e.target).closest('tr');
+    var json = $(tr).data('json');
+    if(!state){
+      Swal.fire({
+        title: '¿Esta seguro que desea deshabilitar la cuenta?',
+        text: 'Si continua, ningun usuario de la cuenta podra ingresar al sistema, y sus datos desaparecerán de algunos reportes e indicadores',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si, deshabilitar!'
+      }).then((result) => {
+      if (result.isConfirmed) {
+        deshabilitaPersona(json.pers_id);
+      }
+      else{
+        //vuelve a el estado original y el ultimo paramaetro es para cortar la ejecucion
+        $(this).bootstrapSwitch('state', !state ,true);
+      }
+      })
+    }
+    else{
+      Swal.fire({
+        title: '¿Esta seguro que desea habilitar la cuenta?',
+        text: "Ten en cuenta que se habilitaras la cuenta",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si, habilitar!'
+      }).then((result) => {
+      if (result.isConfirmed) {
+        habilitaPersona(json.pers_id);
+      }
+      else{
+        //vuelve a el estado original y el ultimo paramaetro es para cortar la ejecucion
+        $(this).bootstrapSwitch('state', !state ,true);
+      }
+    });
+    } 
+  }
+});
 
 function verCuenta(e){
-    $('#btn-accion').hide();
+    $('#btn-accion-cuenta').hide();
     $('#mdl-title').html('Cuenta');
     $('#btn-editar').prop('hidden', false);
     $('#btn-clientes').prop('hidden', false);
     $('#btn-habilitarCuenta').prop('hidden', true);
-    $('#frm-nueva_cuenta').find('.form-control').prop('disabled', true);
+    $('#frm-nuevaCuenta').find('.form-control').prop('disabled', true);
     $('#nueva_cuenta').modal('show');
 }
 
-function habilitaEditarCuenta(){
+function habilitaEditarCuenta(e){
+  console.log("habilitaEditarCuenta");
     $('#btn-habilitarCuenta').prop('hidden', false);
-    $('#btn-accion').show();
-    $('#btn-accion').html('Modificar');
-    $('#btn-accion').attr('onclick', 'editarCuentta()');
-    $('#frm-nueva_cuenta').find('.form-control').prop('disabled', false);
+    $('#btn-accion-cuenta').show();
+    $('#btn-accion-cuenta').html('Modificar');
+    $('#btn-accion-cuenta').attr('onclick', 'editarCuentta()');
+    $('#frm-nuevaCuenta').find('.form-control').prop('disabled', false);
     $('#btn-editar').prop('hidden', true);
     $('#btn-clientes').prop('hidden', false);
     $('#btn-clientes').prop('hidden', true);
+}
+
+function listadoClienteCuenta(e) {
+  
 }
 
 /* Elimina los estilos de los input correctos-incorrectos */
