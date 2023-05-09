@@ -1,5 +1,5 @@
 <datasource>
-  <name>WemapDatasoure</name>
+  <name>WemapDataSource</name>
   <description>WeMap Data Source</description>
   <jndiConfig useDataSourceFactory="false">
     <name>WemapDatasourceJNDI</name>
