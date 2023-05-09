@@ -1,0 +1,332 @@
+<data enableBatchRequests="true" name="PersonaDataService" transports="http https local">
+  <query id="getPersonas" useConfig="WemapDataSource">
+    <sql>select *,p.eliminado as estado, t.descripcion as genero, t1.descripcion as pais, 
+t2.descripcion as estado_civil, t3.descripcion as nacimiento,
+t4.descripcion as educacion, t5.descripcion as ubicacion 
+from core.personas p
+left join core.tablas t on p.gene_id = t.tabl_id 
+left join core.tablas t1 on t1.tabl_id = p.pana_id
+left join core.tablas t2 on t2.tabl_id = p.esci_id
+left join core.tablas t3 on t3.tabl_id = p.naci_id
+left join core.tablas t4 on t4.tabl_id = p.educ_id
+left join core.tablas t5 on t5.tabl_id = p.ubic_id</sql>
+    <result outputType="json">{
+    "personas": {
+        "persona": [{
+            "pers_id" : "$pers_id",
+            "apellidos": "$apellidos",
+            "nombres": "$nombres",
+            "curp": "$curp",
+            "fec_nacimiento": "$fec_nacimiento",
+            "ocupacion": "$ocupacion",
+            "telefono": "$telefono",
+            "email": "$email",
+            "gene_id":"$gene_id",
+            "pana_id":"$pana_id",
+            "esci_id":"$esci_id",
+            "naci_id":"$naci_id",
+            "educ_id":"$educ_id",
+            "ubic_id":"$ubic_id",
+            "num_exterior":"$num_exterior",
+            "cod_postal":"$cod_postal",
+            "calle":"$calle",
+            "num_interior":"$num_interior",
+            "genero":"$genero",
+            "pais":"$pais",
+            "estado_civil":"$estado_civil",
+            "nacimiento":"$nacimiento",
+            "educacion":"$educacion",
+            "estado":"$estado",
+            "imagen":"$imagen",
+            "nom_imagen":"$nom_imagen"
+        }]
+    }
+}</result>
+  </query>
+  <query id="setPersona" useConfig="WemapDataSource">
+    <sql>INSERT INTO core.personas  
+    (apellidos,
+    nombres,
+    curp,
+    fec_nacimiento,
+    ocupacion,
+    telefono,
+    email,
+    calle,
+    num_exterior,
+    cod_postal,
+    num_interior,
+    usr_app_alta,
+    usr_app_ult_modif,
+    gene_id,
+    pana_id,
+    esci_id,
+    naci_id,
+    educ_id,
+    ubic_id,
+    clie_id,
+    imagen,
+    nom_imagen)
+select apellidos,
+nombres,
+curp,
+case when fec_nacimiento is null or fec_nacimiento = '' then null else cast(fec_nacimiento as date) end, 
+ocupacion,
+telefono,
+email,
+calle,
+num_exterior,
+cod_postal,
+num_interior,
+usr_app_alta,
+usr_app_ult_modif,
+gene_id,
+pana_id,
+esci_id,
+naci_id,
+educ_id,
+ubic_id,
+cast(clie_id as integer),
+case when imagen is null or imagen = '' then null else cast(imagen as bytea) end,
+nom_imagen
+from
+(select
+:apellidos apellidos,
+:nombres nombres,
+:curp curp,
+:fec_nacimiento fec_nacimiento, 
+:ocupacion ocupacion,
+:telefono telefono,
+:email email,
+:calle calle,
+:num_exterior num_exterior,
+:cod_postal cod_postal,
+:num_interior num_interior,
+:usr_app_alta usr_app_alta,
+:usr_app_ult_modif usr_app_ult_modif,
+:gene_id gene_id,
+:pana_id pana_id,
+:esci_id esci_id,
+:naci_id naci_id,
+:educ_id educ_id,
+:ubic_id ubic_id,
+:clie_id clie_id,
+:imagen imagen,
+:nom_imagen nom_imagen) param</sql>
+    <param name="apellidos" sqlType="STRING" />
+    <param name="nombres" sqlType="STRING" />
+    <param name="curp" sqlType="STRING" />
+    <param name="fec_nacimiento" sqlType="STRING" />
+    <param name="ocupacion" sqlType="STRING" />
+    <param name="telefono" sqlType="STRING" />
+    <param name="email" sqlType="STRING" />
+    <param name="calle" sqlType="STRING" />
+    <param name="num_exterior" sqlType="STRING" />
+    <param name="cod_postal" sqlType="STRING" />
+    <param name="num_interior" sqlType="STRING" />
+    <param name="usr_app_alta" sqlType="STRING" />
+    <param name="usr_app_ult_modif" sqlType="STRING" />
+    <param name="gene_id" sqlType="STRING" />
+    <param name="pana_id" sqlType="STRING" />
+    <param name="esci_id" sqlType="STRING" />
+    <param name="naci_id" sqlType="STRING" />
+    <param name="educ_id" sqlType="STRING" />
+    <param name="ubic_id" sqlType="STRING" />
+    <param name="clie_id" sqlType="STRING" />
+    <param name="imagen" sqlType="STRING" />
+    <param name="nom_imagen" sqlType="STRING" />
+  </query>
+  <query id="updatePersona" useConfig="WemapDataSource">
+    <sql>update core.personas p
+set
+apellidos = :apellidos,
+nombres = :nombres,
+curp = :curp,
+fec_nacimiento = cast(:fec_nacimiento as date), 
+ocupacion = :ocupacion,
+telefono = :telefono,
+email = :email,
+calle = :calle,
+num_exterior = :num_exterior,
+cod_postal = :cod_postal,
+num_interior = :num_interior,
+usr_app_alta = :usr_app_alta,
+usr_app_ult_modif = :usr_app_ult_modif,
+gene_id = :gene_id,
+pana_id = :pana_id,
+esci_id = :esci_id,
+naci_id = :naci_id,
+educ_id = :educ_id,
+ubic_id = :ubic_id,
+clie_id = cast(:clie_id as integer),
+imagen = case when param.imagen is null or param.imagen = '' then p.imagen else cast(param.imagen as bytea) end,
+nom_imagen = case when param.nom_imagen is null or param.nom_imagen = '' then p.nom_imagen else param.nom_imagen end
+from (select :imagen imagen, :nom_imagen nom_imagen) param
+where pers_id = cast(:pers_id as integer)</sql>
+    <param name="apellidos" sqlType="STRING" />
+    <param name="nombres" sqlType="STRING" />
+    <param name="curp" sqlType="STRING" />
+    <param name="fec_nacimiento" sqlType="STRING" />
+    <param name="ocupacion" sqlType="STRING" />
+    <param name="telefono" sqlType="STRING" />
+    <param name="email" sqlType="STRING" />
+    <param name="calle" sqlType="STRING" />
+    <param name="num_exterior" sqlType="STRING" />
+    <param name="cod_postal" sqlType="STRING" />
+    <param name="num_interior" sqlType="STRING" />
+    <param name="usr_app_alta" sqlType="STRING" />
+    <param name="usr_app_ult_modif" sqlType="STRING" />
+    <param name="gene_id" sqlType="STRING" />
+    <param name="pana_id" sqlType="STRING" />
+    <param name="esci_id" sqlType="STRING" />
+    <param name="naci_id" sqlType="STRING" />
+    <param name="educ_id" sqlType="STRING" />
+    <param name="ubic_id" sqlType="STRING" />
+    <param name="clie_id" sqlType="STRING" />
+    <param name="imagen" sqlType="STRING" />
+    <param name="pers_id" sqlType="STRING" />
+    <param name="nom_imagen" sqlType="STRING" />
+  </query>
+  <query id="deletePersona" useConfig="WemapDataSource">
+    <sql>update core.personas set eliminado = true where pers_id = cast(:pers_id as integer)</sql>
+    <param name="pers_id" sqlType="STRING" />
+  </query>
+  <query id="habilitarPersona" useConfig="WemapDataSource">
+    <sql>update core.personas set eliminado = false where pers_id = cast(:pers_id as integer)</sql>
+    <param name="pers_id" sqlType="STRING" />
+  </query>
+  <query id="getPersonaxId" useConfig="WemapDataSource">
+    <sql>select *,p.eliminado as estado, t.descripcion as genero, t1.descripcion as pais, 
+t2.descripcion as estado_civil, t3.descripcion as nacimiento,
+t4.descripcion as educacion, t5.descripcion as ubicacion 
+from core.personas p
+left join core.tablas t on p.gene_id = t.tabl_id 
+left join core.tablas t1 on t1.tabl_id = p.pana_id
+left join core.tablas t2 on t2.tabl_id = p.esci_id
+left join core.tablas t3 on t3.tabl_id = p.naci_id
+left join core.tablas t4 on t4.tabl_id = p.educ_id
+left join core.tablas t5 on t5.tabl_id = p.ubic_id
+where p.pers_id = cast(:pers_id as integer)</sql>
+    <result outputType="json">{
+    "personas": {
+        "persona": [{
+            "pers_id" : "$pers_id",
+            "apellidos": "$apellidos",
+            "nombres": "$nombres",
+            "curp": "$curp",
+            "fec_nacimiento": "$fec_nacimiento",
+            "ocupacion": "$ocupacion",
+            "telefono": "$telefono",
+            "email": "$email",
+            "gene_id":"$gene_id",
+            "pana_id":"$pana_id",
+            "esci_id":"$esci_id",
+            "naci_id":"$naci_id",
+            "educ_id":"$educ_id",
+            "ubic_id":"$ubic_id",
+            "num_exterior":"$num_exterior",
+            "cod_postal":"$cod_postal",
+            "calle":"$calle",
+            "num_interior":"$num_interior",
+            "genero":"$genero",
+            "pais":"$pais",
+            "estado_civil":"$estado_civil",
+            "nacimiento":"$nacimiento",
+            "educacion":"$educacion",
+            "estado":"$estado",
+            "imagen":"$imagen",
+            "nom_imagen":"$nom_imagen"
+        }]
+    }
+}</result>
+    <param name="pers_id" sqlType="STRING" />
+  </query>
+  <resource method="GET" path="/persona">
+    <description>Listado personas de core.personas                           
+                                    </description>
+    <call-query href="getPersonas" />
+  </resource>
+  <resource method="POST" path="/persona">
+    <description>Guarda persona en tabla core.personas                     </description>
+    <call-query href="setPersona">
+      <with-param name="apellidos" query-param="apellidos" />
+      <with-param name="nombres" query-param="nombres" />
+      <with-param name="curp" query-param="curp" />
+      <with-param name="fec_nacimiento" query-param="fec_nacimiento" />
+      <with-param name="ocupacion" query-param="ocupacion" />
+      <with-param name="telefono" query-param="telefono" />
+      <with-param name="email" query-param="email" />
+      <with-param name="calle" query-param="calle" />
+      <with-param name="num_exterior" query-param="num_exterior" />
+      <with-param name="cod_postal" query-param="cod_postal" />
+      <with-param name="num_interior" query-param="num_interior" />
+      <with-param name="usr_app_alta" query-param="usr_app_alta" />
+      <with-param name="usr_app_ult_modif" query-param="usr_app_ult_modif" />
+      <with-param name="gene_id" query-param="gene_id" />
+      <with-param name="pana_id" query-param="pana_id" />
+      <with-param name="esci_id" query-param="esci_id" />
+      <with-param name="naci_id" query-param="naci_id" />
+      <with-param name="educ_id" query-param="educ_id" />
+      <with-param name="ubic_id" query-param="ubic_id" />
+      <with-param name="clie_id" query-param="clie_id" />
+      <with-param name="imagen" query-param="imagen" />
+      <with-param name="nom_imagen" query-param="nom_imagen" />
+    </call-query>
+  </resource>
+  <resource method="PUT" path="/persona">
+    <description>Updatea datos de persona en core.personas por pers_id                       
+                                    
+                                    
+                                    </description>
+    <call-query href="updatePersona">
+      <with-param name="apellidos" query-param="apellidos" />
+      <with-param name="nombres" query-param="nombres" />
+      <with-param name="curp" query-param="curp" />
+      <with-param name="fec_nacimiento" query-param="fec_nacimiento" />
+      <with-param name="ocupacion" query-param="ocupacion" />
+      <with-param name="telefono" query-param="telefono" />
+      <with-param name="email" query-param="email" />
+      <with-param name="calle" query-param="calle" />
+      <with-param name="num_exterior" query-param="num_exterior" />
+      <with-param name="cod_postal" query-param="cod_postal" />
+      <with-param name="num_interior" query-param="num_interior" />
+      <with-param name="usr_app_alta" query-param="usr_app_alta" />
+      <with-param name="usr_app_ult_modif" query-param="usr_app_ult_modif" />
+      <with-param name="gene_id" query-param="gene_id" />
+      <with-param name="pana_id" query-param="pana_id" />
+      <with-param name="esci_id" query-param="esci_id" />
+      <with-param name="naci_id" query-param="naci_id" />
+      <with-param name="educ_id" query-param="educ_id" />
+      <with-param name="ubic_id" query-param="ubic_id" />
+      <with-param name="clie_id" query-param="clie_id" />
+      <with-param name="imagen" query-param="imagen" />
+      <with-param name="pers_id" query-param="pers_id" />
+      <with-param name="nom_imagen" query-param="nom_imagen" />
+    </call-query>
+  </resource>
+  <resource method="DELETE" path="/persona">
+    <description>Borrado logico de persona por pers_id en core.personas                               
+                                    
+                                    </description>
+    <call-query href="deletePersona">
+      <with-param name="pers_id" query-param="pers_id" />
+    </call-query>
+  </resource>
+  <resource method="PUT" path="/habilitarpersona">
+    <description>actualiza eliminado en true para poder habilitar una persona                    
+                                    </description>
+    <call-query href="habilitarPersona">
+      <with-param name="pers_id" query-param="pers_id" />
+    </call-query>
+  </resource>
+  <resource method="GET" path="/persona/id/{pers_id}">
+    <description>Obtiene datos de persona por pers_id                     
+                                    </description>
+    <call-query href="getPersonaxId">
+      <with-param name="pers_id" query-param="pers_id" />
+    </call-query>
+  </resource>
+  <config id="WemapDataSource">
+    <property name="carbon_datasource_name">WemapDataSource</property>
+  </config>
+</data>
