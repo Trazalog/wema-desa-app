@@ -48,6 +48,7 @@
                                 <button id="btn-anterior" class="btn btn-primary">Anterior</button><button id="btn-siguiente" class="btn btn-primary">Siguiente</button>
                             </div>
                         </div>
+                        <div id="formEntrevista" class="frm-new" data-form="1"></div>
                     </div>
                     <!-- /.card-body -->
                 </div>
@@ -68,6 +69,7 @@ $(document).ready(function () {
     // var stepper = new Stepper(document.querySelector('.bs-stepper'));
     document.getElementById('btn-anterior').onclick = stepper.previous();
     document.getElementById('btn-siguiente').onclick = stepper.next();
+    detectarForm();
 });
 </script>
 <?= $this->endSection() ?>

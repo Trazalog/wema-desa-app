@@ -1,4 +1,8 @@
-<?php defined('BASEPATH') or exit('No direct script access allowed');
+<?php
+/**
+ * Helper para funciones sobre formularios generados dinamicamente
+ * Mantener la estructura del mismo
+*/
 
 if (!function_exists('form')) {
     function form($data, $modal = false)

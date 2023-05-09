@@ -1,13 +1,17 @@
-<?php if (!defined('BASEPATH')) {
-    exit('No direct script access allowed');
-}
+<?php 
 
-class Forms extends CI_Model
-{
+namespace Modules\traz_comp_formularios\Models;
+
+use CodeIgniter\Model;
+use App\Libraries\REST;
+
+class Forms extends Model{
+
 
     public function __construct()
     {
-        parent::__construct();
+        $this->db = \Config\Database::connect();
+        $this->REST = new REST();
     }
     /**
         * Guarda la instacia del formulario dinámico

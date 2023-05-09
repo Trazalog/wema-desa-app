@@ -31,7 +31,7 @@ class Database extends Config
      * @var array
      */
     public $default = [
-        'DSN'      => 'pgsql:host=10.142.0.13;port=5432;dbname=tools_prod_t',
+        'DSN'      => '',
         'hostname' => '10.142.0.13',
         'username' => 'postgres',
         'password' => '!Password00',

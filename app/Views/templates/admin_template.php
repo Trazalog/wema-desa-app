@@ -260,6 +260,8 @@
 
 <script>
   $.widget.bridge('uibutton', $.ui.button)
+  //Definicion de variables JS con valores PHP
+  frmUrl = "<?= site_url('form') ?>";
 </script>
 <!-- Bootstrap 4 -->
 <script src="<?= base_url()?>/public/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>

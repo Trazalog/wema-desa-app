@@ -1,12 +1,15 @@
-<?php defined('BASEPATH') or exit('No direct script access allowed');
+<?php
+ 
+namespace Modules\traz_comp_formularios\Controllers; 
+use App\Controllers\BaseController;
+use Modules\traz_comp_formularios\Models\Forms; 
 
-class Form extends CI_Controller
+
+class Form extends BaseController
 {
     public function __construct()
     {
-        parent::__construct();
-
-        $this->load->model('Forms');
+        $this->Forms = new Forms();
     }
 
     public function obtener($info, $modal = false)
@@ -33,8 +36,9 @@ class Form extends CI_Controller
 	* @param integer $form_id 
 	* @return array instancia formulario generado
 	*/
-    public function obtenerNuevo($form = '', $modal = false){
-        log_message('DEBUG','#TRAZA | #TRAZ-COMP-FORMULARIOS | #FORM | obtenerNuevo() form_id ->'. $form);
+    public function obtenerNuevo($form = ''){
+        log_message('info','#TRAZA | #TRAZ-COMP-FORMULARIOS | #FORM | obtenerNuevo() form_id ->'. $form);
+
         if(!empty($form)){
 
             $data['html'] = form($this->Forms->obtenerPlantilla($form), $modal);
@@ -146,5 +150,9 @@ class Form extends CI_Controller
             return $this->upload->data()['file_name'];
         }
 
+    }
+    public function prueba(){
+        log_message('info', 'HOLAAAAAAA ');
+        return;
     }
 }
