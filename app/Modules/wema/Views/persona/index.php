@@ -61,7 +61,7 @@
                                 <i class="fa fa-search" style="cursor: pointer;margin: 3px;" title="Ver Detalles" onclick="verPersona(this)"></i>
                                 <label class="switch" id="miLabel">
                                 <div class="bootstrap-switch-container float-right" style="width: 15px; margin-left: 24px;" >
-                                  <input type="checkbox" id="habilitarPersona"  name="habilitarPersona" data-bootstrap-switch '.$check.'>
+                                  <input type="checkbox" name="habilitarPersona" data-bootstrap-switch '.$check.'>
                                 </div>
                                 </label>
                               </div>
@@ -100,7 +100,7 @@
                 <label class="switch">
                 <div id="btn-habilitarPersona" hidden>
                     
-                    <input type="checkbox" name="habilitarPersonaEditar" id="habilitarPersonaEditar" data-bootstrap-switch-editar checked onclick="habilitarPersonaEditar()">
+                    <input type="checkbox" name="habilitarPersonaEditar" data-bootstrap-switch-editar checked>
                     
                 </div>
                 </label>
@@ -121,7 +121,6 @@
             <div class="modal-body">
             <form id="frm-nuevaPersona">
               <input id="pers_id" name="pers_id" type="text" disabled hidden>
-              <input id="clie_id" name="clie_id" type="text" hidden value="3">
                         <div class="row" style="margin-top:-7px">
                           <div class="col">
                             <div class="card card-info">
@@ -161,7 +160,7 @@
                                           <!-- <i class="fas fa-user" style="right:250px;"></i> -->
                                           <img id="imagenUsuario" class="profile-user-img img-fluid img-circle" style="height: 100px; width: 100px"  >
                                           <button class="btn btn-sm" style="/*margin-top:-20px;margin-right:150px*/">
-                                            <a id="verImagen" target="_blank" class="fas fa-eye"></a>
+                                            <i id="verImagen" class="fas fa-eye"></i>
                                           </button>
                                           <button class="btn btn-sm agregaImagen" style="/*margin-top:-5px;margin-right:150px*/">
                                             <i class="fas fa-upload"></i>
@@ -408,7 +407,7 @@
       </div>
 
 
-      <!-- Modal Agregar imagen -->
+<!-- Modal Agregar imagen Perfil -->
 <div class="modal fade" id="modalAgregarImagen">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -433,7 +432,12 @@
     </div>
 </div>
 
+
+
 <script>
+
+
+
 /* definicion de datatablet */
   $(function () {
     $("#tabla_personas").DataTable({
@@ -476,13 +480,12 @@
                       text: '<a class="text-light" data-toggle="modal" data-target="#nueva_persona"> Agregar </a>',
                       style: 'margin-left:10px',
                       className: 'btn btn-info btn-sm agregar',
-                      /* action: function ( e, dt, node, config ) {
-                        $('#nueva_cuenta').modal('show');
-                      } */
                     }
                   ],
-    })/* .buttons().container().appendTo('#tabla_personas .col-md-6:eq(0)'); */
+    })
   });
+
+
 
  /* Abre modal nueva persona y habilita/deshabilita botones*/
   $("#nueva_persona").on("hide.bs.modal", function() {
@@ -496,8 +499,10 @@
     $('#btn-accion').show();
     $('#persona_id').prop('hidden', true);
     $('#frm-nuevaPersona')[0].reset();
-    $("imagenUsuario").removeAttr("src","");
+    $("#imagenUsuario").removeAttr("src","");
   }); 
+
+
 
 
 /* Guarda modal de persona */
@@ -531,6 +536,13 @@ function guardarPersona(){
     },
     error: function(result){
       notificar(notiError);
+    },
+    complete: function() {
+      notificar(notiSuccess);
+      $('#nueva_persona').modal('hide');
+      $('#frm-nuevaPersona')[0].reset();
+      limpiaForm('#nueva_persona');
+      actualizaTablaPersonas();
     }
   });
 }
@@ -573,26 +585,80 @@ function verPersona(e){
       /* decodificacion imagen base64 */
       var decodedData = window.atob(json.imagen);
 
-      $('#verImagen').attr('href', codificacion + decodedData);
-
+      /*Accion ojo de imagen */
+      document.getElementById('verImagen').onclick = function (){
+        event.preventDefault();
+        var newTab = window.open();
+        newTab.document.body.innerHTML = '<img src="'+ codificacion + decodedData +'" >';
+        newTab.document.close();
+      }
+    
       $('#imagenUsuario').attr('src', codificacion + decodedData);
     }
     else{
-      $('#verImagen').attr('href', '');
-
       $('#imagenUsuario').attr('src', '');
     }
 
+    /* botones cabecera on/off */
     if(json.estado == 'true')
-    {
-      $('#habilitarPersonaEditar').prop('checked',false).change();
-    }
-    else{
-     $('#habilitarPersonaEditar').prop('checked',true).change();
-    }
-    
+    $("[name='habilitarPersonaEditar']").bootstrapSwitch('state', false ,true);
+    else 
+    $("[name='habilitarPersonaEditar']").bootstrapSwitch('state', true ,true);
+   
 }
 
+
+
+/* inicializacion botones on/off */
+ $("[name='habilitarPersonaEditar']").bootstrapSwitch({
+/* habilitar/deshabilitar personas desde modal editar persona*/
+ onSwitchChange:function(e, state){
+  var pers_id = $('#pers_id').val();
+  if(!state){
+    Swal.fire({
+      title: '¿Está seguro?',
+      text: 'Si deshabilita a la Persona, la misma no aparecerá en algunos reportes o indicadores, y no podrá responder cuestionarios',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Si, deshabilitar!'
+    }).then((result) => {
+    if (result.isConfirmed) {
+      debugger;
+      deshabilitaPersona(pers_id);
+    }
+    else{
+      //vuelve a el estado original y el ultimo paramaetro es para cortar la ejecucion
+      $(this).bootstrapSwitch('state', !state ,true);
+    }
+    })
+  }
+  else{
+    Swal.fire({
+      title: 'Habilitar usuario?',
+      text: "Ten en cuenta que se habilitaras el usuario",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Si, habilitar!'
+    }).then((result) => {
+    if (result.isConfirmed) {
+      habilitaPersona(pers_id);
+    }
+    else{
+      //vuelve a el estado original y el ultimo paramaetro es para cortar la ejecucion
+      $(this).bootstrapSwitch('state', !state ,true);
+    }
+  });
+  } 
+}
+});
+
+
+
+    
 /*boton que habilita editar los datos de una persona en el modal */
 function habilitaEditarPersona(){
   $('#btn-habilitarPersona').prop('hidden', false);
@@ -605,6 +671,9 @@ function habilitaEditarPersona(){
   $('#btn-asociarPosicion').prop('hidden', true);
 
 }
+
+
+
 
 /* Guarda los datos editados de la persona */
 function editarPersona(){
@@ -649,37 +718,20 @@ function editarPersona(){
       $('#frm-nuevaPersona')[0].reset();
       limpiaForm('#nueva_persona');
       actualizaTablaPersonas();
-      // window.location.reload();
     }
     });
 }
 
- /* inicializacion botones on/off */
-$("input[data-bootstrap-switch]").bootstrapSwitch({
-  onSwitchChange:function(e, state){
+
+
+
+/* inicializacion botones on/off  de tabla*/
+$("[name='habilitarPersona']").bootstrapSwitch({
+  /* habilitar/deshabilitar personas */
+   onSwitchChange:function(e, state){
     var tr = $(e.target).closest('tr');
     var json = $(tr).data('json');
-    console.log(json);
-    habilitarPersona(json, e.target);   
-  }
-});
-
-
-$("[name='habilitarPersonaEditar']").bootstrapSwitch();
-
-/* abrir modal agregar imagen */
-$(document).on("click", ".agregaImagen", function() {
-  $('#modalAgregarImagen').modal('show');
-  event.preventDefault();
-  $("#nueva_persona").css('overflow-y', 'auto');//habilita el scroll de nuevo
-});
-
-/* permite habilitar o deshabilitar una persona */
-function habilitarPersona(json, tag){
-  event.preventDefault();  
-  var pers_id = json.pers_id;
-  check = json.estado;
-  if(check == 'false'){
+    if(!state){
       Swal.fire({
         title: '¿Está seguro?',
         text: 'Si deshabilita a la Persona, la misma no aparecerá en algunos reportes o indicadores, y no podrá responder cuestionarios',
@@ -690,21 +742,16 @@ function habilitarPersona(json, tag){
         confirmButtonText: 'Si, deshabilitar!'
       }).then((result) => {
       if (result.isConfirmed) {
-        $.get('<?= base_url()?>/eliminarPersona/' + pers_id, function (data){
-          Swal.fire(
-              'Deshabilitado!',
-              'El usuario fue deshabilitado.',
-              'success'
-            );
-        })
+        deshabilitaPersona(json.pers_id);
       }
       else{
-        $(tag).closest("tr").find('input[type="checkbox"]').prop('checked',true).change();
+        //vuelve a el estado original y el ultimo paramaetro es para cortar la ejecucion
+        $(this).bootstrapSwitch('state', !state ,true);
       }
-    });    
-  }
-  else{
-    Swal.fire({
+      })
+    }
+    else{
+      Swal.fire({
         title: 'Habilitar usuario?',
         text: "Ten en cuenta que se habilitaras el usuario",
         icon: 'warning',
@@ -714,20 +761,56 @@ function habilitarPersona(json, tag){
         confirmButtonText: 'Si, habilitar!'
       }).then((result) => {
       if (result.isConfirmed) {
-        $.get('<?= base_url()?>/habilitarPersona/' + pers_id, function (data){
+        habilitaPersona(json.pers_id);
+      }
+      else{
+        //vuelve a el estado original y el ultimo paramaetro es para cortar la ejecucion
+        $(this).bootstrapSwitch('state', !state ,true);
+      }
+    });
+    } 
+  }
+});
+
+
+
+/* abrir modal agregar imagen */
+$(document).on("click", ".agregaImagen", function() {
+  $('#modalAgregarImagen').modal('show');
+  event.preventDefault();
+  $("#nueva_persona").css('overflow-y', 'auto');//habilita el scroll de nuevo
+});
+
+
+
+/* funcion para deshabilitar una persona */
+function deshabilitaPersona(pers_id){
+  debugger;
+  $.get('<?= base_url()?>/eliminarPersona/' + pers_id, function (data){
+          Swal.fire(
+              'Deshabilitado!',
+              'El usuario fue deshabilitado.',
+              'success'
+        );
+  })
+}
+
+
+
+
+/* funcion para habilitar una persona */
+function habilitaPersona(pers_id){
+  $.get('<?= base_url()?>/habilitarPersona/' + pers_id, function (data){
           Swal.fire(
             'Habilitado!',
             'El usuario fue habilitado.',
             'success'
           );
-        })
-      }
-      else{
-        $(tag).closest("tr").find('input[type="checkbox"]').prop('checked',false).change();
-      }
-    });
-  } 
+  })
 }
+
+
+
 function cargaVistaPrevia(){
   var input = $('#inputImagen').prop('files');
   if(input && input[0]){
@@ -742,63 +825,9 @@ function cargaVistaPrevia(){
       reader.readAsDataURL(input[0]);
   }
 }
- 
-/* habilitar/deshabilitar persona desde modal ver persona */
-function habilitarPersonaEditar(){
-  var pers_id = $('#pers_id').val();
-  if(!$('#habilitarPersonaEditar').prop('checked'))
-  {
-    Swal.fire({
-        title: 'Habilitar usuario?',
-        text: "Ten en cuenta que se habilitaras el usuario",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Si, habilitar!'
-      }).then((result) => {
-      if (result.isConfirmed) {
-        $.get('<?= base_url()?>/habilitarPersona/' + pers_id, function (data){
-          Swal.fire(
-            'Habilitado!',
-            'El usuario fue habilitado.',
-            'success'
-          );
-        })
-        $('#habilitarPersonaEditar').prop('checked',true).change();
-      }
-      else{
-        $('#habilitarPersonaEditar').prop('checked',false).change();
-      }
-    });
-  }
-  else{
-    Swal.fire({
-        title: '¿Está seguro?',
-        text: 'Si deshabilita a la Persona, la misma no aparecerá en algunos reportes o indicadores, y no podrá responder cuestionarios',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Si, deshabilitar!'
-      }).then((result) => {
-      if (result.isConfirmed) {
-        $.get('<?= base_url()?>/eliminarPersona/' + pers_id, function (data){
-          Swal.fire(
-            'Deshabilitado!',
-            'El usuario fue deshabilitado.',
-            'success'
-          );
-        })
-        $('#habilitarPersonaEditar').prop('checked',false).change();
-      }
-      else{
-        $('#habilitarPersonaEditar').prop('checked',true).change();
-      }
-    });
-  }
-}
 
+
+ 
 /* actualiza tabla personas */
 function actualizaTablaPersonas(){
   $.ajax({
@@ -842,7 +871,7 @@ function actualizaTablaPersonas(){
             '<i class="fa fa-search" style="cursor: pointer;margin: 3px;" title="Ver Detalles" onclick="verPersona(this)"></i>'+
              '<label class="switch" id="miLabel">'+
              '<div class="bootstrap-switch-container float-right" style="width: 15px; margin-left: 24px;" >'+
-               '<input type="checkbox" id="habilitarPersona"  name="habilitarPersona" data-bootstrap-switch onclick="habilitarPersona(this)" '+ check +'>'+
+               '<input type="checkbox" name="habilitarPersona" data-bootstrap-switch '+ check +'>'+
              '</div>'+
              '</label>'+
             '</div>'+
@@ -856,8 +885,54 @@ function actualizaTablaPersonas(){
           '</tr>';
           tabla.row.add($(fila)).draw();
     });
-        //inicio de checkbox-switch  
-        $("input[data-bootstrap-switch]").bootstrapSwitch();
+        
+    /* inicializacion botones on/off */
+      $("[name='habilitarPersona']").bootstrapSwitch({
+      
+      /* habilitacion/deshabilitacion de personas */
+       onSwitchChange:function(e, state){
+        var tr = $(e.target).closest('tr');
+        var json = $(tr).data('json');
+        if(!state){
+          Swal.fire({
+            title: '¿Está seguro?',
+            text: 'Si deshabilita a la Persona, la misma no aparecerá en algunos reportes o indicadores, y no podrá responder cuestionarios',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Si, deshabilitar!'
+          }).then((result) => {
+          if (result.isConfirmed) {
+            deshabilitaPersona(json.pers_id);
+          }
+          else{
+            //vuelve a el estado original y el ultimo paramaetro es para cortar la ejecucion
+            $(this).bootstrapSwitch('state', !state ,true);
+          }
+          })
+        }
+        else{
+          Swal.fire({
+            title: 'Habilitar usuario?',
+            text: "Ten en cuenta que se habilitaras el usuario",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Si, habilitar!'
+          }).then((result) => {
+          if (result.isConfirmed) {
+            habilitaPersona(json.pers_id);
+          }
+          else{
+            //vuelve a el estado original y el ultimo paramaetro es para cortar la ejecucion
+            $(this).bootstrapSwitch('state', !state ,true);
+          }
+        });
+        } 
+      }
+      });
       
   }   
   });

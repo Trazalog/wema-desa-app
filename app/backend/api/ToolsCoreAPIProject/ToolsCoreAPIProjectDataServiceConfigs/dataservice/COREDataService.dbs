@@ -1,0 +1,107 @@
+<data enableBatchRequests="true" name="CoreDataService" transports="http https local">
+  <query id="setTabla" useConfig="WemapDataSource">
+    <sql>INSERT INTO core.tablas
+(tabla, valor, valor2, valor3,descripcion,empr_id, tabl_id_padre)
+select tabla
+, valor
+, valor2
+, valor3
+, descripcion
+,case when empr_id is null or empr_id='' then null else cast(empr_id as integer) end
+,tabl_id_padre 
+from
+(select
+:tabla tabla
+,:valor valor
+,:valor2 valor2
+,:valor3 valor3
+,:descripcion descripcion
+,:empr_id empr_id 
+,:tabl_id_padre tabl_id_padre) param
+returning tabl_id</sql>
+    <result outputType="json">{
+    "tabla": {
+        "tabl_id": "$tabl_id"
+    }
+}</result>
+    <param name="tabla" sqlType="STRING" />
+    <param name="valor" sqlType="STRING" />
+    <param name="valor2" sqlType="STRING" />
+    <param name="valor3" sqlType="STRING" />
+    <param name="descripcion" sqlType="STRING" />
+    <param name="empr_id" sqlType="STRING" />
+    <param name="tabl_id_padre" sqlType="STRING" />
+  </query>
+  <query id="getTabla" useConfig="WemapDataSource">
+    <sql>SELECT * FROM core.tablas WHERE tabla = :tabla and eliminado = false</sql>
+    <result outputType="json">{
+    "tablas":{
+        "tabla":[
+            {
+                "tabl_id":"$tabl_id",
+                "valor":"$valor",
+                "valor2":"$valor2",
+                "valor3":"$valor3",
+                "descripcion":"$descripcion",
+                "tabl_id_padre":"$tabl_id_padre"
+            }
+        ]
+    }
+}</result>
+    <param name="tabla" sqlType="STRING" />
+  </query>
+  <query id="getTablaEmpresa" useConfig="WemapDataSource">
+    <sql>select
+	t.*
+from
+	core.tablas t ,
+	(select :empr_id empr_id,:tabla tabla) param
+where
+	t.tabla = case when param.empr_id is null or param.empr_id = '' then param.tabla else param.empr_id ||'-'||param.tabla end
+and t.eliminado = false</sql>
+    <result outputType="json">{
+    "tablas":{
+        "tabla":[
+            {
+                "tabl_id":"$tabl_id",
+                "valor":"$valor",
+                "valor2":"$valor2",
+                "valor3":"$valor3",
+                "descripcion":"$descripcion",
+                "tabl_id_padre":"$tabl_id_padre"
+            }
+        ]
+    }
+}</result>
+    <param name="empr_id" sqlType="STRING" />
+    <param name="tabla" sqlType="STRING" />
+  </query>
+  <resource method="POST" path="/tablas">
+    <call-query href="setTabla">
+      <with-param name="tabla" query-param="tabla" />
+      <with-param name="valor" query-param="valor" />
+      <with-param name="valor2" query-param="valor2" />
+      <with-param name="valor3" query-param="valor3" />
+      <with-param name="descripcion" query-param="descripcion" />
+      <with-param name="empr_id" query-param="empr_id" />
+      <with-param name="tabl_id_padre" query-param="tabl_id_padre" />
+    </call-query>
+  </resource>
+  <resource method="GET" path="/tabla/{tabla}">
+    <description>Listado de la tabla sin empresa                           
+                                    </description>
+    <call-query href="getTabla">
+      <with-param name="tabla" query-param="tabla" />
+    </call-query>
+  </resource>
+  <resource method="GET" path="/tabla/{tabla}/empresa/{empr_id}">
+    <description>Listado de la tabla por empresa       </description>
+    <call-query href="getTablaEmpresa">
+      <with-param name="empr_id" query-param="empr_id" />
+      <with-param name="tabla" query-param="tabla" />
+    </call-query>
+  </resource>
+  <config id="WemapDataSource">
+    <property name="carbon_datasource_name">WemapDataSource</property>
+  </config>
+</data>

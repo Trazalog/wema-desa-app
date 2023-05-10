@@ -70,7 +70,7 @@ class Persona extends BaseController
             'naci_id' =>  $request->getPost('nacionalidad'),
             'educ_id' =>  $request->getPost('escolaridad'),
             'ubic_id' =>  $request->getPost('nacionalidad'),
-            'clie_id' =>  $request->getPost('clie_id'),
+            'clie_id' =>  empresa(),
             'imagen' => !empty($_FILES['imagen']['name'])  ? base64_encode(file_get_contents($fotoPerfil->getTempName())) : '',
             'nom_imagen' => !empty($_FILES['imagen']['name'])  ? $fotoPerfil->getName() : ''
         );
@@ -111,7 +111,7 @@ class Persona extends BaseController
             'naci_id' =>  $request->getPost('nacionalidad'),
             'educ_id' =>  $request->getPost('escolaridad'),
             'ubic_id' =>  $request->getPost('nacionalidad'),
-            'clie_id' =>  $request->getPost('clie_id'),
+            'clie_id' =>  empresa(),
             'imagen' => !empty($_FILES['imagen']['name'])  ? base64_encode(file_get_contents($fotoPerfil->getTempName())) : '',
             'nom_imagen' => !empty($_FILES['imagen']['name'])  ? $fotoPerfil->getName() : ''
         );
@@ -127,17 +127,14 @@ class Persona extends BaseController
 	*/
     public function eliminarPersona($pers_id = null){
 
-        $url = REST_PERSONA."/persona";
-
         $data['delete_persona'] = array(
             'pers_id' => $pers_id
         );
         
-        $aux = $this->REST->callAPI("DELETE",$url, $data);
-
-        if($aux['status']){
-            return json_encode($aux);
-        }else return $aux;
+        $resp = $this->Personas->eliminarPersona($data);
+        
+        echo json_encode($resp);
+        
     }
     /**
         * Recibe id de la persona a habilitar
@@ -145,18 +142,13 @@ class Persona extends BaseController
         * @return array response servicio
     */
     public function habilitarPersona($pers_id = null){
-        $url = REST_PERSONA."/habilitarpersona";
-
+        
         $data['put_persona'] = array(
             'pers_id' => $pers_id
         );
         
-        $aux = $this->REST->callAPI("PUT",$url, $data);
-
-        if($aux['status']){
-            return json_encode($aux);
-        } 
-    else return $aux;
+        $resp = $this->Personas->habilitarPersona($data);
+        echo json_encode($resp);
     }
     /**
         * 

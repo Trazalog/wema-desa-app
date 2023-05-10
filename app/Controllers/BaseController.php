@@ -50,6 +50,5 @@ class BaseController extends Controller
         $this->REST = new REST();
         // E.g.: $this->session = \Config\Services::session();
 
-        helper('admin_helper');
     }
 }

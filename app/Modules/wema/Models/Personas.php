@@ -68,4 +68,31 @@ class Personas extends Model{
         
         return $data->personas->persona;
     }
+
+    /**
+        * habilita una persona en core.personas por pers_id
+        * @param  $pers_id datos persona
+        * @return array respuesta del servicio
+	*/
+    public function habilitarPersona($data){
+        $url = REST_PERSONA."/habilitarpersona";
+        
+        $aux = $this->REST->callAPI("PUT",$url, $data);
+
+        return $aux;
+    }
+
+    /**
+        * elimina una persona en core.personas por pers_id
+        * @param  $pers_id datos persona
+        * @return array respuesta del servicio
+	*/
+    public function eliminarPersona($data){
+
+        $url = REST_PERSONA."/persona";
+
+        $aux = $this->REST->callAPI("DELETE",$url, $data);
+
+        return $aux;
+    }
 }

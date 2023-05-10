@@ -1,0 +1,304 @@
+<data enableBatchRequests="true" name="ClientesDataService" serviceNamespace="ClientesDataService" transports="http https local">
+  <query id="getClientes" useConfig="WemaDataSource">
+    <sql>select c.*, t.descripcion as tipoCliente, tp.descripcion as tipoPersona, tn.descripcion as nacionalidad, tg.descripcion as genero
+from core.clientes c
+left join core.tablas t on c.ticl_id = t.tabl_id
+left join core.tablas tp on c.tipe_id  = tp.tabl_id
+left join core.tablas tn on c.naci_id  = tn.tabl_id
+left join core.tablas tg on c.gene_id  = tg.tabl_id
+left join core.tablas tpan on c.pana_id  = tpan.tabl_id</sql>
+    <result outputType="json">{
+    "clientes": {
+        "cliente": [{
+            "clie_id" : "$clie_id",
+            "nombre"  : "$nombre",
+            "id_tributario" : "$id_tributario",
+            "telefono" : "$telefono",
+            "email" : "$email",
+            "calle" : "$calle",
+            "num_exterior" : "$num_exterior",
+            "cod_postal" : "$cod_postal",
+            "num_interior" : "$num_interior",
+            "razon_social" : "$razon_social",
+            "representante_legal" : "$representante_legal",
+            "curp" : "$curp",
+            "apellidos" : "$apellidos",
+            "nombres" : "$nombres",
+            "fec_nacimiento" : "$fec_nacimiento",
+            "ticl_id" : "$ticl_id",
+            "tipe_id":"$tipe_id",
+            "naci_id":"$naci_id",
+            "gene_id":"$gene_id",
+            "pana_id":"$pana_id",
+            "imagen":"$imagen",
+            "nom_imagen":"$nom_imagen",
+            "eliminado":"$eliminado",
+            "tipoCliente":"$tipoCliente",
+            "tipoPersona":"$tipoPersona",
+            "nacionalidad":"$nacionalidad",
+            "genero":"$genero",
+            "ocupacion":"$ocupacion"
+        }]
+    }
+}</result>
+  </query>
+  <query id="setClientes" useConfig="WemaDataSource">
+    <sql>INSERT INTO core.clientes 
+(nombre, 
+id_tributario, 
+telefono, 
+email, 
+calle, 
+num_exterior, 
+cod_postal, 
+num_interior, 
+razon_social,
+representante_legal, 
+curp, 
+apellidos,
+nombres, 
+fec_nacimiento, 
+ocupacion, 
+fec_alta, 
+usr_alta, 
+usr_app_alta, 
+ticl_id, 
+tipe_id, 
+naci_id, 
+empr_id, 
+gene_id, 
+pana_id, 
+imagen,
+nom_imagen)
+select nombre,
+id_tributario,
+telefono,
+email, 
+calle,
+num_exterior,
+cod_postal,
+num_interior,
+razon_social,
+representante_legal,
+curp,
+apellidos,
+nombres,
+case when fec_nacimiento is null or fec_nacimiento = '' then null else cast(fec_nacimiento as date) end,
+ocupacion,
+fec_alta,
+usr_alta,
+usr_app_alta,
+ticl_id,
+tipe_id,
+naci_id,
+case when empr_id is null or empr_id = '' then null else cast(empr_id as integer) end,
+gene_id,
+pana_id,
+case when imagen is null or imagen = '' then null else cast(imagen as bytea) end,
+nom_imagen
+from
+(select
+:nombre nombre,
+:id_tributario id_tributario,
+:telefono telefono,
+:email email, 
+:calle calle,
+:num_exterior num_exterior,
+:cod_postal cod_postal,
+:num_interior num_interior,
+:razon_social razon_social,
+:representante_legal representante_legal,
+:curp curp,
+:apellidos apellidos,
+:nombres nombres,
+:fec_nacimiento fec_nacimiento,
+:ocupacion ocupacion,
+now() fec_alta,
+:usr_alta usr_alta,
+:usr_app_alta usr_app_alta,
+:ticl_id ticl_id,
+:tipe_id tipe_id,
+:naci_id naci_id,
+:empr_id empr_id,
+:gene_id gene_id,
+:pana_id pana_id,
+:imagen imagen,
+:nom_imagen nom_imagen) param</sql>
+    <param name="nombre" sqlType="STRING" />
+    <param name="id_tributario" sqlType="STRING" />
+    <param name="telefono" sqlType="STRING" />
+    <param name="email" sqlType="STRING" />
+    <param name="calle" sqlType="STRING" />
+    <param name="num_exterior" sqlType="STRING" />
+    <param name="cod_postal" sqlType="STRING" />
+    <param name="num_interior" sqlType="STRING" />
+    <param name="razon_social" sqlType="STRING" />
+    <param name="representante_legal" sqlType="STRING" />
+    <param name="curp" sqlType="STRING" />
+    <param name="apellidos" sqlType="STRING" />
+    <param name="nombres" sqlType="STRING" />
+    <param name="fec_nacimiento" sqlType="STRING" />
+    <param name="ocupacion" sqlType="STRING" />
+    <param name="usr_alta" sqlType="STRING" />
+    <param name="usr_app_alta" sqlType="STRING" />
+    <param name="ticl_id" sqlType="STRING" />
+    <param name="tipe_id" sqlType="STRING" />
+    <param name="naci_id" sqlType="STRING" />
+    <param name="empr_id" sqlType="STRING" />
+    <param name="gene_id" sqlType="STRING" />
+    <param name="pana_id" sqlType="STRING" />
+    <param name="imagen" sqlType="STRING" />
+    <param name="nom_imagen" sqlType="STRING" />
+  </query>
+  <query id="updateClientes" useConfig="WemaDataSource">
+    <sql>update core.clientes c
+set
+nombre = :nombre,
+id_tributario = :id_tributario,
+telefono = :telefono,
+email = :email,
+calle = :calle,
+num_exterior = :num_exterior,
+cod_postal = :cod_postal,
+num_interior = :num_interior,
+razon_social = :razon_social,
+representante_legal = :representante_legal,
+curp = :curp,
+apellidos = :apellidos,
+nombres = :nombres, 
+ocupacion = :ocupacion,
+usr_alta = :usr_alta,
+usr_app_alta = :usr_app_alta,
+ticl_id = :ticl_id,
+tipe_id = :tipe_id,
+naci_id = :naci_id,
+empr_id = cast(:empr_id as integer),
+gene_id = :gene_id,
+pana_id = :pana_id,
+fec_nacimiento = case when param.fec_nacimiento is null or param.fec_nacimiento = '' then c.fec_nacimiento else cast(param.fec_nacimiento as date) end,
+imagen = case when param.imagen is null or param.imagen = '' then c.imagen else cast(param.imagen as bytea) end,
+nom_imagen = case when param.nom_imagen is null or param.nom_imagen = '' then c.nom_imagen else param.nom_imagen end
+from (select :imagen imagen, :nom_imagen nom_imagen, :fec_nacimiento fec_nacimiento) param
+where clie_id = cast(:clie_id as integer)</sql>
+    <param name="nombre" sqlType="STRING" />
+    <param name="id_tributario" sqlType="STRING" />
+    <param name="telefono" sqlType="STRING" />
+    <param name="email" sqlType="STRING" />
+    <param name="calle" sqlType="STRING" />
+    <param name="num_exterior" sqlType="STRING" />
+    <param name="cod_postal" sqlType="STRING" />
+    <param name="num_interior" sqlType="STRING" />
+    <param name="razon_social" sqlType="STRING" />
+    <param name="representante_legal" sqlType="STRING" />
+    <param name="curp" sqlType="STRING" />
+    <param name="apellidos" sqlType="STRING" />
+    <param name="nombres" sqlType="STRING" />
+    <param name="fec_nacimiento" sqlType="STRING" />
+    <param name="ocupacion" sqlType="STRING" />
+    <param name="usr_alta" sqlType="STRING" />
+    <param name="usr_app_alta" sqlType="STRING" />
+    <param name="ticl_id" sqlType="STRING" />
+    <param name="tipe_id" sqlType="STRING" />
+    <param name="naci_id" sqlType="STRING" />
+    <param name="empr_id" sqlType="STRING" />
+    <param name="gene_id" sqlType="STRING" />
+    <param name="pana_id" sqlType="STRING" />
+    <param name="imagen" sqlType="STRING" />
+    <param name="nom_imagen" sqlType="STRING" />
+    <param name="clie_id" sqlType="STRING" />
+  </query>
+  <query id="deleteClientes" useConfig="WemaDataSource">
+    <sql>update core.clientes set eliminado = true where clie_id = cast(:clie_id as integer)</sql>
+    <param name="clie_id" sqlType="STRING" />
+  </query>
+  <query id="habilitarClientes" useConfig="WemaDataSource">
+    <sql>update core.clientes set eliminado = false where clie_id = cast(:clie_id as integer)</sql>
+    <param name="clie_id" sqlType="STRING" />
+  </query>
+  <resource method="GET" path="/clientes">
+    <description>obtiene los datos de los clientes                                    
+                                    </description>
+    <call-query href="getClientes" />
+  </resource>
+  <resource method="POST" path="/clientes">
+    <description>permite guardar un nuevo cliente en la base de datos                           
+                                    
+                                    </description>
+    <call-query href="setClientes">
+      <with-param name="nombre" query-param="nombre" />
+      <with-param name="id_tributario" query-param="id_tributario" />
+      <with-param name="telefono" query-param="telefono" />
+      <with-param name="email" query-param="email" />
+      <with-param name="calle" query-param="calle" />
+      <with-param name="num_exterior" query-param="num_exterior" />
+      <with-param name="cod_postal" query-param="cod_postal" />
+      <with-param name="num_interior" query-param="num_interior" />
+      <with-param name="razon_social" query-param="razon_social" />
+      <with-param name="representante_legal" query-param="representante_legal" />
+      <with-param name="curp" query-param="curp" />
+      <with-param name="apellidos" query-param="apellidos" />
+      <with-param name="nombres" query-param="nombres" />
+      <with-param name="fec_nacimiento" query-param="fec_nacimiento" />
+      <with-param name="ocupacion" query-param="ocupacion" />
+      <with-param name="usr_alta" query-param="usr_alta" />
+      <with-param name="usr_app_alta" query-param="usr_app_alta" />
+      <with-param name="ticl_id" query-param="ticl_id" />
+      <with-param name="tipe_id" query-param="tipe_id" />
+      <with-param name="naci_id" query-param="naci_id" />
+      <with-param name="empr_id" query-param="empr_id" />
+      <with-param name="gene_id" query-param="gene_id" />
+      <with-param name="pana_id" query-param="pana_id" />
+      <with-param name="imagen" query-param="imagen" />
+      <with-param name="nom_imagen" query-param="nom_imagen" />
+    </call-query>
+  </resource>
+  <resource method="PUT" path="/clientes">
+    <description>actualiza datos del cliente en core.clientes                           
+                                    </description>
+    <call-query href="updateClientes">
+      <with-param name="nombre" query-param="nombre" />
+      <with-param name="id_tributario" query-param="id_tributario" />
+      <with-param name="telefono" query-param="telefono" />
+      <with-param name="email" query-param="email" />
+      <with-param name="calle" query-param="calle" />
+      <with-param name="num_exterior" query-param="num_exterior" />
+      <with-param name="cod_postal" query-param="cod_postal" />
+      <with-param name="num_interior" query-param="num_interior" />
+      <with-param name="razon_social" query-param="razon_social" />
+      <with-param name="representante_legal" query-param="representante_legal" />
+      <with-param name="curp" query-param="curp" />
+      <with-param name="apellidos" query-param="apellidos" />
+      <with-param name="nombres" query-param="nombres" />
+      <with-param name="fec_nacimiento" query-param="fec_nacimiento" />
+      <with-param name="ocupacion" query-param="ocupacion" />
+      <with-param name="usr_alta" query-param="usr_alta" />
+      <with-param name="usr_app_alta" query-param="usr_app_alta" />
+      <with-param name="ticl_id" query-param="ticl_id" />
+      <with-param name="tipe_id" query-param="tipe_id" />
+      <with-param name="naci_id" query-param="naci_id" />
+      <with-param name="empr_id" query-param="empr_id" />
+      <with-param name="gene_id" query-param="gene_id" />
+      <with-param name="pana_id" query-param="pana_id" />
+      <with-param name="imagen" query-param="imagen" />
+      <with-param name="nom_imagen" query-param="nom_imagen" />
+      <with-param name="clie_id" query-param="clie_id" />
+    </call-query>
+  </resource>
+  <resource method="DELETE" path="/clientes">
+    <description>permite eliminado logico de un cliente en tabla core.clientes                            
+                                    </description>
+    <call-query href="deleteClientes">
+      <with-param name="clie_id" query-param="clie_id" />
+    </call-query>
+  </resource>
+  <resource method="PUT" path="/habilitarcliente">
+    <description>permite habilitar el cliente luego de hacer el borrado logico en la tabla core.clientes                         
+                                    </description>
+    <call-query href="habilitarClientes">
+      <with-param name="clie_id" query-param="clie_id" />
+    </call-query>
+  </resource>
+  <config id="WemaDataSource">
+    <property name="carbon_datasource_name">WemapDataSource</property>
+  </config>
+</data>
