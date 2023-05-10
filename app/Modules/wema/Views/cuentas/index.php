@@ -96,6 +96,30 @@
     </section>
     <!-- /.content -->
 
+    <!-- MODAL NUEVA CUENTA -->
+    <div class="modal fade right" id="list_cuenta_clientes" aria-modal="true" role="dialog">
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+          <div class="modal-header">
+            <div class="col-6"><h5 class="modal-title" id="mdl-title">Lisatdo Clientes</h5></div>
+            <div class="col-2">
+              <button type="button" class="close"  data-dismiss="modal" aria-label="Close" onclick="limpiaForm('#list_cuenta_clientes')">
+                <span aria-hidden="true">×</span>
+              </button>
+          </div>
+          </div><!-- fin modal-header -->
+
+          <div class="modal-body"></div><!-- fin modal-body -->
+
+          <div class="modal-footer ">
+            <button type="button" class="btn btn-secondary float-left" data-dismiss="modal" onclick='limpiaForm("#list_cuenta_clientes")'>Cerrar</button>
+
+          </div><!-- fin modal-footer -->          
+        
+        </div><!-- /.modal-content -->        
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal-dialog -->
+
 
     <!-- MODAL NUEVA CUENTA -->
     <div class="modal fade right" id="nueva_cuenta" aria-modal="true" role="dialog">
@@ -233,22 +257,24 @@
                                       </div>
                                     </div>
                                     <div class="col-md-4">
-                                        <div class="form-group">
+                                      <div class="form-group">
                                         <label>Correo electrónico <strong class="text-danger">*</strong>: </label>
                                         <div class="input-group">
                                           <div class="input-group-prepend">
                                             <span class="input-group-text">@</span>
                                           </div><input type="text" class="form-control" id="correo" >
                                         </div>
-                                        </div>
+                                      </div>
                                     </div>
                                     <div class="col-md-4">
-                                          <div class="form-group">
-                                            <label>Calle <strong class="text-danger">*</strong>: </label>
-                                            <input type="text" class="form-control" id="calle" name="calle">
-                                          </div>
-                                    </div>
-                                
+                                      <label>Calle <strong class="text-danger">*</strong>: </label>
+                                      <div class="form-group">                                            
+                                        <div class="input-group-prepend">
+                                          <span class="input-group-text"><i class="fas fa-road"></i></span>
+                                        </div>
+                                        <input type="text" class="form-control" id="calle" name="calle">
+                                      </div>
+                                    </div>                               
                                  
                                     <div class="col-md-4">
                                       <div class="form-group">
@@ -262,12 +288,18 @@
                                           <input type="text" class="form-control" id="numeroInterior" name="numeroInterior">
                                         </div>
                                     </div>
+
                                     <div class="col-md-4">
-                                        <div class="form-group">
-                                          <label>Codigo Postal / Colonia <strong class="text-danger">*</strong>: </label>
+                                      <div class="form-group">
+                                        <label>Codigo Postal / Colonia <strong class="text-danger">*</strong>: </label>
+                                        <div class="input-group">
+                                          <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-search"></i></span>
+                                          </div>
                                           <input type="text" class="form-control" id="CodigoColonia" name="CodigoColonia">
                                         </div>
-                                    </div>
+                                      </div>
+                                    </div>                                    
                                     
                                   </div>
     
@@ -614,6 +646,11 @@ function verCuenta(e){
     $('#nueva_cuenta').modal('show');
 }
 
+function listadoClienteCuenta(e){
+  
+    $('#list_cuenta_clientes').modal('show');
+}
+
 function habilitaEditarCuenta(e){
   console.log("habilitaEditarCuenta");
     $('#btn-habilitarCuenta').prop('hidden', false);
@@ -624,10 +661,6 @@ function habilitaEditarCuenta(e){
     $('#btn-editar').prop('hidden', true);
     $('#btn-clientes').prop('hidden', false);
     $('#btn-clientes').prop('hidden', true);
-}
-
-function listadoClienteCuenta(e) {
-  
 }
 
 /* Elimina los estilos de los input correctos-incorrectos */
