@@ -48,6 +48,8 @@
   <script src="<?= base_url()?>/lib/scriptsGenerales.js"></script>
   <!--Scripts para Formularios -->
   <script src="<?= base_url()?>/lib/forms.js"></script>
+  <!--Recorder JS -->
+  <script src="<?= base_url()?>/lib/recorderjs/dist/recorder.js"></script>
   <!-- Masonry Plugin -->
   <script src="<?= base_url()?>/public/plugins/masonry/masonry.pkgd.min.js"></script>
 </head>

@@ -5,18 +5,16 @@
 */
 
 if (!function_exists('form')) {
-    function form($data, $modal = false)
-    {
+    function form($data){
         $html = "<form class='frm' id='frm-$data->id' data-ninfoid='$data->id' data-form='" . (isset($data->form_id) ? $data->form_id : 'frm-default') . "' data-info='" . (isset($data->info_id) ? $data->info_id : null) . "' data-valido='false'>";
         $html .= "<fieldset>";
-        if (!$data->items) {
+
+        if (empty($data)) {
             return 'Formulario No encontrado.';
         }
 
         foreach ($data->items as $key => $e) {
-
             switch ($e->tipo_dato) {
-
                 case 'titulo1':
                     $html .= "<div class='".($e->columna ? $e->columna : 'col-md-12')."'><div class=<h1>$e->label</h1></div>";
                     break;
@@ -26,61 +24,51 @@ if (!function_exists('form')) {
                 case 'titulo3':
                     $html .= "<div class='".($e->columna ? $e->columna : 'col-md-12')."'><h3>$e->label</h3></div>";
                     break;
-
                 case 'comentario':
                     $html .= "<p class='text-info'>$e->label</p>";
                     break;
-
                 case 'input':
                     $html .= input($e);
                     break;
-
                 case 'select':
                     $html .= select($e);
                     break;
-
                 case 'date':
                     $html .= datepicker($e);
                     break;
-
                 case 'check':
                     $html .= check($e);
                     break;
-
                 case 'radio':
                     $html .= radio($e);
                     break;
-
                 case 'file':
                     $html .= archivo($e);
                     break;
-
                 case 'textarea':
                     $html .= textarea($e);
                     break;
-                
                 case 'image':
                     $html .= image($e);
                     break;
-
                 case 'number':
                         $html .= number($e);
                         break;
-
                 case 'btnAgregar':
                     $html .= btnAgregar($e);
+                    break;
+                case 'audio':
+                    $html .= audio($e);
                     break;
                 default:
                     $html .= "<hr>";
                     break;
             }
         }
-
-        return $html . '<div style="float:right" class="col-md-12"><button type="button" class="btn btn-primary pull-right frm-save ' . ($modal ? 'hidden' : null) . '" onclick="frmGuardar(this)">Guardar</button></div></form></fieldset>';
+        return $html . '<div style="float:right" class="col-md-12"><button type="button" class="btn btn-primary pull-right frm-save" onclick="frmGuardar(this)">Guardar</button></div></form></fieldset>';
     }
 }
-function input($e)
-{
+function input($e){
     return
         "<div class='".($e->columna ? $e->columna : 'col-md-12')."'>
             <div class='form-group'>
@@ -90,8 +78,7 @@ function input($e)
         </div>";
 }
 
-function select($e)
-{
+function select($e){
     $val = '<option value=""> -Seleccionar- </option>';
     foreach ($e->values as $o) {
         $val .= "<option value='$o->value' " . ((isset($e->valor) && $e->valor == $o->value) ? 'selected' : null) . ">$o->label</option>";
@@ -106,8 +93,7 @@ function select($e)
         </div>";
 }
 
-function datepicker($e)
-{
+function datepicker($e){
     return
         "<div class='".($e->columna ? $e->columna : 'col-md-12')."'>
             <div class='form-group'>
@@ -115,11 +101,9 @@ function datepicker($e)
                 <input class='form-control datepicker' value='" . (isset($e->valor) ? $e->valor : null) . "' type='date' placeholder='dd/mm/aaaa' id='$e->name'  name='$e->name' " . ($e->requerido ? req() : null) . " data-bv-date-format='DD/MM/YYYY' data-bv-date-message='Formato de Fecha Inválido'/>
             </div>
         </div>";
-
 }
 
-function check($e)
-{
+function check($e){
     $html = "";
     foreach ($e->values as $key => $o) {
         $html .= "<div class='checkbox'>
@@ -139,8 +123,7 @@ function check($e)
 
 }
 
-function radio($e)
-{
+function radio($e){
     $html = '';
     foreach ($e->values as $key => $o) {
         $html .= "<div class='radio'>
@@ -158,8 +141,7 @@ function radio($e)
         </div>";
 }
 
-function archivo($e)
-{
+function archivo($e){
 
     $file = null;
 
@@ -185,8 +167,7 @@ function archivo($e)
         </div>";
 }
 
-function textarea($e)
-{
+function textarea($e){
     return
         "<div class='".($e->columna ? $e->columna : 'col-md-12')."'>
             <div class='form-group'>
@@ -197,15 +178,7 @@ function textarea($e)
     </div>";
 }
 
-function req()
-{
-    return
-        ' data-bv-notempty
-          data-bv-notempty-message="Campo Obligatorio *" ';
-}
-
-function hreq()
-{
+function hreq(){
     echo '<strong class="text-danger">*</strong>';
 }
 
@@ -253,7 +226,6 @@ function image($e){
     </div>
     </div>";
 }
-
 function number($e){
     return
         "<div class='".($e->columna ? $e->columna : 'col-md-12')."'>
@@ -263,7 +235,6 @@ function number($e){
             </div>
         </div>";
 }
-
 function btnAgregar($e){
     return
         "<div class='".($e->columna ? $e->columna : 'col-md-12')."'>
@@ -272,7 +243,35 @@ function btnAgregar($e){
             </div>
         </div>";
 }
+function audio($e){
 
+    $file = null;
+
+    if (isset($e->valor)) {
+        // $url = base_url(files . $e->valor);
+        $ext = obtenerExtension($e->valor);
+        $rec = stream_get_contents($e->valor4_base64);
+        $url = $ext.$rec;
+        $file = " download='$e->valor' href='$url' ";
+    } else {
+        $file = "style='display: none;'";
+    }
+
+    return
+        "<div class='".($e->columna ? $e->columna : 'col-md-12')."'>
+            <div class='form-group'>
+                <input class='form-control' id='$e->name' type='file' name='". ($e->multiple ? '-file-'.$e->name.'[]' : '-file-'.$e->name) . "'>
+                <p class='help-block show-file'><a $file class='help-button col-sm-4 download' title='Descargar' download>
+                    <iclass='fa fa-download'></i> Ver Adjunto</a>
+                </p>
+            </div>
+        </div>";
+}
+//
+//FIN FUNCIONES BLOQUE SWITCH
+//
+//COMIENZO FUNCIONES GENERALES
+//
 function nuevoForm($form_id)
 {
     if ($form_id) {

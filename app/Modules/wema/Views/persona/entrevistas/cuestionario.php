@@ -48,7 +48,7 @@
                                 <button id="btn-anterior" class="btn btn-primary">Anterior</button><button id="btn-siguiente" class="btn btn-primary">Siguiente</button>
                             </div>
                         </div>
-                        <div id="formEntrevista" class="frm-new" data-form="1"></div>
+                        <div id="formEntrevista" class="frm-new" data-form="3"></div>
                     </div>
                     <!-- /.card-body -->
                 </div>
@@ -66,10 +66,128 @@ $(document).ready(function () {
     //Inicializo STEPPER
     var stepperConstruct = new Stepper($('.bs-stepper')[0]);
     //Defino la instancia para moverme sobre el form
-    // var stepper = new Stepper(document.querySelector('.bs-stepper'));
+    var stepper = new Stepper(document.querySelector('.bs-stepper'));
     document.getElementById('btn-anterior').onclick = stepper.previous();
     document.getElementById('btn-siguiente').onclick = stepper.next();
     detectarForm();
+    $(document).on('keydown', startRecording).on('keyup', stopRecording);
 });
+var gumStream; 						//stream from getUserMedia()
+var rec; 							//Recorder.js object
+var input; 							//MediaStreamAudioSourceNode we'll be recording
+var formData = new FormData();      //Formulario a enviar con el cuestionario
+var comienzo;                       //Variable de estado para controlar tiempo de grabacion
+var duracion;                       //Variable de estado para controlar tiempo de grabacion
+var fin;                            //Variable de estado para controlar tiempo de grabacion
+// shim for AudioContext when it's not avb. 
+var AudioContext = window.AudioContext || window.webkitAudioContext;
+var audioContext //audio context to help us record
+
+function startRecording(e) {
+    console.log(e.keyCode);
+    if(e.keyCode != 32) return;
+    if (!comienzo) {
+      comienzo = new Date().getTime(); // Set the keydown timestamp
+      checkear = setInterval(checkearTiempo, 100); // Check every second
+    }
+	console.log("Comienza Grabacion!");
+    // comienzo = new Date().getTime();
+    var constraints = {audio: true};
+
+	navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {
+		console.log("getUserMedia() success, stream created, initializing Recorder.js ...");
+		/*
+			create an audio context after getUserMedia is called
+			sampleRate might change after getUserMedia is called, like it does on macOS when recording through AirPods
+			the sampleRate defaults to the one set in your OS for your playback device
+		*/
+		audioContext = new AudioContext();
+		/*  assign to gumStream for later use  */
+		gumStream = stream;
+		
+		/* use the stream */
+		input = audioContext.createMediaStreamSource(stream);
+
+		/* 
+			Create the Recorder object and configure to record mono sound (1 channel)
+			Recording 2 channels  will double the file size
+		*/
+		rec = new Recorder(input,{
+          numChannels: 1,
+          sampleRate: 11025
+        });
+
+		//start the recording process
+		rec.record()
+		console.log("Recording started");
+
+	}).catch(function(err) {
+        console.log(err);
+	});
+}
+
+function stopRecording(e) {
+    if(e.keyCode != 32){
+        clearInterval(checkear); // Clear the interval
+        comienzo = null; // Reset the keydown timestamp
+    }
+	console.log("Finaliza Grabación!");
+    fin = new Date().getTime();
+    var media = fin - comienzo;
+    if(media < 7000){
+        config = {'icon' : 'warning','title':'Advertencia', text: 'La respuesta debe durar mas de 7 segundos','btnConfirmar' : true};
+        notificar(config)
+    }
+	//tell the recorder to stop the recording
+	rec.stop();
+	//stop microphone access
+	gumStream.getAudioTracks()[0].stop();
+	//create the wav blob and pass it on to createDownloadLink
+	// rec.exportWAV(createDownloadLink);
+    rec.exportWAV(function(blob) {
+        // var url = URL.createObjectURL(blob);
+        // var link = document.createElement('a');
+        // link.href = url;
+        // link.download = 'recorded-audio.wav';
+        // link.click();
+        
+        var filename = new Date().toISOString();
+        formData.append("audio[]",blob, filename);
+        console.log("Pegue el aaaaudio");
+    });
+}
+
+function sendAudios(){
+    console.log("Enviando audios!");
+    form_id = $("#formEntrevista").attr('data-form');
+    $.ajax({
+        type:'POST',
+        dataType: 'JSON',
+        processData: false,
+        contentType: false,
+        data:formData,
+        url: '<?= base_url()?>/guardarCuestionario/'+form_id,
+        success: function(resp) {
+            if(resp.status){
+                notificar(notiSuccess);
+            }else{
+                notificar(notiError);
+            }
+        },
+        error: function(result){
+            notificar(notiError);
+        }
+    });
+}
+function checkearTiempo(){
+    var fin = new Date().getTime();
+    var duracion = fin - comienzo; // Calculate the time held in milliseconds
+
+    if (duracion >= 7000) {
+        // The key was held down for at least 7 seconds
+        console.log('Key held down for at least 7 seconds!');
+        clearInterval(checkear); // Clear the interval after validation
+    }
+}
 </script>
 <?= $this->endSection() ?>

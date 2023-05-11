@@ -34,8 +34,8 @@ class Database extends Config
         'DSN'      => '',
         'hostname' => '10.142.0.13',
         'username' => 'postgres',
-        'password' => '!Password00',
-        'database' => 'tools_prod_t',
+        'password' => '$ueDYY0v47*r',
+        'database' => 'wemap_d',
         'DBDriver' => 'Postgre',//'MySQLi'
         'DBPrefix' => '',
         'pConnect' => false,
@@ -47,7 +47,7 @@ class Database extends Config
         'compress' => false,
         'strictOn' => false,
         'failover' => [],
-        'port'     => 5432,
+        'port'     => 7432,
     ];
 
     /**

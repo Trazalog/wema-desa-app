@@ -18,8 +18,7 @@ class Forms extends Model{
         * @param array datos de formulario
         * @return 
 	*/
-    public function guardar($form_id, $data = false)
-    {   
+    public function guardar($form_id, $data = false){   
         $items = $this->obtenerPlantilla($form_id);
         $array = array();
         $aux = array();
@@ -158,26 +157,31 @@ class Forms extends Model{
 
         return $aux;
     }
+    /**
+        * Obtiene la plantilla del formulario creada en frm.items a traves del form_id de frm.formularios
+        * @param integer $id form_id
+        * @return array $aux formulario definido
+	*/
+    public function obtenerPlantilla($form_id){
+        log_message('info', '#TRAZA | TRAZ-COMP-FORMULARIOS | Model | Forms | obtenerPlantilla($form_id) -> form_id: '.$form_id);
 
-    public function obtenerPlantilla($id)
-    {
-        $this->db->select('name, label, requerido, valo_id, orden, A.form_id, tipo_dato, C.nombre, A.columna, A.multiple');
-        $this->db->from('frm.items as A');
-        $this->db->join('frm.formularios as C', 'C.form_id = A.form_id');
-        $this->db->where('A.form_id', $id);
-        $this->db->where('A.eliminado', false);
-        $this->db->order_by('A.orden');
+        $query = $this->db->query("select name, label, requerido, valo_id, orden, A.form_id, tipo_dato, C.nombre, A.columna, A.multiple
+            from frm.items as A
+            join frm.formularios as C on C.form_id = A.form_id
+            where A.form_id = cast($form_id as integer) and A.eliminado = false
+            order by A.orden"
+        );
 
-        $res = $this->db->get();
+        $items = $query->getResultObject();
 
-        $newInfo = $this->db->select_max('info_id')->get('frm.instancias_formularios')->row('info_id') + 1;
+        // $newInfo = $this->db->select_max('info_id')->get('frm.instancias_formularios')->row('info_id') + 1;
         
-        $aux = new StdClass();
+        $aux = new \StdClass();
         $aux->info_id = false;
-        $aux->form_id = $id;
-        $aux->nombre = $res->row()->nombre;
-        $aux->id = $newInfo; 
-        $aux->items = $res->result();
+        $aux->form_id = $form_id;
+        $aux->nombre = count($items) > 0 ? $items[0]->nombre : 'SIN RESULTADOS';//Nombre del formulario
+        $aux->id = rand(0,10000);
+        $aux->items = $items;
 
         foreach ($aux->items as $key => $o) {
 
@@ -224,18 +228,6 @@ class Forms extends Model{
             $this->db->update('frm.instancias_formularios');
         }
     }
-
-    public function generarInstancia($form_id)
-    {
-        $res['info_id'] = $this->guardar($form_id);
-        return $res;
-    }
-
-    public function validarVariable($info_id)
-    {
-        # code...
-    }
-
     public function obtenerXEmpresa($nombre, $emprId)
     {
         $this->db->where('empr_id', $emprId);
@@ -253,5 +245,64 @@ class Forms extends Model{
         $url = REST_FRM . $resource;
         $array = $this->rest->callApi('GET', $url);
         return json_decode($array['data']);
+    }
+        /**
+        * Guarda la instacia del formulario dinámico
+        * @param array datos de formulario
+        * @return 
+	*/
+    public function guardarCuestionario($form_id, $audios = false){   
+        $items = $this->obtenerPlantilla($form_id);
+        $array = array();
+        // $aux = array();
+        
+        foreach ($items->items as $key => $o) {
+            unset($o->nombre);//Lo desetea en el objeto $items->items tambien
+            if ($o->name) {
+                if(!is_array($audios)){
+
+                    $o->valor4_base64 = null;
+
+                    if($o->tipo_dato == 'image' || $o->tipo_dato == 'file'){
+                        
+                        $nom = "-file-".$o->name;
+                        
+                        if(!empty($_FILES[$nom]['tmp_name'])){
+                            $o->valor4_base64 = base64_encode(file_get_contents($_FILES[$nom]['tmp_name']));
+                        }
+                    }
+                    
+                    array_push($array, $o);
+                }else{
+                    foreach ($audios['name'] as $i => $audio) {
+                        $datoPlantilla = clone $o;
+
+                        $datoPlantilla->valor = $_FILES[$datoPlantilla->name]['name'][$i].".wav";//.$_FILES[$datoPlantilla->name]['type'][$i]; Harcodeada
+                                    
+                        if(!empty($_FILES[$datoPlantilla->name]['tmp_name'][$i])){
+                            $datoPlantilla->valor4_base64 = base64_encode(file_get_contents($_FILES[$datoPlantilla->name]['tmp_name'][$i]));
+                        }else{
+                            $datoPlantilla->valor4_base64 = NULL;
+                        }
+
+                        array_push($array, $datoPlantilla);
+                        unset($datoPlantilla);
+                    }
+
+                    unset($o);
+                }
+            }
+            unset($o);
+        }
+        // $this->db->save_queries = FALSE;// Para que no cachee la query
+
+        // if($aux && !$this->db->insert_batch('frm.instancias_formularios', $aux)) return FALSE;
+        $this->db->table('frm.instancias_formularios')->insertBatch($array);
+        $queryInfo = $this->db->query('SELECT MAX(info_id) as info_id FROM frm.instancias_formularios');
+        // $eso = $queryInfo->getResultObject();
+        $newInfo = $queryInfo->getResultObject()[0]->info_id;
+        log_message('info',"#TRAZA | #TRAZ-COMP-FORMULARIOS | Model | Forms | guardar() >> info_id generado ". $newInfo);
+
+        return $newInfo;
     }
 }
