@@ -65,7 +65,7 @@ if (!function_exists('form')) {
                     break;
             }
         }
-        return $html . '<div style="float:right" class="col-md-12"><button type="button" class="btn btn-primary pull-right frm-save" onclick="frmGuardar(this)">Guardar</button></div></form></fieldset>';
+        return $html . '<div style="float:right" class="col-md-12"><button type="button" class="btn btn-primary pull-right frm-save hidden" onclick="frmGuardar(this)">Guardar</button></div></form></fieldset>';
     }
 }
 function input($e){
@@ -260,10 +260,7 @@ function audio($e){
     return
         "<div class='".($e->columna ? $e->columna : 'col-md-12')."'>
             <div class='form-group'>
-                <input class='form-control' id='$e->name' type='file' name='". ($e->multiple ? '-file-'.$e->name.'[]' : '-file-'.$e->name) . "'>
-                <p class='help-block show-file'><a $file class='help-button col-sm-4 download' title='Descargar' download>
-                    <iclass='fa fa-download'></i> Ver Adjunto</a>
-                </p>
+                <audio class='form-control hidden' id='$e->name'>Los audios no estan disponibles en esta navegador</audio>
             </div>
         </div>";
 }

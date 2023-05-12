@@ -3,6 +3,9 @@
 .centrar{
 	text-align: center;
 }
+.hidden{
+	display: none;
+}
 /*Fin estilos clases generales*/
 
 /* Estilo de breadcrumb*/

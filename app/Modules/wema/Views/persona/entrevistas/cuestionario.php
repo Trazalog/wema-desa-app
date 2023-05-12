@@ -30,7 +30,7 @@
                                     <!-- your steps content here -->
                                     <?php foreach ($cuestionario->preguntas as $key => $pregunta) {
                                             echo    '<div id="pregunta-'.$key.'" class="content" role="tabpanel" aria-labelledby="pregunta-'.$key.'-trigger">';
-                                            echo        '<div class="form-group">';
+                                            echo        '<div style="width:70%; margin-left: auto;margin-right: auto;" class="form-group">';
                                             echo            '<div style="position: relative; overflow: hidden; padding-top: 56.25%;">';
                                             echo                '<iframe src="'.$pregunta->video.'" loading="lazy" title="Synthesia video player - Your AI video" allow="encrypted-media; fullscreen;" style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; border: none; padding: 0; margin: 0; overflow:hidden;"></iframe>';
                                             echo                '<audio id="pregunta-'.$key.'-audio-">Your browser does not support the audio element.</audio>';
@@ -45,7 +45,8 @@
                         <!-- /.bs-tepper -->
                         <div class="col-md-12 centrar">
                             <div class="form-group">
-                                <button id="btn-anterior" class="btn btn-primary">Anterior</button><button id="btn-siguiente" class="btn btn-primary">Siguiente</button>
+                                <!-- <button id="btn-anterior" class="btn btn-primary">Anterior</button> -->
+                                <button id="btn-siguiente" class="btn btn-primary">Siguiente</button>
                             </div>
                         </div>
                         <div id="formEntrevista" class="frm-new" data-form="3"></div>
@@ -62,16 +63,6 @@
 </section>
 <!-- /section -->
 <script>
-$(document).ready(function () {
-    //Inicializo STEPPER
-    var stepperConstruct = new Stepper($('.bs-stepper')[0]);
-    //Defino la instancia para moverme sobre el form
-    var stepper = new Stepper(document.querySelector('.bs-stepper'));
-    document.getElementById('btn-anterior').onclick = stepper.previous();
-    document.getElementById('btn-siguiente').onclick = stepper.next();
-    detectarForm();
-    $(document).on('keydown', startRecording).on('keyup', stopRecording);
-});
 var gumStream; 						//stream from getUserMedia()
 var rec; 							//Recorder.js object
 var input; 							//MediaStreamAudioSourceNode we'll be recording
@@ -79,16 +70,36 @@ var formData = new FormData();      //Formulario a enviar con el cuestionario
 var comienzo;                       //Variable de estado para controlar tiempo de grabacion
 var duracion;                       //Variable de estado para controlar tiempo de grabacion
 var fin;                            //Variable de estado para controlar tiempo de grabacion
+var stepper;
+var stepperConstruct;
+var indiceCuestionario = <?= count($cuestionario->preguntas); ?>;
 // shim for AudioContext when it's not avb. 
 var AudioContext = window.AudioContext || window.webkitAudioContext;
 var audioContext //audio context to help us record
+$(document).ready(function () {
+    //Inicializo STEPPER
+    stepperConstruct = new Stepper($('.bs-stepper')[0]);
+    //Defino la instancia para moverme sobre el form
+    stepper = new Stepper(document.querySelector('.bs-stepper'));
+    // document.getElementById('btn-anterior').onclick = stepper.previous();
+    document.getElementById('btn-siguiente').onclick = stepper.next();
+    $("#btn-siguiente").on('click', function () {
+        console.log("avanzando");
+        stepper.next();
+    });
+    detectarForm();
+    $(document).on('keydown', startRecording).on('keyup', stopRecording);
+});
 
 function startRecording(e) {
     console.log(e.keyCode);
     if(e.keyCode != 32) return;
+    e.preventDefault();
     if (!comienzo) {
       comienzo = new Date().getTime(); // Set the keydown timestamp
-      checkear = setInterval(checkearTiempo, 100); // Check every second
+      checkear = setInterval(checkearTiempo, 500); // Check every second
+    }else{
+        return;
     }
 	console.log("Comienza Grabacion!");
     // comienzo = new Date().getTime();
@@ -127,16 +138,21 @@ function startRecording(e) {
 }
 
 function stopRecording(e) {
-    if(e.keyCode != 32){
+    if(e.keyCode === 32){
         clearInterval(checkear); // Clear the interval
+        fin = new Date().getTime();
+        var media = fin - comienzo;
         comienzo = null; // Reset the keydown timestamp
-    }
-	console.log("Finaliza Grabación!");
-    fin = new Date().getTime();
-    var media = fin - comienzo;
-    if(media < 7000){
-        config = {'icon' : 'warning','title':'Advertencia', text: 'La respuesta debe durar mas de 7 segundos','btnConfirmar' : true};
-        notificar(config)
+        console.log("Finaliza Grabación!");
+        if(media < 7000){
+            config = {'icon' : 'warning','title':'Advertencia', text: 'La respuesta debe durar mas de 7 segundos','btnConfirmar' : true};
+            notificar(config);
+            return;
+        }else{
+            console.log("Duracion correcta");
+        }
+    }else{
+        return;
     }
 	//tell the recorder to stop the recording
 	rec.stop();
@@ -153,7 +169,22 @@ function stopRecording(e) {
         
         var filename = new Date().toISOString();
         formData.append("audio[]",blob, filename);
-        console.log("Pegue el aaaaudio");
+        var confCorrecta = {'icon' : 'success','title':'Éxito', text: 'Solicitud procesada correctamente','btnConfirmar' : true};
+        notificar(confCorrecta);
+        if(stepper._currentIndex === indiceCuestionario - 1){
+            Swal.fire({
+                title: 'Gracias',
+                text: "Entrevista realizada satifactoriamente!",
+                icon: 'success',
+                confirmButtonColor: '#28a745',
+                confirmButtonText: 'Hecho'
+                }).then((result) => {
+                    sendAudios();
+                })
+        }else{
+            $("#btn-siguiente").click();
+        }
+        // console.log("Pegue el aaaaudio");
     });
 }
 
@@ -169,7 +200,8 @@ function sendAudios(){
         url: '<?= base_url()?>/guardarCuestionario/'+form_id,
         success: function(resp) {
             if(resp.status){
-                notificar(notiSuccess);
+                var confi = {'icon' : 'success','title':'Éxito', text: 'Se guardó el cuestionario correctamente','btnConfirmar' : true};
+                notificar(confi);
             }else{
                 notificar(notiError);
             }
