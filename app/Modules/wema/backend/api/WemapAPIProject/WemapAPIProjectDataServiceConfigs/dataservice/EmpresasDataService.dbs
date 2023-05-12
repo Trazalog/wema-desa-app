@@ -1,0 +1,259 @@
+<data transports="http https local" serviceGroup="" serviceNamespace="EmpresasDataService" name="EmpresasDataService">
+  <description>Gestiona Menu Empresas</description>
+  <config id="WemapDataSource">
+    <property name="carbon_datasource_name">WemapDataSource</property>
+  </config>
+  <resource path="/empresas" method="GET">
+    <description>Listar las empresas desde la tabla core.empresas</description>
+    <call-query href="getEmpesas" />
+  </resource>
+  <resource path="/empresas" method="DELETE">
+    <description>deleteEmpresas</description>
+    <call-query href="deleteEmpresas">
+      <with-param name="empr_id" query-param="empr_id" />
+    </call-query>
+  </resource>
+  <resource path="/habilitarEmpresa" method="PUT">
+    <description>habilitarEmpresa</description>
+    <call-query href="habilitarEmpresas">
+      <with-param name="empr_id" query-param="empr_id" />
+    </call-query>
+  </resource>
+  <resource path="/empresas" method="POST">
+    <description>insert Empresas</description>
+    <call-query href="setEmpresas" />
+  </resource>
+  <resource path="/empresas" method="PUT">
+    <description>Update Empresas</description>
+    <call-query href="updateEmpresa" />
+  </resource>
+  <query id="getEmpesas" useConfig="WemapDataSource">
+    <sql>select e.*, t.descripcion as empresa, tp.descripcion as persona, tn.descripcion as nacionalidad, tg.descripcion as genero,
+       tu.descripcion  as ubicacion
+from core.empresas e
+join core.tablas t on e.tiem_id = t.tabl_id 
+join core.tablas tp on e.tipe_id  = tp.tabl_id
+join core.tablas tn on e.naci_id  = tn.tabl_id 
+join core.tablas tg on e.gene_id = tg.tabl_id 
+join core.tablas tu on e.ubic_id  = tu.tabl_id</sql>
+    <result outputType="json">{
+    "empresas": {
+        "empresa": [{
+            "empr_id" : "$empr_id",
+				"nombre" : "$nombre",
+				"id_tributario" : "$id_tributario",
+				"num_telefono" : "$num_telefono",
+				"email" : "$email",
+				"calle" : "$calle",
+				"num_exterior" : "$num_exterior",
+				"cod_postal" : "$cod_postal",
+				"num_interior" : "$num_interior",
+				"razon_social" : "$razon_social",
+				"representante_legal" : "$representante_legal",
+				"id_persona" : "$id_persona",
+				"apellidos" : "$apellidos",
+				"nombres" : "$nombres",
+				"fec_nacimiento" : "$fec_nacimiento",
+				"ocupacion" : "$ocupacion",
+				"fec_alta" : "$fec_alta",
+				"usr_alta" : "$usr_alta",
+				"usr_app_alta" : "$usr_app_alta",
+				"fec_ult_modif" : "$fec_ult_modif",
+				"usr_ult_modif" : "$usr_ult_modif",
+				"usr_app_ult_modif" : "$usr_app_ult_modif",
+				"tiem_id" : "$tiem_id",
+				"tipe_id" : "$tipe_id",
+				"naci_id" : "$naci_id",
+				"gene_id" : "$gene_id",
+				"ubic_id" : "$ubic_id",
+				"imagen" : "$imagen",
+				"nom_imagen" : "$nom_imagen",
+				"eliminado" : "$eliminado",				
+				"empresa" : "$empresa",
+				"persona" : "$persona",
+				"nacionalidad" : "$nacionalidad",
+				"genero" : "$genero",
+				"ubicacion" : "$ubicacion"
+        }]
+    }
+}</result>
+  </query>
+  <query id="habilitarEmpresas" useConfig="WemapDataSource">
+    <sql>update core.empresas set eliminado = false  where empr_id = cast(:empr_id as integer)</sql>
+    <param name="empr_id" paramType="SCALAR" sqlType="STRING" />
+  </query>
+  <query id="deleteEmpresas" useConfig="WemapDataSource">
+    <sql>update core.empresas set eliminado = true where empr_id = cast(:empr_id as integer)</sql>
+    <param name="empr_id" paramType="SCALAR" sqlType="STRING" />
+  </query>
+  <query id="updateEmpresa" useConfig="WemapDataSource">
+    <sql>update core.empresas e
+set
+ nombre = :nombre ,
+ id_tributario = :id_tributario ,
+ num_telefono = :num_telefono ,
+ email = :email ,
+ calle = :calle ,
+ num_exterior = :num_exterior ,
+ cod_postal = :cod_postal ,
+ num_interior = :num_interior ,
+ razon_social = :razon_social ,
+ representante_legal = :representante_legal ,
+ id_persona = :id_persona ,
+ apellidos = :apellidos ,
+ nombres = :nombres ,
+ fec_nacimiento = case when param.fec_nacimiento is null or param.fec_nacimiento = '' then c.fec_nacimiento else cast(param.fec_nacimiento as date) end,
+ ocupacion = :ocupacion ,
+ fec_alta = :fec_alta ,
+ usr_alta = :usr_alta ,
+ usr_app_alta = :usr_app_alta ,
+ fec_ult_modif = :fec_ult_modif ,
+ usr_ult_modif = :usr_ult_modif ,
+ usr_app_ult_modif = :usr_app_ult_modif ,
+ tiem_id = :tiem_id ,
+ tipe_id = :tipe_id ,
+ naci_id = :naci_id ,
+ gene_id = :gene_id ,
+ ubic_id = :ubic_id ,
+imagen = case when param.imagen is null or param.imagen = '' then c.imagen else cast(param.imagen as bytea) end,
+nom_imagen = case when param.nom_imagen is null or param.nom_imagen = '' then c.nom_imagen else param.nom_imagen end,
+ eliminado = :eliminado ,				
+ empresa = :empresa ,
+ persona = :persona ,
+ nacionalidad = :nacionalidad ,
+ genero = :genero ,
+ ubicacion = :ubicacion 
+ from (select :imagen imagen, :nom_imagen nom_imagen, :fec_nacimiento fec_nacimiento) param
+ where empr_id = cast(:empr_id as integer)</sql>
+    <param name="empr_id" paramType="SCALAR" sqlType="STRING" />
+    <param name="nombre" paramType="SCALAR" sqlType="STRING" />
+    <param name="id_tributario" paramType="SCALAR" sqlType="STRING" />
+    <param name="num_telefono" paramType="SCALAR" sqlType="STRING" />
+    <param name="email" paramType="SCALAR" sqlType="STRING" />
+    <param name="calle" paramType="SCALAR" sqlType="STRING" />
+    <param name="num_exterior" paramType="SCALAR" sqlType="STRING" />
+    <param name="cod_postal" paramType="SCALAR" sqlType="STRING" />
+    <param name="num_interior" paramType="SCALAR" sqlType="STRING" />
+    <param name="razon_social" paramType="SCALAR" sqlType="STRING" />
+    <param name="representante_legal" paramType="SCALAR" sqlType="STRING" />
+    <param name="id_persona" paramType="SCALAR" sqlType="STRING" />
+    <param name="apellidos" paramType="SCALAR" sqlType="STRING" />
+    <param name="nombres" paramType="SCALAR" sqlType="STRING" />
+    <param name="fec_nacimiento" paramType="SCALAR" sqlType="STRING" />
+    <param name="ocupacion" paramType="SCALAR" sqlType="STRING" />
+    <param name="fec_alta" paramType="SCALAR" sqlType="STRING" />
+    <param name="usr_alta" paramType="SCALAR" sqlType="STRING" />
+    <param name="usr_app_alta" paramType="SCALAR" sqlType="STRING" />
+    <param name="fec_ult_modif" paramType="SCALAR" sqlType="STRING" />
+    <param name="usr_ult_modif" paramType="SCALAR" sqlType="STRING" />
+    <param name="usr_app_ult_modif" paramType="SCALAR" sqlType="STRING" />
+    <param name="tiem_id" paramType="SCALAR" sqlType="STRING" />
+    <param name="tipe_id" paramType="SCALAR" sqlType="STRING" />
+    <param name="naci_id" paramType="SCALAR" sqlType="STRING" />
+    <param name="gene_id" paramType="SCALAR" sqlType="STRING" />
+    <param name="ubic_id" paramType="SCALAR" sqlType="STRING" />
+    <param name="imagen" paramType="SCALAR" sqlType="STRING" />
+    <param name="nom_imagen" paramType="SCALAR" sqlType="STRING" />
+    <param name="eliminado" paramType="SCALAR" sqlType="STRING" />
+    <param name="empresa" paramType="SCALAR" sqlType="STRING" />
+    <param name="persona" paramType="SCALAR" sqlType="STRING" />
+    <param name="nacionalidad" paramType="SCALAR" sqlType="STRING" />
+    <param name="genero" paramType="SCALAR" sqlType="STRING" />
+    <param name="ubicacion" paramType="SCALAR" sqlType="STRING" />
+    <param name=":nom_imagen nom_imagen" paramType="SCALAR" sqlType="STRING" />
+    <param name=":fec_nacimiento fec_nacimiento) param" paramType="SCALAR" sqlType="STRING" />
+    <param name="empr_id" paramType="SCALAR" sqlType="STRING" />
+  </query>
+  <query id="setEmpresas" useConfig="WemapDataSource">
+    <sql>INSERT INTO core.empresas 
+(nombre, id_tributario, num_telefono, email, calle, num_exterior, cod_postal, num_interior, razon_social,representante_legal, id_persona, apellidos,
+nombres, fec_nacimiento, ocupacion, fec_alta, usr_alta, usr_app_alta, fec_ult_modif, usr_ult_modif,usr_app_ult_modif, tiem_id,  tipe_id, naci_id, gene_id, ubic_id, imagen, nom_imagen)
+select nombre,
+id_tributario,
+num_telefono,
+email, 
+calle,
+num_exterior,
+cod_postal,
+num_interior,
+razon_social,
+representante_legal,
+id_persona,
+apellidos,
+nombres,
+case when fec_nacimiento is null or fec_nacimiento = '' then null else cast(fec_nacimiento as date) end,
+ocupacion,
+fec_alta,
+usr_alta,
+usr_app_alta,
+fec_ult_modif,
+usr_ult_modif,
+usr_app_ult_modif,
+tiem_id,
+tipe_id,
+naci_id,
+gene_id,
+ubic_id,
+case when imagen is null or imagen = '' then null else cast(imagen as bytea) end,
+nom_imagen,
+eliminado
+from
+(select
+:nombre nombre,
+:id_tributario id_tributario,
+:num_telefono num_telefono,
+:email email, 
+:calle calle,
+:num_exterior num_exterior,
+:cod_postal cod_postal,
+:num_interior num_interior,
+:razon_social razon_social,
+:representante_legal representante_legal,
+:id_persona id_persona,
+:apellidos apellidos,
+:nombres nombres,
+:fec_nacimiento fec_nacimiento,
+:ocupacion ocupacion,
+now() fec_alta,
+:usr_alta usr_alta,
+:usr_app_alta usr_app_alta,
+:fec_ult_modif fec_ult_modif,
+:usr_ult_modif usr_ult_modif,
+:usr_app_ult_modif usr_app_ult_modif,
+:tiem_id tiem_id,
+:tipe_id tipe_id,
+:naci_id naci_id,
+:gene_id gene_id,
+:ubic_id ubic_id,
+:imagen imagen,
+:nom_imagen nom_imagen) param</sql>
+    <param type="IN" name="nombre" paramType="SCALAR" sqlType="STRING" optional="false" />
+    <param type="IN" name="id_tributario" paramType="SCALAR" sqlType="STRING" optional="false" />
+    <param type="IN" name="num_telefono" paramType="SCALAR" sqlType="STRING" optional="false" />
+    <param type="IN" name="email" paramType="SCALAR" sqlType="STRING" optional="false" />
+    <param type="IN" name="calle" paramType="SCALAR" sqlType="STRING" optional="false" />
+    <param type="IN" name="num_exterior" paramType="SCALAR" sqlType="STRING" optional="false" />
+    <param type="IN" name="cod_postal" paramType="SCALAR" sqlType="STRING" optional="false" />
+    <param type="IN" name="num_interior" paramType="SCALAR" sqlType="STRING" optional="false" />
+    <param type="IN" name="razon_social" paramType="SCALAR" sqlType="STRING" optional="false" />
+    <param type="IN" name="representante_legal" paramType="SCALAR" sqlType="STRING" optional="false" />
+    <param type="IN" name="id_persona" paramType="SCALAR" sqlType="STRING" optional="false" />
+    <param type="IN" name="apellidos" paramType="SCALAR" sqlType="STRING" optional="false" />
+    <param type="IN" name="nombres" paramType="SCALAR" sqlType="STRING" optional="false" />
+    <param type="IN" name="fec_nacimiento" paramType="SCALAR" sqlType="STRING" optional="false" />
+    <param type="IN" name="ocupacion" paramType="SCALAR" sqlType="STRING" optional="false" />
+    <param type="IN" name="fec_alta" paramType="SCALAR" sqlType="STRING" optional="false" />
+    <param type="IN" name="usr_alta" paramType="SCALAR" sqlType="STRING" optional="false" />
+    <param type="IN" name="usr_app_alta" paramType="SCALAR" sqlType="STRING" optional="false" />
+    <param type="IN" name="fec_ult_modif" paramType="SCALAR" sqlType="STRING" optional="false" />
+    <param type="IN" name="usr_ult_modif" paramType="SCALAR" sqlType="STRING" optional="false" />
+    <param type="IN" name="usr_app_ult_modif" paramType="SCALAR" sqlType="STRING" optional="false" />
+    <param type="IN" name="tiem_id" paramType="SCALAR" sqlType="STRING" optional="false" />
+    <param type="IN" name="tipe_id" paramType="SCALAR" sqlType="STRING" optional="false" />
+    <param type="IN" name="naci_id" paramType="SCALAR" sqlType="STRING" optional="false" />
+    <param type="IN" name="gene_id" paramType="SCALAR" sqlType="STRING" optional="false" />
+    <param type="IN" name="ubic_id" paramType="SCALAR" sqlType="STRING" optional="false" />
+    <param type="IN" name="imagen" paramType="SCALAR" sqlType="STRING" optional="false" />
+    <param type="IN" name="nom_imagen" paramType="SCALAR" sqlType="STRING" optional="false" />
+  </query>
+</data>
