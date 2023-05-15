@@ -1,5 +1,10 @@
 <?php $this->extend('templates/admin_template') ?>
 <?= $this->section('content') ?>
+<style>
+    #formEntrevista .frm-save{
+        display: none;
+    }
+</style>
 <section class="content">
     <div class="container-fluid">
         <div class="row">
@@ -50,6 +55,7 @@
                             </div>
                         </div>
                         <div id="formEntrevista" class="frm-new" data-form="3"></div>
+                        <div id="waveform"></div>
                     </div>
                     <!-- /.card-body -->
                 </div>
@@ -73,6 +79,7 @@ var fin;                            //Variable de estado para controlar tiempo d
 var stepper;
 var stepperConstruct;
 var indiceCuestionario = <?= count($cuestionario->preguntas); ?>;
+var wavesurfer;
 // shim for AudioContext when it's not avb. 
 var AudioContext = window.AudioContext || window.webkitAudioContext;
 var audioContext //audio context to help us record
@@ -89,6 +96,19 @@ $(document).ready(function () {
     });
     detectarForm();
     $(document).on('keydown', startRecording).on('keyup', stopRecording);
+    wavesurfer = WaveSurfer.create({
+        // Use the id or class-name of the element you created, as a selector
+        container: '#waveform',
+        // The color can be either a simple CSS color or a Canvas gradient
+        waveColor: 'grey',
+        progressColor: 'hsla(200, 100%, 30%, 0.5)',
+        cursorColor: '#fff',
+        // This parameter makes the waveform look like SoundCloud's player
+        barWidth: 3,
+        plugins: [
+            WaveSurfer.microphone.create()
+        ]
+    });
 });
 
 function startRecording(e) {
@@ -102,6 +122,8 @@ function startRecording(e) {
         return;
     }
 	console.log("Comienza Grabacion!");
+    //Inicializo el wavesurfer
+    wavesurfer.microphone.start();
     // comienzo = new Date().getTime();
     var constraints = {audio: true};
 
@@ -154,6 +176,8 @@ function stopRecording(e) {
     }else{
         return;
     }
+    //Limpio el wavesurfer
+    wavesurfer.microphone.stop();
 	//tell the recorder to stop the recording
 	rec.stop();
 	//stop microphone access
