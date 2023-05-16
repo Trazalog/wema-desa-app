@@ -4,6 +4,9 @@
     #formEntrevista .frm-save{
         display: none;
     }
+    .bs-stepper-header{
+        overflow: auto;
+    }
 </style>
 <section class="content">
     <div class="container-fluid">
@@ -19,26 +22,39 @@
                             <div class="bs-stepper-header" role="tablist">
                                 <!-- your steps here -->
                                 <?php foreach ($cuestionario->preguntas as $key => $pregunta) {
-                                        echo    '<div class="step" data-target="#pregunta-'.$key.'">';
-                                        echo    '<button type="button" class="step-trigger" role="tab" aria-controls="pregunta-'.$key.'" id="pregunta-'.$key.'-trigger">';
-                                        echo        '<span class="bs-stepper-circle">'.$key.'</span>';
+                                    $indice = ++$key;
+                                        echo    '<div class="step" data-target="#pregunta-'.$indice.'">';
+                                        echo    '<button type="button" class="step-trigger" role="tab" aria-controls="pregunta-'.$indice.'" id="pregunta-'.$indice.'-trigger">';
+                                        echo        '<span class="bs-stepper-circle">'.$indice.'</span>';
                                         echo        '<span class="bs-stepper-label">'.$pregunta->titulo.'</span>';
                                         echo    '</button>';
                                         echo    '</div>';
-                                        echo    ($key !== count($cuestionario->preguntas) - 1) ? '<div class="line"></div>' : '';
+                                        echo    ($indice !== count($cuestionario->preguntas)) ? '<div class="line"></div>' : '';
                                     }
                                 ?>
                             </div>
-                            <div class="bs-stepper-content">
+                            <div class="bs-stepper-content mt-2">
                                 <form id="frm-entrevista">
                                     <input id="pers_id" name="pers_id" type="text" disabled hidden>
                                     <!-- your steps content here -->
                                     <?php foreach ($cuestionario->preguntas as $key => $pregunta) {
-                                            echo    '<div id="pregunta-'.$key.'" class="content" role="tabpanel" aria-labelledby="pregunta-'.$key.'-trigger">';
-                                            echo        '<div style="width:70%; margin-left: auto;margin-right: auto;" class="form-group">';
-                                            echo            '<div style="position: relative; overflow: hidden; padding-top: 56.25%;">';
-                                            echo                '<iframe src="'.$pregunta->video.'" loading="lazy" title="Synthesia video player - Your AI video" allow="encrypted-media; fullscreen;" style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; border: none; padding: 0; margin: 0; overflow:hidden;"></iframe>';
-                                            echo                '<audio id="pregunta-'.$key.'-audio-">Your browser does not support the audio element.</audio>';
+                                            $indice = ++$key;
+                                            echo    '<div id="pregunta-'.$indice.'" class="content" role="tabpanel" aria-labelledby="pregunta-'.$indice.'-trigger">';
+                                            echo        '<div class="card card-info">';
+                                            echo            '<div class="card-header">';
+                                            echo                '<h3 class="card-title">'.$pregunta->pregunta.'</h3>';
+                                            echo            '</div>';
+                                            echo            '<div class="car-body">';
+                                            echo                '<div class="container">';
+                                            echo                    '<div class="row align-items-center mt-3">';
+                                            echo                        '<div class="col-md-12">';
+                                            echo                            '<p>'.$pregunta->descripcion.'</p>';
+                                            echo                        '</div>';
+                                            echo                    '</div>';
+                                            echo                 '</div>';
+                                            echo             '</div>';
+                                            echo            '<div class="card-footer text-muted text-right">';
+                                            echo                '<small class="text-muted"><em>Pulse la barra espaciadora para comenzar su respuesta.</em></small>';
                                             echo            '</div>';
                                             echo        '</div>';
                                             echo    '</div>';
@@ -46,6 +62,7 @@
                                     ?>
                                 </form>
                             </div>
+                            <div id="waveform"></div>
                         </div>
                         <!-- /.bs-tepper -->
                         <div class="col-md-12 centrar">
@@ -55,7 +72,6 @@
                             </div>
                         </div>
                         <div id="formEntrevista" class="frm-new" data-form="3"></div>
-                        <div id="waveform"></div>
                     </div>
                     <!-- /.card-body -->
                 </div>
@@ -68,6 +84,42 @@
     <!-- /.container-fluid -->
 </section>
 <!-- /section -->
+<!-- MODAL BIENVENIDA  -->
+<!-- MODAL GENERICO PARA CLIENTES -->
+<div class="modal fade right" id="modalBienvenida" aria-modal="true" role="dialog">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header" id='modalHeader'>
+                <h3>Bienvenido al cuestionario</h3>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <h4>TÉRMINOS Y CONDICIONES</h4>
+                <p>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi non justo in enim gravida consequat. Vivamus tristique ultrices lectus, vitae dapibus neque feugiat nec. Aliquam in nibh ut justo facilisis dictum. Vivamus at eros vel odio feugiat tristique id nec neque. Aenean lobortis eros vel arcu vulputate blandit. Nunc luctus lacus eget ante rhoncus vehicula. Sed eleifend lacinia accumsan. Morbi interdum id augue in lobortis. Pellentesque efficitur ante tortor, eu tincidunt ligula faucibus ut. Etiam urna metus, vehicula in nibh nec, ultricies laoreet dui. Sed sagittis risus quam, eu faucibus neque sollicitudin a.
+                </p>
+                <p>
+                    Quisque vehicula accumsan ante, ac consequat lorem convallis tempor. Maecenas non sollicitudin ex. Aliquam condimentum nisi sapien. Phasellus massa elit, porta et justo vitae, scelerisque varius massa. Etiam maximus elit posuere enim volutpat, eget facilisis massa sagittis. Suspendisse tincidunt mi non neque dictum rhoncus. Etiam nec sapien in metus tempus imperdiet id at arcu. Donec pellentesque lorem nec porttitor gravida. Vestibulum vitae nulla quis purus ornare pretium et vitae ante. Donec varius, nunc vel mattis congue, ligula neque feugiat lectus, vitae suscipit enim neque non arcu. Donec dui ex, maximus sit amet nulla vehicula, dignissim sollicitudin neque.
+                </p>
+                <p>
+                    Donec pulvinar vulputate tincidunt. Donec ut laoreet dui. Vivamus porttitor varius metus sed bibendum. In imperdiet nisi eu dui accumsan congue. Curabitur posuere efficitur enim commodo tristique. Ut vel enim varius, rutrum ligula sit amet, dapibus massa. In hac habitasse platea dictumst. Duis eget tellus nec nibh ultricies commodo nec eu orci. Praesent enim eros, porta a turpis a, euismod cursus est. Nullam pretium nunc mauris, ut vehicula ex mollis sit amet. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Ut laoreet sit amet lectus at lacinia. Sed auctor, ligula eu ultrices gravida, ex urna ornare odio, at laoreet nulla nunc vel quam. Quisque sagittis justo sed velit fringilla, sed faucibus eros luctus.
+                </p>
+                <p>
+                    Nullam et placerat dui, quis blandit neque. Donec sit amet lorem sit amet quam rutrum dapibus nec eu velit. Praesent in gravida felis. Nunc lacus tellus, laoreet sit amet placerat a, faucibus vitae nibh. Suspendisse laoreet faucibus urna in ullamcorper. Sed pellentesque, magna nec elementum dapibus, purus nibh ornare dolor, a cursus sapien elit eget turpis. Etiam sed rhoncus magna. Vivamus nec tellus nec sapien aliquet facilisis. Quisque risus diam, aliquam vitae velit fermentum, aliquam hendrerit sem. Cras interdum augue semper vulputate luctus. Mauris sagittis arcu at blandit molestie. Nulla ut semper neque. Duis maximus hendrerit ligula, ac venenatis mi commodo non.
+                </p>
+                <p>
+                    Integer quis justo in sapien feugiat tincidunt a nec mauris. Sed sem ligula, faucibus et congue id, rhoncus quis justo. Curabitur tincidunt dolor eu est vehicula viverra. Fusce nisi quam, lacinia quis rhoncus ut, efficitur nec sapien. Nunc dolor metus, placerat vel tempus in, iaculis id ante. Integer fermentum mi sed nibh suscipit euismod. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam condimentum porttitor metus, et maximus orci elementum in. Proin ut dignissim lectus. Mauris vel pharetra justo. Praesent commodo leo tincidunt, finibus ipsum vitae, feugiat mi.</p>
+                </p>
+            </div>
+            <div class="modal-footer ">
+                <div class="col-mt-1 col-12 justify-content-center" style="margin-top:-5px">
+                    <button type="button" class="btn btn-secondary float-right" data-dismiss="modal">Comenzar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+ </div>
+
+<!-- FIN MODAL BIENVENIDA  -->
 <script>
 var gumStream; 						//stream from getUserMedia()
 var rec; 							//Recorder.js object
@@ -76,10 +128,12 @@ var formData = new FormData();      //Formulario a enviar con el cuestionario
 var comienzo;                       //Variable de estado para controlar tiempo de grabacion
 var duracion;                       //Variable de estado para controlar tiempo de grabacion
 var fin;                            //Variable de estado para controlar tiempo de grabacion
-var stepper;
-var stepperConstruct;
+var stepper;                        //Instancia variable plugin Stepper
+var stepperConstruct;               //Contructor inicializacion stepper
 var indiceCuestionario = <?= count($cuestionario->preguntas); ?>;
-var wavesurfer;
+var wavesurfer;                     //Instancia para visualizacion de ingreso de auido
+var utterance;                      //Instancia para lectura de texto
+var synth = window.speechSynthesis; //Instancia API voces
 // shim for AudioContext when it's not avb. 
 var AudioContext = window.AudioContext || window.webkitAudioContext;
 var audioContext //audio context to help us record
@@ -88,26 +142,37 @@ $(document).ready(function () {
     stepperConstruct = new Stepper($('.bs-stepper')[0]);
     //Defino la instancia para moverme sobre el form
     stepper = new Stepper(document.querySelector('.bs-stepper'));
-    // document.getElementById('btn-anterior').onclick = stepper.previous();
-    document.getElementById('btn-siguiente').onclick = stepper.next();
+    //Vinculo evento para moverme por el formulario
     $("#btn-siguiente").on('click', function () {
         console.log("avanzando");
         stepper.next();
     });
     detectarForm();
     $(document).on('keydown', startRecording).on('keyup', stopRecording);
-    wavesurfer = WaveSurfer.create({
-        // Use the id or class-name of the element you created, as a selector
-        container: '#waveform',
-        // The color can be either a simple CSS color or a Canvas gradient
-        waveColor: 'grey',
-        progressColor: 'hsla(200, 100%, 30%, 0.5)',
-        cursorColor: '#fff',
-        // This parameter makes the waveform look like SoundCloud's player
-        barWidth: 3,
-        plugins: [
-            WaveSurfer.microphone.create()
-        ]
+    // wavesurfer = WaveSurfer.create({
+    //     // Use the id or class-name of the element you created, as a selector
+    //     container: '#waveform',
+    //     // The color can be either a simple CSS color or a Canvas gradient
+    //     waveColor: 'grey',
+    //     progressColor: 'hsla(200, 100%, 30%, 0.5)',
+    //     cursorColor: '#fff',
+    //     // This parameter makes the waveform look like SoundCloud's player
+    //     barWidth: 3,
+    //     plugins: [
+    //         WaveSurfer.microphone.create()
+    //     ]
+    // });
+    // Inicializo la APi de lectura de texto nativa
+    voices = synth.getVoices();
+    utterance = new SpeechSynthesisUtterance("Bienvenido al cuestionario");
+    utterance.voice = voices[7];
+    $("#modalBienvenida").modal("show");
+    //Comienzo lectura del cuestionario
+    $("#modalBienvenida").on('hide.bs.modal', function(){
+        var iniciarCuestionario = () => {
+            synth.speak(utterance)
+        };
+        notificar({'icon' : 'info','title':'Entrevista', text: 'Cuando se encuentre listo presione el botón para dar inicio a la entrevista',"confirmButtonText":"Iniciar",'btnConfirmar' : true,"always": iniciarCuestionario});
     });
 });
 
