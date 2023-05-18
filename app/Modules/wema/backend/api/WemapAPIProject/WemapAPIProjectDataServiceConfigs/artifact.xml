@@ -5,4 +5,7 @@
     <artifact name="ClientesDataService" groupId="com.example.dataservice" version="1.0.0" type="service/dataservice" serverRole="DataServicesServer">
         <file>dataservice/ClientesDataService.dbs</file>
     </artifact>
+    <artifact name="EmpresasDataService" groupId="com.example.dataservice" version="1.0.0" type="service/dataservice" serverRole="DataServicesServer">
+        <file>dataservice/EmpresasDataService.dbs</file>
+    </artifact>
 </artifacts>
