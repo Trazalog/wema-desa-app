@@ -45,50 +45,54 @@ class Cuenta extends BaseController
     }
 
     /**
+        * 
+        * @param  array datos cuents
+        * @return array response servicio
+    */
+    public function getEmpresas(){
+        $resp = $this->Clientes->getEmpresas();
+        echo json_encode($resp);
+    }
+
+    /**
         * Recibe request con datos de cliente para ALTA
         * @param  array datos cliente
         * @return array response servicio
 	*/
-    public function guardarCliente(){
+    public function guardarCuenta(){
         $request = \Config\Services::request();
 
         $fotoPerfil = $request->getFile('imagen');
 
         $data['post_empresas'] = array(
-            'empr_id'=> $request->getPost(''),
-            'nombre' => $request->getPost(''),
-            'num_telefono' =>  $request->getPost(''),
-            'telefono' =>  $request->getPost(''),
-            'email' =>  $request->getPost(''),
-            'calle' =>  $request->getPost(''),
-            'num_exterior' =>  $request->getPost(''),
-            'num_interior' => $request->getPost(''),
-            'cod_postal' =>  $request->getPost(''),
-            'razon_social' => $request->getPost(''),
-            'representante_legal' => $request->getPost(''),
-            'id_persona' => $request->getPost(''),
-            'apellidos' => $request->getPost(''),
-            'nombres' => $request->getPost(''),
-            'fec_nacimiento' => $request->getPost(''),
-            'ocupacion'=>  $request->getPost(''),
-			'fec_alta' => $request->getPost(''),
-            'usr_alta' =>  userNick(),
-            'usr_app_alta' =>   userNick(),
-			'fec_ult_modif' => $request->getPost(''),
-			'usr_ult_modif' => userNick(),
-			'usr_app_ult_modif' => userNick(),
-			'tiem_id' => $request->getPost(''),
-			'tipe_id' => $request->getPost(''),
-			'naci_id' => $request->getPost(''),
-			'gene_id' => $request->getPost(''),
-			'ubic_id' => $request->getPost(''),
+            
+            'nombre' => $request->getPost('nombreCuenta'),
+			'id_tributario' => $request->getPost('rfcCuenta'),
+            'num_telefono' =>  $request->getPost('telefono'),            
+            'email' =>  $request->getPost('correo'),
+            'calle' =>  $request->getPost('calle'),
+            'num_exterior' =>  $request->getPost('numeroExterior'),            
+            'cod_postal' =>  $request->getPost('CodigoColonia'),
+			'num_interior' => $request->getPost('numeroInterior'),
+            'razon_social' => $request->getPost('razonSocial'),
+            'representante_legal' => $request->getPost('representanteLegal'),
+            'id_persona' => $request->getPost('curp'),
+            'apellidos' => $request->getPost('apellidos'),
+            'nombres' => $request->getPost('nombres'),
+            'fec_nacimiento' => $request->getPost('fechaNacimiento'),
+            'ocupacion'=>  $request->getPost('ocupacion'),
+            'usr_alta' =>  'koke',
+            'usr_app_alta' =>   'koke',
+			'tiem_id' => $request->getPost('tipoCuenta'),
+			'tipe_id' => $request->getPost('tipoPersona'),
+			'naci_id' => $request->getPost('nacionalidad'),
+			'gene_id' => $request->getPost('genero'),
+			'ubic_id' => $request->getPost('paisNacimiento'),
 			'imagen' => !empty($_FILES['imagen']['name'])  ? base64_encode(file_get_contents($fotoPerfil->getTempName())) : '',
             'nom_imagen' => !empty($_FILES['imagen']['name'])  ? $fotoPerfil->getName() : '',
-            
-            
         );
 
-        $resp = $this->Cuentas->guardarCuentas($data);
+        $resp = $this->Cuentas->guardarCuenta($data);
         
         echo json_encode($resp);
 

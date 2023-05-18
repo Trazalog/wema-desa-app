@@ -34,8 +34,8 @@ from core.empresas e
 join core.tablas t on e.tiem_id = t.tabl_id 
 join core.tablas tp on e.tipe_id  = tp.tabl_id
 join core.tablas tn on e.naci_id  = tn.tabl_id 
-join core.tablas tg on e.gene_id = tg.tabl_id 
-join core.tablas tu on e.ubic_id  = tu.tabl_id</sql>
+left join core.tablas tg on e.gene_id = tg.tabl_id 
+left join core.tablas tu on e.ubic_id  = tu.tabl_id</sql>
     <result outputType="json">{
     "empresas": {
         "empresa": [{
@@ -167,7 +167,7 @@ nom_imagen = case when param.nom_imagen is null or param.nom_imagen = '' then c.
   <query id="setEmpresas" useConfig="WemapDataSource">
     <sql>INSERT INTO core.empresas 
 (nombre, id_tributario, num_telefono, email, calle, num_exterior, cod_postal, num_interior, razon_social,representante_legal, id_persona, apellidos,
-nombres, fec_nacimiento, ocupacion, fec_alta, usr_alta, usr_app_alta, fec_ult_modif, usr_ult_modif,usr_app_ult_modif, tiem_id,  tipe_id, naci_id, gene_id, ubic_id, imagen, nom_imagen)
+nombres, fec_nacimiento, ocupacion, usr_app_alta, tiem_id,  tipe_id, naci_id, gene_id, ubic_id, imagen, nom_imagen)
 select nombre,
 id_tributario,
 num_telefono,
@@ -183,20 +183,14 @@ apellidos,
 nombres,
 case when fec_nacimiento is null or fec_nacimiento = '' then null else cast(fec_nacimiento as date) end,
 ocupacion,
-fec_alta,
-usr_alta,
 usr_app_alta,
-fec_ult_modif,
-usr_ult_modif,
-usr_app_ult_modif,
 tiem_id,
 tipe_id,
 naci_id,
-gene_id,
+case when gene_id is null or gene_id = '' then null else gene_id end,
 ubic_id,
 case when imagen is null or imagen = '' then null else cast(imagen as bytea) end,
-nom_imagen,
-eliminado
+nom_imagen
 from
 (select
 :nombre nombre,
@@ -214,12 +208,7 @@ from
 :nombres nombres,
 :fec_nacimiento fec_nacimiento,
 :ocupacion ocupacion,
-now() fec_alta,
-:usr_alta usr_alta,
 :usr_app_alta usr_app_alta,
-:fec_ult_modif fec_ult_modif,
-:usr_ult_modif usr_ult_modif,
-:usr_app_ult_modif usr_app_ult_modif,
 :tiem_id tiem_id,
 :tipe_id tipe_id,
 :naci_id naci_id,
@@ -227,7 +216,6 @@ now() fec_alta,
 :ubic_id ubic_id,
 :imagen imagen,
 :nom_imagen nom_imagen) param</sql>
-    <param type="IN" name="nombre" paramType="SCALAR" sqlType="STRING" optional="false" />
     <param type="IN" name="id_tributario" paramType="SCALAR" sqlType="STRING" optional="false" />
     <param type="IN" name="num_telefono" paramType="SCALAR" sqlType="STRING" optional="false" />
     <param type="IN" name="email" paramType="SCALAR" sqlType="STRING" optional="false" />
@@ -242,12 +230,7 @@ now() fec_alta,
     <param type="IN" name="nombres" paramType="SCALAR" sqlType="STRING" optional="false" />
     <param type="IN" name="fec_nacimiento" paramType="SCALAR" sqlType="STRING" optional="false" />
     <param type="IN" name="ocupacion" paramType="SCALAR" sqlType="STRING" optional="false" />
-    <param type="IN" name="fec_alta" paramType="SCALAR" sqlType="STRING" optional="false" />
-    <param type="IN" name="usr_alta" paramType="SCALAR" sqlType="STRING" optional="false" />
     <param type="IN" name="usr_app_alta" paramType="SCALAR" sqlType="STRING" optional="false" />
-    <param type="IN" name="fec_ult_modif" paramType="SCALAR" sqlType="STRING" optional="false" />
-    <param type="IN" name="usr_ult_modif" paramType="SCALAR" sqlType="STRING" optional="false" />
-    <param type="IN" name="usr_app_ult_modif" paramType="SCALAR" sqlType="STRING" optional="false" />
     <param type="IN" name="tiem_id" paramType="SCALAR" sqlType="STRING" optional="false" />
     <param type="IN" name="tipe_id" paramType="SCALAR" sqlType="STRING" optional="false" />
     <param type="IN" name="naci_id" paramType="SCALAR" sqlType="STRING" optional="false" />
@@ -255,5 +238,6 @@ now() fec_alta,
     <param type="IN" name="ubic_id" paramType="SCALAR" sqlType="STRING" optional="false" />
     <param type="IN" name="imagen" paramType="SCALAR" sqlType="STRING" optional="false" />
     <param type="IN" name="nom_imagen" paramType="SCALAR" sqlType="STRING" optional="false" />
+    <param type="IN" name="nombre" paramType="SCALAR" sqlType="STRING" optional="false" />
   </query>
 </data>

@@ -232,10 +232,10 @@
                                             <select name="tipoPersona" id="tipoPersona" class="form-control requerido">
                                               <option value="" selected disabled> - Seleccionar - </option>
                                               <?php 
-                                              foreach ($tipoPersona as $key => $pers) {
-                                                echo "<option value='$pers->tabl_id'>$pers->valor</option>";
-                                              }
-                                            ?>
+                                                foreach ($tipoPersona as $key => $pers) {
+                                                  echo "<option value='$pers->tabl_id'>$pers->valor</option>";
+                                                }
+                                              ?>
                                             </select>
                                           </div>
                                       </div>

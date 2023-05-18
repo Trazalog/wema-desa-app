@@ -98,31 +98,6 @@
     <!-- /.content -->
 
     <!-- MODAL NUEVA CUENTA -->
-    <div class="modal fade right" id="list_cuenta_clientes" aria-modal="true" role="dialog">
-      <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-          <div class="modal-header">
-            <div class="col-6"><h5 class="modal-title" id="mdl-title">Lisatdo Clientes</h5></div>
-            <div class="col-2">
-              <button type="button" class="close"  data-dismiss="modal" aria-label="Close" onclick="limpiaForm('#list_cuenta_clientes')">
-                <span aria-hidden="true">×</span>
-              </button>
-          </div>
-          </div><!-- fin modal-header -->
-
-          <div class="modal-body"></div><!-- fin modal-body -->
-
-          <div class="modal-footer ">
-            <button type="button" class="btn btn-secondary float-left" data-dismiss="modal" onclick='limpiaForm("#list_cuenta_clientes")'>Cerrar</button>
-
-          </div><!-- fin modal-footer -->          
-        
-        </div><!-- /.modal-content -->        
-      </div><!-- /.modal-dialog -->
-    </div><!-- /.modal-dialog -->
-
-
-    <!-- MODAL NUEVA CUENTA -->
     <div class="modal fade right" id="nueva_cuenta" aria-modal="true" role="dialog">
         <div class="modal-dialog modal-xl">
           <div class="modal-content">
@@ -164,7 +139,7 @@
                                     <div class="col-md-4 ">
                                       <div class="form-group">
                                         <p id="empresa_id" style="margin-top: 2px;margin-bottom: -7px; font-style: italic;" hidden></p>
-                                        <label>Nombre Cuenta <strong class="text-danger">*</strong>: </label>
+                                        <label id="n_cuenta" style="margin-top: 20px">Nombre Cuenta <strong class="text-danger">*</strong>: </label>
                                         <div class="input-group">
                                           <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-user"></i></span>
@@ -176,7 +151,7 @@
 
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                          <label style="margin-top: 20px">Tipo Cuenta <strong class="text-danger">*</strong>: </label>
+                                          <label id="t_cuenta" style="margin-top: 20px">Tipo Cuenta <strong class="text-danger">*</strong>: </label>
                                           <div class="input-group">
                                             <div class="input-group-prepend">
                                               <span class="input-group-text"><i class="fas fa-user"></i></span>
@@ -407,7 +382,7 @@
                                           <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-phone"></i></span>
                                           </div>
-                                          <input id="telefono" type="text" class="form-control" data-inputmask="&quot;mask&quot;: &quot;(999) 999-9999&quot;" data-mask="" inputmode="text">
+                                          <input id="telefono" name="telefono" type="text" class="form-control requerido" data-inputmask="&quot;mask&quot;: &quot;(999) 999-9999&quot;" data-mask="" inputmode="text">
                                         </div>
                                       </div>
                                     </div>
@@ -417,7 +392,7 @@
                                         <div class="input-group">
                                           <div class="input-group-prepend">
                                             <span class="input-group-text">@</span>
-                                          </div><input type="text" class="form-control" id="correo" >
+                                          </div><input type="text" class="form-control requerido" id="correo" name="correo" >
                                         </div>
                                       </div>
                                     </div>
@@ -429,7 +404,7 @@
                                           <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-road"></i></span>
                                           </div>
-                                          <input type="text" class="form-control" id="calle" name="calle">
+                                          <input type="text" class="form-control requerido" id="calle" name="calle">
                                         </div>
                                       </div>
                                     </div>                                                                  
@@ -437,13 +412,13 @@
                                     <div class="col-md-4">
                                       <div class="form-group">
                                           <label>Número Exterior<strong class="text-danger">*</strong>: </label>
-                                          <input type="text" class="form-control" id="numeroExterior" name="numeroExterior">
+                                          <input type="text" class="form-control requerido" id="numeroExterior" name="numeroExterior">
                                       </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
                                           <label>Número Interior <strong class="text-danger">*</strong>: </label>
-                                          <input type="text" class="form-control" id="numeroInterior" name="numeroInterior">
+                                          <input type="text" class="form-control requerido" id="numeroInterior" name="numeroInterior">
                                         </div>
                                     </div>
 
@@ -454,7 +429,7 @@
                                           <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-search"></i></span>
                                           </div>
-                                          <input type="text" class="form-control" id="CodigoColonia" name="CodigoColonia">
+                                          <input type="text" class="form-control requerido" id="CodigoColonia" name="CodigoColonia">
                                         </div>
                                       </div>
                                     </div>                                    
@@ -481,6 +456,8 @@
         </div>
         <!-- /.modal-dialog -->
       </div>
+      </div>
+
 
             <!-- Modal Agregar imagen -->
       <div class="modal fade" id="modalAgregarLogo">
@@ -488,7 +465,7 @@
               <div class="modal-content">
                   <div class="modal-header">
                       <h4 class="modal-title">Agregar</h4>
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <button type="button" class="close"  data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                       </button>
                   </div>
@@ -621,21 +598,59 @@
     $('#btn-cuenta').prop('hidden', true);
     $('#btn-habilitarCuenta').prop('hidden', true);
     $('#nueva_cuenta #empresa_id').prop('hidden', true);
-    $('#imagenCuenta').prop('src', '');
+    $('#imagenCuenta').prop('src', ''); 
+    $('#nueva_cuenta #n_cuenta').css("margin-top","20px");
+   
     
     $('#btn-accion-cuenta').show();
     $('#frm-nuevaCuenta')[0].reset();
   });
 
+/* abrir modal agregar imagen */
+$(document).on("click", ".agregaLogo", function() {
+  $('#modalAgregarLogo').modal('show');
+  event.preventDefault();
+  $("#nuevo_cuenta").css('overflow-y', 'auto');//habilita el scroll de nuevo
+});
+
+function cerrarModalImagen(){
+  $('#modalAgregarLogo').modal('hide');
+}
+
+function cargaVistaPrevia(input){
+  if(input.files && input.files[0]){
+      // var idImagen = $(input).attr('id');
+      var reader = new FileReader();
+
+      reader.addEventListener("load", function (e) {
+          $('#imagenCuenta').css('background-image', 'url('+e.target.result +')');
+          $('#imagenCuenta').hide();
+          $('#imagenCuenta').fadeIn(850);   
+      }, false);
+
+      reader.readAsDataURL(input.files[0]);
+  }
+}
+
 function guardarCuenta(){
   console.log("guardarCuenta");
   var formData = new FormData($('#frm-nuevaCuenta')[0]);
+
+  let logo = document.getElementById("inputLogo").files;
+  if(logo.lenght!= 0){
+    let imagenFile = $('#inputLogo').prop('files')[0]; 
+    formData.append("imagen", imagenFile);
+  }
   
   console.log(formData);
   if(!validaForm('#frm-nuevaCuenta')) return;
+  
+  if(!rfcValido($('#rfcCuenta').val())){
+    $('#rfcCuenta').addClass('is-invalid');
+    return
+  };
 
-  if(!rfcValido($('#curp').val()))return;
-
+  //debugger
   $.ajax({
     type:'POST',
     dataType: 'JSON',
@@ -661,11 +676,121 @@ function guardarCuenta(){
       $('#nueva_cuenta').modal('hide');
       $('#frm-nuevaCuenta')[0].reset();
       limpiaForm('#nueva_cuenta');
-      actualizaTablaPersonas();
+      /*actualizaTablaCuentas();*/
     }
   });
+}
 
+/* Actualiza la tabla sin recargar */
+function actualizaTablaCuentas(){
+  $.ajax({
+        type: 'POST',
+        cache: false,
+        dataType: "json",
+        url: "<?= base_url()?>/getEmpresas",
+  success:function(data){
 
+    tabla = $('#tabla_cuentass').DataTable();
+    tabla.clear().draw();
+
+    $.each(data, function (i, value) {
+
+    //activar o desactivar checked
+    if(value.eliminado == 'true'){
+      check= '';
+    }
+    else {
+      check = 'checked';
+    }
+
+    //estilos imagen perfil
+    if(value.imagen){
+            var ext = obtenerExtension(value.nom_imagen);
+            /* decodificacion imagen base64 */
+            var decodedData = window.atob(value.imagen);
+            var src = ext + decodedData;
+            clase="img-circle elevation-2" ;
+            estilo="height: 3rem; width: 3.9rem";
+    }
+    else{
+          src= '';
+          estilo='';
+          clase='';
+    }
+
+      fila="<tr data-json= '"+ JSON.stringify(value) +"'>" +
+          '<td>'+
+            '<div class="btn-group"> '+
+            '<i class="fa fa-search" style="cursor: pointer;margin: 3px;" title="Ver Detalles" onclick="verCuentas(this)"></i>'+
+            '<i class="fa fa-users" style="cursor: pointer;margin: 3px;" title="Ver Cuentas" ></i>' +
+             '<label class="switch" id="miLabel">'+
+             '<div class="bootstrap-switch-container float-right" style="width: 15px; margin-left: 24px;" >'+
+               '<input type="checkbox" name="habilitarCuenta" data-bootstrap-switch '+ check +'>'+
+             '</div>'+
+             '</label>'+
+            '</div>'+
+          '</td>'+
+            
+          '<td class="centrar"><img src="'+ src +'" class="'+clase+'" style="'+estilo+'"/></td>'+
+
+          '<td>'+ value.empresa +'</td>'+
+          '<td>'+ value.id_tributario +'</td>'+
+          '<td>'+ value.nombre +'</td>'+
+          '<td>'+ value.persona +'</td>'+
+          '</tr>';
+          tabla.row.add($(fila)).draw();
+    });
+         /* inicializacion botones on/off */
+         $("[name='habilitarCuenta']").bootstrapSwitch({
+          /* habilitar/deshabilitar personas */
+          onSwitchChange:function(e, state){
+            var tr = $(e.target).closest('tr');
+            var json = $(tr).data('json');
+            console.log(state);
+            if(!state){
+              Swal.fire({
+                title: '¿Esta seguro que desea deshabilitar la cuenta?',
+                text: 'Si continua, ningun usuario de la cuenta podra ingresar al sistema, y sus datos desaparecerán de algunos reportes e indicadores',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Si, deshabilitar!'
+              }).then((result) => {
+              if (result.isConfirmed) {
+                deshabilitaCuenta(json.empr_id);
+              }
+              else{
+                //vuelve a el estado original y el ultimo paramaetro es para cortar la ejecucion
+                $(this).bootstrapSwitch('state', !state ,true);
+              }
+              })
+            }
+            else{
+              Swal.fire({
+                title: '¿Esta seguro que desea habilitar la cuenta?',
+                text: "Ten en cuenta que se habilitaras la cuenta",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Si, habilitar!'
+              }).then((result) => {
+              if (result.isConfirmed) {
+                habilitaCuenta(json.empr_id);
+              }
+              else{
+                //vuelve a el estado original y el ultimo paramaetro es para cortar la ejecucion
+                $(this).bootstrapSwitch('state', !state ,true);
+              }
+            });
+            } 
+          }
+        });
+  
+      
+  }   
+  });
 }
 
 /* Guarda los datos editados de la cuenta */
@@ -710,126 +835,6 @@ function editarCuenta(){
       //actualizarTablaCuenta();
     }
     });
-}
-
-
-function validarForm(){
-  var ban=1;
-  if(ban){
-    /* Datos Generales */
-      if($('#nombreCuenta').val() == ''){
-         $('#nombreCuenta').addClass('is-invalid');
-         ban=0;
-      }else{
-         $('#nombreCuenta').removeClass('is-invalid');
-         $('#nombreCuenta').addClass('is-valid');
-      }
-    
-      if($('#tipoCuenta').val() == null){
-         $('#tipoCuenta').addClass('is-invalid');
-         ban=0;
-      }else{
-         $('#tipoCuenta').removeClass('is-invalid');
-         $('#tipoCuenta').addClass('is-valid');
-      }
-    
-       if($('#rfcCuenta').val() == ''){
-         $('#rfcCuenta').addClass('is-invalid');
-         ban=0;
-      }else{
-         $('#rfcCuenta').removeClass('is-invalid');
-         $('#rfcCuenta').addClass('is-valid');  
-      } 
-    
-       if($('#nacionalidad').val() == null){
-         $('#nacionalidad').addClass('is-invalid');
-         ban=0;
-      }else{
-         $('#nacionalidad').removeClass('is-invalid');
-         $('#nacionalidad').addClass('is-valid');
-      } 
-    
-      if($('#tipoPersona').val() == null){
-         $('#tipoPersona').addClass('is-invalid');
-         ban=0;
-      }else{
-         $('#tipoPersona').removeClass('is-invalid');
-         $('#tipoPersona').addClass('is-valid');
-      }
-    
-      if($('#razonSocial').val() == ''){
-         $('#razonSocial').addClass('is-invalid');
-         ban=0;
-      }else{
-         $('#razonSocial').removeClass('is-invalid');
-         $('#razonSocial').addClass('is-valid');
-      }
-    
-      if($('#representanteLegal').val() == ''){
-         $('#representanteLegal').addClass('is-invalid');
-         ban=0;
-      }else{
-         $('#representanteLegal').removeClass('is-invalid');
-         $('#representanteLegal').addClass('is-valid');
-      }
-    
-      /* Datos de Contacto */
-      if($('#telefono').val() == ''){
-         $('#telefono').addClass('is-invalid');
-         ban=0;
-      }else{
-         $('#telefono').removeClass('is-invalid');
-         $('#telefono').addClass('is-valid');
-      }
-
-      if($('#correo').val() == ''){
-         $('#correo').addClass('is-invalid');
-         ban=0;
-      }else{
-         $('#correo').removeClass('is-invalid');
-         $('#correo').addClass('is-valid');
-      }
-
-      if($('#calle').val() == ''){
-         $('#calle').addClass('is-invalid');
-         ban=0;
-      }else{
-         $('#calle').removeClass('is-invalid');
-         $('#calle').addClass('is-valid');
-      }
-
-      if($('#numeroExterior').val() == ''){
-         $('#numeroExterior').addClass('is-invalid');
-         ban=0;
-      }else{
-         $('#numeroExterior').removeClass('is-invalid');
-         $('#numeroExterior').addClass('is-valid');
-      }
-
-      if($('#numeroInterior').val() == ''){
-         $('#numeroInterior').addClass('is-invalid');
-         ban=0;
-      }else{
-         $('#numeroInterior').removeClass('is-invalid');
-         $('#numeroInterior').addClass('is-valid');
-      }
-
-      if($('#CodigoColonia').val() == ''){
-         $('#CodigoColonia').addClass('is-invalid');
-         ban=0;
-      }else{
-         $('#CodigoColonia').removeClass('is-invalid');
-         $('#CodigoColonia').addClass('is-valid');
-      }
-}
-  if(!ban){
-    Swal.fire({
-      icon: 'error',
-      title: 'Error',
-      text: 'Complete los campos obligatorios!',
-    });
-  }
-  return ban; 
 }
 
 /* inicializacion botones on/off  de tabla*/
@@ -960,6 +965,8 @@ function verCuenta(e){
     $('#btn-habilitarCuenta').prop('hidden', true);
     $('#frm-nuevaCuenta').find('.form-control').prop('disabled', true);
     $('#nueva_cuenta #empresa_id').prop('hidden', false);
+    $('#nueva_cuenta #n_cuenta').css("margin-top","0px");
+
     $('#nueva_cuenta').modal('show');
 
     var tr = $(e).closest('tr');
@@ -1025,13 +1032,6 @@ function verCuenta(e){
     else 
     $("[name='habilitarCuentaEditar']").bootstrapSwitch('state', true ,true);
 }
-
-/* abrir modal agregar imagen */
-$(document).on("click", ".agregaLogo", function() {
-  $('#modalAgregarLogo').modal('show');
-  event.preventDefault();
-  $("#nuevo_cliente").css('overflow-y', 'auto');//habilita el scroll de nuevo
-});
 
 
 function listadoClienteCuenta(e){
