@@ -86,9 +86,9 @@ define('base_url', $base);
 
 
 /* CONEXIONES SERVICIOS */
-define('HOST', 'http://10.142.0.13:8280');
+define('HOST', 'http://DESKTOP-7EP6V6I:8290');
 
 
 define('REST_CLIENTE', HOST.'/services/ClientesDataService');
 define('REST_PERSONA', HOST.'/services/PersonaDataService');
-define('REST_CORE', HOST.'/services/CoreWEMADataService');
+define('REST_CORE', HOST.'/services/CoreDataService');

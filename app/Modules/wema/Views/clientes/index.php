@@ -16,7 +16,7 @@
           </div>
            <div class="col-sm-3"></div> 
           <div class="col-sm-2">
-          <button type="button" class="btn btn-outline-primary btn-block btn-sm"><i class="fa fa-info float-left"></i> Información de la cuenta</button>
+          <button type="button" class="btn btn-outline-primary btn-block btn-sm" onclick="modalprueba()"><i class="fa fa-info float-left"></i> Información de la cuenta</button>
           </div>
         </div>
         <div class="row mb-2">
@@ -66,7 +66,7 @@
                         echo'<td>
                                 <div class="btn-group"> 
                                   <i class="fa fa-search" style="cursor: pointer;margin: 3px;" title="Ver Detalles" onclick="verCliente(this)"></i>
-                                  <a style="color:black" href="'.site_url('persona').'"><i class="fa fa-users" style="cursor: pointer;margin: 3px;" title="Ver personas"> </i></a>
+                                  <a style="color:black" href="'. site_url('getPersonas/'.$clientes->clie_id) .'"><i class="fa fa-users" style="cursor: pointer;margin: 3px;" title="Ver personas"></i></a>
                                   <label class="switch" id="miLabel">
                                   <div class="bootstrap-switch-container float-right" style="width: 10px; margin-left: 24px;" >
                                     <input type="checkbox" name="habilitarCliente" data-bootstrap-switch '.$check.'>
@@ -581,11 +581,6 @@
 
   });
 
-  /* oculta/muestra inputs de modal agregar cliente */
-  $('#miLabel').on("change",function(){
-    alert('holaa')
-  });
-  
 
   /* avtiva botones para cliente fisico */
   function activaBotonesClientesFisicos(){
@@ -638,9 +633,8 @@ function guardarCliente(){
   //validacion datos del formulario
   if(!validaForm('#frm-nuevoCliente')) return;
 
-  if(!rfcValido($('#curp').val()))return;
+  if(!rfcValido($('#rfc').val()))return;
 
-  debugger;
   $.ajax({
     type:'POST',
     dataType: 'JSON',
@@ -997,12 +991,12 @@ function actualizarTablaCliente(){
           estilo='';
           clase='';
     }
-
+ 
       fila="<tr data-json= '"+ JSON.stringify(value) +"'>" +
           '<td>'+
             '<div class="btn-group"> '+
             '<i class="fa fa-search" style="cursor: pointer;margin: 3px;" title="Ver Detalles" onclick="verCliente(this)"></i>'+
-            '<i class="fa fa-users" style="cursor: pointer;margin: 3px;" title="Ver personas" ></i>' +
+            '<a style="color:black" href=" <?= site_url() ?>getPersonas/'+ value.clie_id +'"><i class="fa fa-users" style="cursor: pointer;margin: 3px;" title="Ver personas"></i></a>' + 
              '<label class="switch" id="miLabel">'+
              '<div class="bootstrap-switch-container float-right" style="width: 15px; margin-left: 24px;" >'+
                '<input type="checkbox" name="habilitarCliente" data-bootstrap-switch '+ check +'>'+
@@ -1070,6 +1064,14 @@ function actualizarTablaCliente(){
   }   
   });
 }
+
+function modalprueba(){
+  var clie_id='1';
+  $.get('<?= base_url()?>/traerModal/'+ clie_id, function (data){
+    $("#IdDondeQuieroMiVIsta").html(data);
+  })
+}
+
 </script>
 
 <?= $this->endSection() ?>

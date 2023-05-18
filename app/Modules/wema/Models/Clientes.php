@@ -81,7 +81,39 @@ class Clientes extends Model{
         return $aux;
     }
 
+    /**
+        * trae las personas que pertenecen a un cliente
+        * @param array $data datos personas
+        * @return array respuesta del servicio
+	*/
+    public function getPersonas($data){
+        log_message('debug','#TRAZA | WEMA-DESA-APP | Model | Clientes | getPersonas()');
 
+        $url = REST_CLIENTE."/clientes/personas/".$data;
+        $aux = $this->REST->callAPI("GET",$url);
+        $dato = json_decode($aux['data']);
+        if(!empty($dato->personas->persona)){
+            return $dato->personas->persona;
+        }
+        else return array(); 
+    }
 
+/**
+        * Listado de clientes
+        * @param  
+        * @return array listado de clientes en core.clientes
+	*/
+    public function getClientexId( $clie_id = null){
+        log_message('debug','#TRAZA | WEMA-DESA-APP | Model | Clientes | getClientexId()');
+
+        $url = REST_CLIENTE."/clientes/getCliente/".$clie_id;
+        $aux = $this->REST->callAPI("GET",$url);
+        $data = json_decode($aux['data']);
+
+        if(!empty($data->clientes->cliente)){
+            return $data->clientes->cliente;
+        } 
+        else return array(); 
+    }
 
 }

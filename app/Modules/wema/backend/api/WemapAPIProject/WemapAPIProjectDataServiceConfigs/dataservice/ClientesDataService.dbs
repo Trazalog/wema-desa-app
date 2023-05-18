@@ -1,4 +1,102 @@
 <data enableBatchRequests="true" name="ClientesDataService" serviceNamespace="ClientesDataService" transports="http https local">
+  <config id="WemaDataSource">
+    <property name="carbon_datasource_name">WemapDataSource</property>
+  </config>
+  <resource method="GET" path="/clientes">
+    <description>obtiene los datos de los clientes                                    
+                                    </description>
+    <call-query href="getClientes" />
+  </resource>
+  <resource method="POST" path="/clientes">
+    <description>permite guardar un nuevo cliente en la base de datos                           
+                                    
+                                    </description>
+    <call-query href="setClientes">
+      <with-param name="nombre" query-param="nombre" />
+      <with-param name="id_tributario" query-param="id_tributario" />
+      <with-param name="telefono" query-param="telefono" />
+      <with-param name="email" query-param="email" />
+      <with-param name="calle" query-param="calle" />
+      <with-param name="num_exterior" query-param="num_exterior" />
+      <with-param name="cod_postal" query-param="cod_postal" />
+      <with-param name="num_interior" query-param="num_interior" />
+      <with-param name="razon_social" query-param="razon_social" />
+      <with-param name="representante_legal" query-param="representante_legal" />
+      <with-param name="curp" query-param="curp" />
+      <with-param name="apellidos" query-param="apellidos" />
+      <with-param name="nombres" query-param="nombres" />
+      <with-param name="fec_nacimiento" query-param="fec_nacimiento" />
+      <with-param name="ocupacion" query-param="ocupacion" />
+      <with-param name="usr_alta" query-param="usr_alta" />
+      <with-param name="usr_app_alta" query-param="usr_app_alta" />
+      <with-param name="ticl_id" query-param="ticl_id" />
+      <with-param name="tipe_id" query-param="tipe_id" />
+      <with-param name="naci_id" query-param="naci_id" />
+      <with-param name="empr_id" query-param="empr_id" />
+      <with-param name="gene_id" query-param="gene_id" />
+      <with-param name="pana_id" query-param="pana_id" />
+      <with-param name="imagen" query-param="imagen" />
+      <with-param name="nom_imagen" query-param="nom_imagen" />
+    </call-query>
+  </resource>
+  <resource method="PUT" path="/clientes">
+    <description>actualiza datos del cliente en core.clientes                           
+                                    </description>
+    <call-query href="updateClientes">
+      <with-param name="nombre" query-param="nombre" />
+      <with-param name="id_tributario" query-param="id_tributario" />
+      <with-param name="telefono" query-param="telefono" />
+      <with-param name="email" query-param="email" />
+      <with-param name="calle" query-param="calle" />
+      <with-param name="num_exterior" query-param="num_exterior" />
+      <with-param name="cod_postal" query-param="cod_postal" />
+      <with-param name="num_interior" query-param="num_interior" />
+      <with-param name="razon_social" query-param="razon_social" />
+      <with-param name="representante_legal" query-param="representante_legal" />
+      <with-param name="curp" query-param="curp" />
+      <with-param name="apellidos" query-param="apellidos" />
+      <with-param name="nombres" query-param="nombres" />
+      <with-param name="fec_nacimiento" query-param="fec_nacimiento" />
+      <with-param name="ocupacion" query-param="ocupacion" />
+      <with-param name="usr_alta" query-param="usr_alta" />
+      <with-param name="usr_app_alta" query-param="usr_app_alta" />
+      <with-param name="ticl_id" query-param="ticl_id" />
+      <with-param name="tipe_id" query-param="tipe_id" />
+      <with-param name="naci_id" query-param="naci_id" />
+      <with-param name="empr_id" query-param="empr_id" />
+      <with-param name="gene_id" query-param="gene_id" />
+      <with-param name="pana_id" query-param="pana_id" />
+      <with-param name="imagen" query-param="imagen" />
+      <with-param name="nom_imagen" query-param="nom_imagen" />
+      <with-param name="clie_id" query-param="clie_id" />
+    </call-query>
+  </resource>
+  <resource method="DELETE" path="/clientes">
+    <description>permite eliminado logico de un cliente en tabla core.clientes                            
+                                    </description>
+    <call-query href="deleteClientes">
+      <with-param name="clie_id" query-param="clie_id" />
+    </call-query>
+  </resource>
+  <resource method="PUT" path="/habilitarcliente">
+    <description>permite habilitar el cliente luego de hacer el borrado logico en la tabla core.clientes                         
+                                    </description>
+    <call-query href="habilitarClientes">
+      <with-param name="clie_id" query-param="clie_id" />
+    </call-query>
+  </resource>
+  <resource method="GET" path="/clientes/personas/{clie_id}">
+    <description>filtra las personas que pertenecen a un cliente desde la tabla core.personas</description>
+    <call-query href="clientesGetPersona">
+      <with-param name="clie_id" query-param="clie_id" />
+    </call-query>
+  </resource>
+  <resource method="GET" path="/clientes/getCliente/{clie_id}">
+    <description>permite obtener los datos de un cliente por id desde la tabla core.cliente</description>
+    <call-query href="getClientexId">
+      <with-param name="clie_id" query-param="clie_id" />
+    </call-query>
+  </resource>
   <query id="getClientes" useConfig="WemaDataSource">
     <sql>select c.*, t.descripcion as tipoCliente, tp.descripcion as tipoPersona, tn.descripcion as nacionalidad, tg.descripcion as genero
 from core.clientes c
@@ -215,90 +313,101 @@ where clie_id = cast(:clie_id as integer)</sql>
     <sql>update core.clientes set eliminado = false where clie_id = cast(:clie_id as integer)</sql>
     <param name="clie_id" sqlType="STRING" />
   </query>
-  <resource method="GET" path="/clientes">
-    <description>obtiene los datos de los clientes                                    
-                                    </description>
-    <call-query href="getClientes" />
-  </resource>
-  <resource method="POST" path="/clientes">
-    <description>permite guardar un nuevo cliente en la base de datos                           
-                                    
-                                    </description>
-    <call-query href="setClientes">
-      <with-param name="nombre" query-param="nombre" />
-      <with-param name="id_tributario" query-param="id_tributario" />
-      <with-param name="telefono" query-param="telefono" />
-      <with-param name="email" query-param="email" />
-      <with-param name="calle" query-param="calle" />
-      <with-param name="num_exterior" query-param="num_exterior" />
-      <with-param name="cod_postal" query-param="cod_postal" />
-      <with-param name="num_interior" query-param="num_interior" />
-      <with-param name="razon_social" query-param="razon_social" />
-      <with-param name="representante_legal" query-param="representante_legal" />
-      <with-param name="curp" query-param="curp" />
-      <with-param name="apellidos" query-param="apellidos" />
-      <with-param name="nombres" query-param="nombres" />
-      <with-param name="fec_nacimiento" query-param="fec_nacimiento" />
-      <with-param name="ocupacion" query-param="ocupacion" />
-      <with-param name="usr_alta" query-param="usr_alta" />
-      <with-param name="usr_app_alta" query-param="usr_app_alta" />
-      <with-param name="ticl_id" query-param="ticl_id" />
-      <with-param name="tipe_id" query-param="tipe_id" />
-      <with-param name="naci_id" query-param="naci_id" />
-      <with-param name="empr_id" query-param="empr_id" />
-      <with-param name="gene_id" query-param="gene_id" />
-      <with-param name="pana_id" query-param="pana_id" />
-      <with-param name="imagen" query-param="imagen" />
-      <with-param name="nom_imagen" query-param="nom_imagen" />
-    </call-query>
-  </resource>
-  <resource method="PUT" path="/clientes">
-    <description>actualiza datos del cliente en core.clientes                           
-                                    </description>
-    <call-query href="updateClientes">
-      <with-param name="nombre" query-param="nombre" />
-      <with-param name="id_tributario" query-param="id_tributario" />
-      <with-param name="telefono" query-param="telefono" />
-      <with-param name="email" query-param="email" />
-      <with-param name="calle" query-param="calle" />
-      <with-param name="num_exterior" query-param="num_exterior" />
-      <with-param name="cod_postal" query-param="cod_postal" />
-      <with-param name="num_interior" query-param="num_interior" />
-      <with-param name="razon_social" query-param="razon_social" />
-      <with-param name="representante_legal" query-param="representante_legal" />
-      <with-param name="curp" query-param="curp" />
-      <with-param name="apellidos" query-param="apellidos" />
-      <with-param name="nombres" query-param="nombres" />
-      <with-param name="fec_nacimiento" query-param="fec_nacimiento" />
-      <with-param name="ocupacion" query-param="ocupacion" />
-      <with-param name="usr_alta" query-param="usr_alta" />
-      <with-param name="usr_app_alta" query-param="usr_app_alta" />
-      <with-param name="ticl_id" query-param="ticl_id" />
-      <with-param name="tipe_id" query-param="tipe_id" />
-      <with-param name="naci_id" query-param="naci_id" />
-      <with-param name="empr_id" query-param="empr_id" />
-      <with-param name="gene_id" query-param="gene_id" />
-      <with-param name="pana_id" query-param="pana_id" />
-      <with-param name="imagen" query-param="imagen" />
-      <with-param name="nom_imagen" query-param="nom_imagen" />
-      <with-param name="clie_id" query-param="clie_id" />
-    </call-query>
-  </resource>
-  <resource method="DELETE" path="/clientes">
-    <description>permite eliminado logico de un cliente en tabla core.clientes                            
-                                    </description>
-    <call-query href="deleteClientes">
-      <with-param name="clie_id" query-param="clie_id" />
-    </call-query>
-  </resource>
-  <resource method="PUT" path="/habilitarcliente">
-    <description>permite habilitar el cliente luego de hacer el borrado logico en la tabla core.clientes                         
-                                    </description>
-    <call-query href="habilitarClientes">
-      <with-param name="clie_id" query-param="clie_id" />
-    </call-query>
-  </resource>
-  <config id="WemaDataSource">
-    <property name="carbon_datasource_name">WemapDataSource</property>
-  </config>
+  <query id="clientesGetPersona" useConfig="WemaDataSource">
+    <sql>select p.*,p.eliminado as estado, t.descripcion as genero, t1.descripcion as pais, 
+t2.descripcion as estado_civil, t3.descripcion as nacimiento,
+t4.descripcion as educacion, t5.descripcion as ubicacion, c.nombre as nombreCliente, e.nombre as nombreEmpresa
+from core.personas p
+left join core.tablas t on p.gene_id = t.tabl_id 
+left join core.tablas t1 on t1.tabl_id = p.pana_id
+left join core.tablas t2 on t2.tabl_id = p.esci_id
+left join core.tablas t3 on t3.tabl_id = p.naci_id
+left join core.tablas t4 on t4.tabl_id = p.educ_id
+left join core.tablas t5 on t5.tabl_id = p.ubic_id
+left join core.clientes c on p.clie_id = c.clie_id
+left join core.empresas e on  e.empr_id = c.empr_id 
+where p.clie_id = cast(:clie_id as integer)</sql>
+    <param type="IN" name="clie_id" sqlType="STRING" optional="false" paramType="SCALAR" />
+    <result outputType="json">{
+    "personas": {
+        "persona": [{
+            "pers_id" : "$pers_id",
+            "apellidos": "$apellidos",
+            "nombres": "$nombres",
+            "curp": "$curp",
+            "fec_nacimiento": "$fec_nacimiento",
+            "ocupacion": "$ocupacion",
+            "telefono": "$telefono",
+            "email": "$email",
+            "gene_id":"$gene_id",
+            "pana_id":"$pana_id",
+            "esci_id":"$esci_id",
+            "naci_id":"$naci_id",
+            "educ_id":"$educ_id",
+            "ubic_id":"$ubic_id",
+            "num_exterior":"$num_exterior",
+            "cod_postal":"$cod_postal",
+            "calle":"$calle",
+            "num_interior":"$num_interior",
+            "genero":"$genero",
+            "pais":"$pais",
+            "estado_civil":"$estado_civil",
+            "nacimiento":"$nacimiento",
+            "educacion":"$educacion",
+            "estado":"$estado",
+            "imagen":"$imagen",
+            "nom_imagen":"$nom_imagen",
+            "nombreCliente":"$nombreCliente",
+           "nombreEmpresa":"$nombreEmpresa"
+        }]
+    }
+}</result>
+  </query>
+  <query id="getClientexId" useConfig="WemaDataSource">
+    <sql>select c.*, t.descripcion as tipoCliente, tp.descripcion as tipoPersona, tn.descripcion as nacionalidad, tg.descripcion as genero,
+tpan.descripcion paisNacimiento
+from core.clientes c
+left join core.tablas t on c.ticl_id = t.tabl_id
+left join core.tablas tp on c.tipe_id  = tp.tabl_id
+left join core.tablas tn on c.naci_id  = tn.tabl_id
+left join core.tablas tg on c.gene_id  = tg.tabl_id
+left join core.tablas tpan on c.pana_id  = tpan.tabl_id
+where c.clie_id = cast(:clie_id as integer)</sql>
+    <param type="IN" name="clie_id" sqlType="STRING" optional="false" paramType="SCALAR" />
+    <result outputType="json">{
+    "clientes": {
+        "cliente": [{
+            "clie_id" : "$clie_id",
+            "nombre"  : "$nombre",
+            "id_tributario" : "$id_tributario",
+            "telefono" : "$telefono",
+            "email" : "$email",
+            "calle" : "$calle",
+            "num_exterior" : "$num_exterior",
+            "cod_postal" : "$cod_postal",
+            "num_interior" : "$num_interior",
+            "razon_social" : "$razon_social",
+            "representante_legal" : "$representante_legal",
+            "curp" : "$curp",
+            "apellidos" : "$apellidos",
+            "nombres" : "$nombres",
+            "fec_nacimiento" : "$fec_nacimiento",
+            "ticl_id" : "$ticl_id",
+            "tipe_id":"$tipe_id",
+            "naci_id":"$naci_id",
+            "gene_id":"$gene_id",
+            "pana_id":"$pana_id",
+            "imagen":"$imagen",
+            "nom_imagen":"$nom_imagen",
+            "eliminado":"$eliminado",
+            "tipoCliente":"$tipoCliente",
+            "tipoPersona":"$tipoPersona",
+            "nacionalidad":"$nacionalidad",
+            "genero":"$genero",
+            "ocupacion":"$ocupacion",
+            "paisNacimiento":"$paisNacimiento",
+        }]
+    }
+}</result>
+  </query>
 </data>
