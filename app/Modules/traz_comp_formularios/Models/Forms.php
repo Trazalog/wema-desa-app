@@ -28,54 +28,58 @@ class Forms extends Model{
             unset($o->nombre);
             
             if ($o->name) {
+                if(!empty($data[$o->name])){//Valida si no esta vacio, si esta vacio guarda sin valor
+                    if(!is_array($data[$o->name])){
 
-                if(!is_array($data[$o->name]) && !is_array($_FILES["-file-".$o->name]['tmp_name'])){
-
-                    $o->valor = ($o->tipo_dato == 'radio') ? $data[empresa()."-".$o->name] : $data[$o->name];
-                    $o->valor4_base64 = null;
-                    
-                    
-                    if($o->tipo_dato == 'image' || $o->tipo_dato == 'file'){
+                        $o->valor = ($o->tipo_dato == 'radio') ? $data[empresa()."-".$o->name] : $data[$o->name];
+                        $o->valor4_base64 = null;
                         
-                        $nom = "-file-".$o->name;
                         
-                        if(!empty($_FILES[$nom]['tmp_name'])){
-                            $o->valor4_base64 = base64_encode(file_get_contents($_FILES[$nom]['tmp_name']));
+                        if($o->tipo_dato == 'image' || $o->tipo_dato == 'file'){
+                            
+                            $nom = "-file-".$o->name;
+                            
+                            if(!empty($_FILES[$nom]['tmp_name'])){
+                                $o->valor4_base64 = base64_encode(file_get_contents($_FILES[$nom]['tmp_name']));
+                            }
                         }
-                    }
-                    
-                    array_push($array, $o);
-                }else{
-                    if(!empty($data[$o->name])){
-                        foreach ($data[$o->name] as $i => $datos ) {
-                            $datoPlantilla = clone $o;
+                        
+                        array_push($array, $o);
+                    }else{
+                        if(!empty($data[$o->name])){
+                            foreach ($data[$o->name] as $i => $datos ) {
+                                $datoPlantilla = clone $o;
 
-                            $datoPlantilla->valor = $datos;
-                            
-                            $nom = "-file-".$datoPlantilla->name;
-                            
-                            if($datoPlantilla->tipo_dato == 'image' || $datoPlantilla->tipo_dato == 'file'){
-            
-                                if(!empty($_FILES[$nom]['tmp_name'][$i])){
-                                    $datoPlantilla->valor4_base64 = base64_encode(file_get_contents($_FILES[$nom]['tmp_name'][$i]));
+                                $datoPlantilla->valor = $datos;
+                                
+                                $nom = "-file-".$datoPlantilla->name;
+                                
+                                if($datoPlantilla->tipo_dato == 'image' || $datoPlantilla->tipo_dato == 'file'){
+                
+                                    if(!empty($_FILES[$nom]['tmp_name'][$i])){
+                                        $datoPlantilla->valor4_base64 = base64_encode(file_get_contents($_FILES[$nom]['tmp_name'][$i]));
+                                    }else{
+                                        $datoPlantilla->valor4_base64 = NULL;
+                                    }
+                                    
                                 }else{
                                     $datoPlantilla->valor4_base64 = NULL;
                                 }
-                                
-                            }else{
-                                $datoPlantilla->valor4_base64 = NULL;
+
+                                array_push($array, $datoPlantilla);
+                                unset($datoPlantilla);
                             }
 
-                            array_push($array, $datoPlantilla);
-                            unset($datoPlantilla);
+                            unset($o);
+                        }else{
+                            $o->valor = NULL;
+                            $o->valor4_base64 = NULL;
+                            array_push($array, $o);
                         }
-
-                        unset($o);
-                    }else{
-                        $o->valor = NULL;
-                        $o->valor4_base64 = NULL;
-                        array_push($array, $o);
                     }
+                }else{
+                    //Si $data no estaba seteada, guardo el valor vacio en la instancia
+                    array_push($array, $o);
                 }
             } else {
                 if(!empty($_FILES[$nom]['tmp_name'])){
@@ -91,14 +95,14 @@ class Forms extends Model{
         }
         $this->db->save_queries = FALSE;// Para que no cachee la query
 
-        if($aux && !$this->db->insert_batch('frm.instancias_formularios', $aux)) return FALSE;
-        if($array && !$this->db->insert_batch('frm.instancias_formularios', $array)) return FALSE;
+        // if($aux && !$this->db->insert_batch('frm.instancias_formularios', $aux)) return FALSE;
+        $rsp = $this->db->table('frm.instancias_formularios')->insertBatch($array);
         
-        $newInfo = $this->db->select_max('info_id')->get('frm.instancias_formularios')->row('info_id');
+        $queryInfo = $this->db->query('SELECT MAX(info_id) as info_id FROM frm.instancias_formularios');
+        $newInfo = $queryInfo->getResultObject()[0]->info_id;
 
-        $this->instanciarVariables($form_id, $newInfo);
-
-        log_message('DEBUG',"#TRAZA | #TRAZ-COMP-FORMULARIOS | #FORMS | guardar() >> info_id generado ". $newInfo);
+        // $this->instanciarVariables($form_id, $newInfo); Sin adaptar todavia
+        log_message('info',"#TRAZA | #TRAZ_COMP_FORMULARIOS | Model | Forms | guardar() >> info_id generado ". $newInfo);
 
         return $newInfo;
     }
@@ -128,23 +132,27 @@ class Forms extends Model{
         log_message('DEBUG',"#TRAZA | #TRAZ-COMP-FORMULARIOS | #FORMS | actualizar() >> info_id actualizado: ". $info_id);
         return $info_id;
     }
+    /**
+        * Obtiene uns instacia generada a traves del info_id 
+        * @param integer $info_id instancia generada
+        * @return array instancia formulario dinamico
+	*/
+    public function obtener($info_id){
+        log_message('info', '#TRAZA | TRAZ-COMP-FORMULARIOS | Model | Forms | obtener($info_id) -> info_id: '.$info_id);
 
-    public function obtener($info_id)
-    {
-        $this->db->select('name, label,valor, requerido, valo_id, orden, A.inst_id, A.form_id, tipo_dato, C.nombre, A.valor4_base64, A.columna, A.multiple');
-        $this->db->from('frm.instancias_formularios as A');
-        $this->db->join('frm.formularios as C', 'C.form_id = A.form_id');
-        $this->db->where('A.info_id', $info_id);
-        $this->db->where('A.eliminado', false);
-        $this->db->order_by('A.orden');
+        $query = $this->db->query("select name, label,valor, requerido, valo_id, orden, A.inst_id, A.form_id, tipo_dato, C.nombre, A.valor4_base64, A.columna, A.multiple
+            from frm.instancias_formularios as A
+            join frm.formularios as C on C.form_id = A.form_id
+            where A.info_id = cast($info_id as integer) and A.eliminado = false
+            order by A.orden"
+        );
+        $items = $query->getResultObject();
 
-        $res = $this->db->get();
-
-        $aux = new StdClass();
+        $aux = new \StdClass();
         $aux->info_id = $info_id;
-        $aux->nombre = $res->row()->nombre;
+        $aux->nombre = count($items) > 0 ? $items[0]->nombre : 'SIN RESULTADOS';//Nombre del formulario
         $aux->id = $info_id;
-        $aux->items = $res->result();
+        $aux->items = $items;
 
         foreach ($aux->items as $key => $o) {
 
@@ -171,10 +179,7 @@ class Forms extends Model{
             where A.form_id = cast($form_id as integer) and A.eliminado = false
             order by A.orden"
         );
-
         $items = $query->getResultObject();
-
-        // $newInfo = $this->db->select_max('info_id')->get('frm.instancias_formularios')->row('info_id') + 1;
         
         $aux = new \StdClass();
         $aux->info_id = false;
@@ -246,7 +251,7 @@ class Forms extends Model{
         $array = $this->rest->callApi('GET', $url);
         return json_decode($array['data']);
     }
-        /**
+    /**
         * Guarda la instacia del formulario dinámico
         * @param array datos de formulario
         * @return 
@@ -294,7 +299,6 @@ class Forms extends Model{
             }
             unset($o);
         }
-        // $this->db->save_queries = FALSE;// Para que no cachee la query
 
         // if($aux && !$this->db->insert_batch('frm.instancias_formularios', $aux)) return FALSE;
         $this->db->table('frm.instancias_formularios')->insertBatch($array);
@@ -304,5 +308,14 @@ class Forms extends Model{
         log_message('info',"#TRAZA | #TRAZ-COMP-FORMULARIOS | Model | Forms | guardar() >> info_id generado ". $newInfo);
 
         return $newInfo;
+    }
+    /**
+        * Creo y guardo una instancia vacia del formulario
+        * @param integer $form_id
+        * @return array $info_id generado
+	*/
+    public function generarInstancia($form_id){
+        $res = $this->guardar($form_id);
+        return $res;
     }
 }

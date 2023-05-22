@@ -323,3 +323,62 @@ function obtenerExtension($archivo){
         }
     return $ext;
 }
+
+//Script para cuestionarios dinamicos
+if (!function_exists('cuestionario')) {
+    function cuestionario($data){
+        $html = "<div class='bs-stepper'>";
+        $html .= "<div class='bs-stepper-header' role='tablist'>";
+
+        if (empty($data)) {
+            return 'Cuestionario no encontrado.';
+        }
+        //Dibujo las preguntas
+        $indice = 0;
+        foreach ($data->items as $key => $pregunta) {
+            if($pregunta->tipo_dato === 'question'){
+                ++$indice;
+                $html .=    '<div class="step" data-target="#pregunta-'.$indice.'">';
+                $html .=    '<button type="button" class="step-trigger" role="tab" aria-controls="pregunta-'.$indice.'" id="pregunta-'.$indice.'-trigger">';
+                $html .=        '<span class="bs-stepper-circle">'.$indice.'</span>';
+                $html .=    '</button>';
+                $html .=    '</div>';
+                $html .=    ($indice !== count($data->items)) ? '<div class="line"></div>' : '';
+            }
+        }
+        $html .= "</div>";
+        $html .= "<div class='bs-stepper-content mt-2'>";
+        $html .=    "<form id='frm-$data->id'>";
+        $indice = 0;
+        foreach ($data->items as $key => $pregunta) {
+            if($pregunta->tipo_dato === 'question'){
+                ++$indice;
+                $html .=    '<div id="pregunta-'.$indice.'" class="content" role="tabpanel" aria-labelledby="pregunta-'.$indice.'-trigger">';
+                $html .=        '<div class="card card-info">';
+                $html .=            '<div class="card-header">';
+                $html .=                '<h3 class="card-title">'.$pregunta->label.'</h3>';
+                $html .=            '</div>';
+                $html .=            '<div class="car-body">';
+                $html .=                '<div class="container">';
+                $html .=                    '<div class="row align-items-center mt-3">';
+                $html .=                        '<div class="col-md-12">';
+                $html .=                            '<input type="hidden" value="'.$pregunta->name.'"/>';
+                $html .=                            '<p>'.!empty($pregunta->valo_id) ? $pregunta->valo_id : $pregunta->valo_id.'</p>';
+                $html .=                        '</div>';
+                $html .=                    '</div>';
+                $html .=                 '</div>';
+                $html .=             '</div>';
+                $html .=            '<div class="card-footer text-muted text-right">';
+                $html .=                '<small class="text-muted"><em>Pulse la barra espaciadora para comenzar su respuesta.</em></small>';
+                $html .=            '</div>';
+                $html .=        '</div>';
+                $html .=    '</div>';
+            }
+        }
+        $html .= '</form>';
+        $html .= '</div>';
+        $html .= '</div>';
+        return $html;
+
+    }
+}

@@ -72,23 +72,15 @@ class Form extends BaseController
         }
         echo json_encode($res);
     }
-
+    /**
+        * Guarda el cuestionario previamente inicializado
+        * @param integer $form_id id formulario asociado; $_FILES audios grabados
+        * @return array $res respuesta de la query de guardado
+	*/
     public function guardarCuestionario($form_id = false){
         log_message('info',"#TRAZA | #TRAZ_COMP_FORMULARIOS | Controllers | Form | guardar()");
-        // $request = \Config\Services::request();
-        // $data = $this->input->post();
-        $audios = $_FILES['audio'];
-        // foreach ($data as $key => $o) {
 
-        //     $rsp = strpos($key, 'file');
-        //     if ($rsp > 0) {
-        //         $nom = str_replace("-file-", "", $key);
-        //         //Los files se codifican en base64 y se guarda en la tabla directamente en la columna valor4_base64
-        //         // $data[$nom] = $this->uploadFile($key); 
-        //         $data[$nom] = $_FILES[$key]['name'];
-        //         unset($data[$key]);
-        //     }
-        // }
+        $audios = $_FILES['audio'];
 
         // if ($new) {
             $res['info_id'] = $this->Forms->guardarCuestionario($form_id, $audios);
@@ -98,5 +90,22 @@ class Form extends BaseController
         // }
         // echo json_encode($res);
         echo json_encode($res);
+    }
+    /**
+        * Genera una nueva instancia del form_id tipo cuestionario
+        * @param integer $form_id 
+        * @return array instancia cuestionario dinamico generado
+	*/
+    public function obtenerNuevoCuestionario($form = ''){
+        log_message('info','#TRAZA | TRAZ_COMP_FORMULARIOS | Controller | Form | obtenerNuevoCuestionario() form_id ->'. $form);
+
+        if(!empty($form)){
+            $info_id = $this->Forms->generarInstancia($form);
+            $data['html'] = cuestionario($this->Forms->obtener($info_id));
+            echo $data['html'];
+
+        }else{
+            echo '<h5>No se especificó un formulario.</h5>';
+        }
     }
 }

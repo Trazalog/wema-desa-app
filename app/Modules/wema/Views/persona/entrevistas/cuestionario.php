@@ -18,52 +18,9 @@
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
-                        <div class="bs-stepper">
-                            <div class="bs-stepper-header" role="tablist">
-                                <!-- your steps here -->
-                                <?php foreach ($cuestionario->preguntas as $key => $pregunta) {
-                                    $indice = ++$key;
-                                        echo    '<div class="step" data-target="#pregunta-'.$indice.'">';
-                                        echo    '<button type="button" class="step-trigger" role="tab" aria-controls="pregunta-'.$indice.'" id="pregunta-'.$indice.'-trigger">';
-                                        echo        '<span class="bs-stepper-circle">'.$indice.'</span>';
-                                        echo        '<span class="bs-stepper-label">'.$pregunta->titulo.'</span>';
-                                        echo    '</button>';
-                                        echo    '</div>';
-                                        echo    ($indice !== count($cuestionario->preguntas)) ? '<div class="line"></div>' : '';
-                                    }
-                                ?>
-                            </div>
-                            <div class="bs-stepper-content mt-2">
-                                <form id="frm-entrevista">
-                                    <input id="pers_id" name="pers_id" type="text" disabled hidden>
-                                    <!-- your steps content here -->
-                                    <?php foreach ($cuestionario->preguntas as $key => $pregunta) {
-                                            $indice = ++$key;
-                                            echo    '<div id="pregunta-'.$indice.'" class="content" role="tabpanel" aria-labelledby="pregunta-'.$indice.'-trigger">';
-                                            echo        '<div class="card card-info">';
-                                            echo            '<div class="card-header">';
-                                            echo                '<h3 class="card-title">'.$pregunta->pregunta.'</h3>';
-                                            echo            '</div>';
-                                            echo            '<div class="car-body">';
-                                            echo                '<div class="container">';
-                                            echo                    '<div class="row align-items-center mt-3">';
-                                            echo                        '<div class="col-md-12">';
-                                            echo                            '<p>'.$pregunta->descripcion.'</p>';
-                                            echo                        '</div>';
-                                            echo                    '</div>';
-                                            echo                 '</div>';
-                                            echo             '</div>';
-                                            echo            '<div class="card-footer text-muted text-right">';
-                                            echo                '<small class="text-muted"><em>Pulse la barra espaciadora para comenzar su respuesta.</em></small>';
-                                            echo            '</div>';
-                                            echo        '</div>';
-                                            echo    '</div>';
-                                        }
-                                    ?>
-                                </form>
-                            </div>
-                            <div id="waveform"></div>
-                        </div>
+                        <input id="pers_id" name="pers_id" type="text" disabled hidden>
+                        <div id="formEntrevista" class="quiz-new" data-form="3"></div>
+                        <div id="waveform"></div>
                         <!-- /.bs-tepper -->
                         <div class="col-md-12 centrar">
                             <div class="form-group">
@@ -71,7 +28,6 @@
                                 <button id="btn-siguiente" class="btn btn-primary">Siguiente</button>
                             </div>
                         </div>
-                        <div id="formEntrevista" class="frm-new" data-form="3"></div>
                     </div>
                     <!-- /.card-body -->
                 </div>
@@ -128,88 +84,80 @@ var formData = new FormData();      //Formulario a enviar con el cuestionario
 var comienzo;                       //Variable de estado para controlar tiempo de grabacion
 var duracion;                       //Variable de estado para controlar tiempo de grabacion
 var fin;                            //Variable de estado para controlar tiempo de grabacion
+var tiempoExcedido;                 //Bandera tiempo maximo grabación
 var stepper;                        //Instancia variable plugin Stepper
 var stepperConstruct;               //Contructor inicializacion stepper
-var indiceCuestionario = <?= count($cuestionario->preguntas); ?>;
 var wavesurfer;                     //Instancia para visualizacion de ingreso de auido
 var utterance;                      //Instancia para lectura de texto
 var synth = window.speechSynthesis; //Instancia API voces
+var indice = 1;                     //Indice de los ID's para la lectura de las preguntas
 // shim for AudioContext when it's not avb. 
 var AudioContext = window.AudioContext || window.webkitAudioContext;
 var audioContext //audio context to help us record
 $(document).ready(function () {
-    //Inicializo STEPPER
-    stepperConstruct = new Stepper($('.bs-stepper')[0]);
-    //Defino la instancia para moverme sobre el form
-    stepper = new Stepper(document.querySelector('.bs-stepper'));
-    //Vinculo evento para moverme por el formulario
-    $("#btn-siguiente").on('click', function () {
-        console.log("avanzando");
-        stepper.next();
-    });
-    detectarForm();
+    //Detecta el cuestionario, lo genera e inicializa el bs-stepper
+    detectarCuestionario();
+    //Vinculo eventos de para grabacion de audios
     $(document).on('keydown', startRecording).on('keyup', stopRecording);
-    // wavesurfer = WaveSurfer.create({
-    //     // Use the id or class-name of the element you created, as a selector
-    //     container: '#waveform',
-    //     // The color can be either a simple CSS color or a Canvas gradient
-    //     waveColor: 'grey',
-    //     progressColor: 'hsla(200, 100%, 30%, 0.5)',
-    //     cursorColor: '#fff',
-    //     // This parameter makes the waveform look like SoundCloud's player
-    //     barWidth: 3,
-    //     plugins: [
-    //         WaveSurfer.microphone.create()
-    //     ]
-    // });
     // Inicializo la APi de lectura de texto nativa
     voices = synth.getVoices();
-    utterance = new SpeechSynthesisUtterance("Bienvenido al cuestionario");
+    utterance = new SpeechSynthesisUtterance("Bienvenido al cuestionario. Se leerán las preguntas del mismo y cuando termine, deberá presionar la barra espaciadora para poder grabar su respuesta. El requerimiento de la respuesta debe ser de al menos 7 segundos.");
     utterance.voice = voices[7];
     $("#modalBienvenida").modal("show");
     //Comienzo lectura del cuestionario
     $("#modalBienvenida").on('hide.bs.modal', function(){
+        //creo isntancia luego de tener instanciado el AudioContext
+        wavesurfer = WaveSurfer.create({
+            // Use the id or class-name of the element you created, as a selector
+            container: '#waveform',
+            // The color can be either a simple CSS color or a Canvas gradient
+            waveColor: 'grey',
+            progressColor: 'hsla(200, 100%, 30%, 0.5)',
+            cursorColor: '#fff',
+            // This parameter makes the waveform look like SoundCloud's player
+            barWidth: 3,
+            plugins: [
+                WaveSurfer.microphone.create()
+            ]
+        });
         var iniciarCuestionario = () => {
-            synth.speak(utterance)
+            synth.speak(utterance);
+            utterance = new SpeechSynthesisUtterance($("#pregunta-"+indice).find("h3").text());
+            utterance.voice = voices[7];
+            synth.speak(utterance);
         };
         notificar({'icon' : 'info','title':'Entrevista', text: 'Cuando se encuentre listo presione el botón para dar inicio a la entrevista',"confirmButtonText":"Iniciar",'btnConfirmar' : true,"always": iniciarCuestionario});
     });
 });
 
 function startRecording(e) {
-    console.log(e.keyCode);
-    if(e.keyCode != 32) return;
+    if(e.keyCode !== 32) return;
     e.preventDefault();
-    if (!comienzo) {
-      comienzo = new Date().getTime(); // Set the keydown timestamp
-      checkear = setInterval(checkearTiempo, 500); // Check every second
-    }else{
-        return;
+
+    if(!comienzo){
+        $(document).off('keydown'); //desvinculo evento
+        comienzo = new Date().getTime(); // Set the keydown timestamp
+        checkear = setInterval(checkearTiempo, 500); // Controlo tiempo minimo de respuesta
+        tiempoExcedido = setInterval(() => {
+            $(function() {
+                var e = $.Event('keyup');
+                e.keyCode = 32;
+                $(document).trigger(e);
+                $(document).off('keyup');
+            });
+        }, 45000);// Controlo tiempo maximo 1 vez 45s
     }
-	console.log("Comienza Grabacion!");
+
     //Inicializo el wavesurfer
     wavesurfer.microphone.start();
-    // comienzo = new Date().getTime();
+
     var constraints = {audio: true};
 
 	navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {
-		console.log("getUserMedia() success, stream created, initializing Recorder.js ...");
-		/*
-			create an audio context after getUserMedia is called
-			sampleRate might change after getUserMedia is called, like it does on macOS when recording through AirPods
-			the sampleRate defaults to the one set in your OS for your playback device
-		*/
 		audioContext = new AudioContext();
-		/*  assign to gumStream for later use  */
 		gumStream = stream;
-		
-		/* use the stream */
 		input = audioContext.createMediaStreamSource(stream);
 
-		/* 
-			Create the Recorder object and configure to record mono sound (1 channel)
-			Recording 2 channels  will double the file size
-		*/
 		rec = new Recorder(input,{
           numChannels: 1,
           sampleRate: 11025
@@ -217,7 +165,7 @@ function startRecording(e) {
 
 		//start the recording process
 		rec.record()
-		console.log("Recording started");
+		console.log("Comienza Grabacion!");
 
 	}).catch(function(err) {
         console.log(err);
@@ -225,18 +173,22 @@ function startRecording(e) {
 }
 
 function stopRecording(e) {
-    if(e.keyCode === 32){
-        clearInterval(checkear); // Clear the interval
+    if(e.keyCode === 32 && comienzo){
+        clearInterval(tiempoExcedido); //Clear intervalo tiempo maximo
+        clearInterval(checkear); // Clear intervalo tiempo minimo
         fin = new Date().getTime();
-        var media = fin - comienzo;
-        comienzo = null; // Reset the keydown timestamp
+        duracion = fin - comienzo;
+        comienzo = null; // Reseteo el comienzo
         console.log("Finaliza Grabación!");
-        if(media < 7000){
+        if(duracion < 7000){
             config = {'icon' : 'warning','title':'Advertencia', text: 'La respuesta debe durar mas de 7 segundos','btnConfirmar' : true};
             notificar(config);
+            $(document).on('keydown', startRecording);
             return;
         }else{
+            duracion = null; //Reseteo la duracion
             console.log("Duracion correcta");
+            wo();
         }
     }else{
         return;
@@ -256,11 +208,10 @@ function stopRecording(e) {
         // link.download = 'recorded-audio.wav';
         // link.click();
         
-        var filename = new Date().toISOString();
+        var filename = $("#pregunta-"+indice).find('input').val();
         formData.append("audio[]",blob, filename);
-        var confCorrecta = {'icon' : 'success','title':'Éxito', text: 'Solicitud procesada correctamente','btnConfirmar' : true};
-        notificar(confCorrecta);
-        if(stepper._currentIndex === indiceCuestionario - 1){
+
+        if(stepper._currentIndex === (stepper._steps.length - 1)){
             Swal.fire({
                 title: 'Gracias',
                 text: "Entrevista realizada satifactoriamente!",
@@ -268,17 +219,27 @@ function stopRecording(e) {
                 confirmButtonColor: '#28a745',
                 confirmButtonText: 'Hecho'
                 }).then((result) => {
-                    sendAudios();
+                    console.log("ENVIANDO, te la creiste");
                 })
         }else{
             $("#btn-siguiente").click();
+            ++indice;
+            setTimeout(() => {
+                //Aca me quede
+                // sendAudios();
+                utterance = new SpeechSynthesisUtterance("Siguiente pregunta. " + $("#pregunta-"+indice).find("h3").text());
+                utterance.voice = voices[7];
+                synth.speak(utterance);
+                //Pasados 3 segundo del comienzo de la lectura, habilito los eventos para grabar
+                setTimeout(() => {
+                    $(document).on('keydown', startRecording).on('keyup', stopRecording);
+                }, 3000);
+            }, 2000);
         }
-        // console.log("Pegue el aaaaudio");
     });
 }
 
 function sendAudios(){
-    console.log("Enviando audios!");
     form_id = $("#formEntrevista").attr('data-form');
     $.ajax({
         type:'POST',
@@ -288,25 +249,26 @@ function sendAudios(){
         data:formData,
         url: '<?= base_url()?>/guardarCuestionario/'+form_id,
         success: function(resp) {
+            wc();
             if(resp.status){
-                var confi = {'icon' : 'success','title':'Éxito', text: 'Se guardó el cuestionario correctamente','btnConfirmar' : true};
-                notificar(confi);
+                console.log("Audio guardado correctamente");
             }else{
                 notificar(notiError);
             }
         },
         error: function(result){
             notificar(notiError);
+        },
+        complete: ()=>{
+            // reseteo indice preguntas
+            indice = 1;
         }
     });
 }
 function checkearTiempo(){
     var fin = new Date().getTime();
-    var duracion = fin - comienzo; // Calculate the time held in milliseconds
-
+    var duracion = fin - comienzo; // Calculo del tiempo de duracion
     if (duracion >= 7000) {
-        // The key was held down for at least 7 seconds
-        console.log('Key held down for at least 7 seconds!');
         clearInterval(checkear); // Clear the interval after validation
     }
 }

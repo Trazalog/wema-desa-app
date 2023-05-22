@@ -8,4 +8,5 @@ if(!isset($routes)) {
 
 /* RUTAS PERSONAS */
 $routes->get('/form/obtenerNuevo/(:num)', '\Modules\traz_comp_formularios\Controllers\Form::obtenerNuevo/$1');
+$routes->get('/form/obtenerNuevoCuestionario/(:num)', '\Modules\traz_comp_formularios\Controllers\Form::obtenerNuevoCuestionario/$1');
 $routes->post('/guardarCuestionario/(:num)', '\Modules\traz_comp_formularios\Controllers\Form::guardarCuestionario/$1');
