@@ -32,6 +32,10 @@
 
   <link rel="stylesheet" href="<?= base_url()?>/public/dist/css/stylesTrazalog.css">
 
+  <!-- Balkan and Balkan style -->  
+  <script src="<?= base_url() ?>/lib/balkan/orgchart/orgchart.js"></script>
+  <link rel="stylesheet" type="t-ext/css" src="<?= base_url() ?>/lib/balkan/css/stylesBalkan.css">
+
   <!-- Bootstrap Switch -->
   <script src="<?= base_url()?>/public/plugins/bootstrap-switch/js/bootstrap-switch.min.js"></script>
   <!-- Plugin checkboxs into toggles -->
@@ -297,6 +301,10 @@
 <script src="<?= base_url()?>/public/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
 <script src="<?= base_url()?>/public/plugins/datatables-buttons/js/buttons.print.min.js"></script>
 <script src="<?= base_url()?>/public/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+
+<!-- Balkan Orgchart -->
+<!--<script src="<?= base_url() ?>/lib/balkan/js/balkanAdmin.js"></script>-->
+
 
 <!-- lenguaje datatable NO FUNCA-->
 <!-- <script src="https://cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json"></script>  -->

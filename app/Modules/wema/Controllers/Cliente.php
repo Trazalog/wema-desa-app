@@ -37,6 +37,8 @@ class Cliente extends BaseController
 
         /* LISTADO DE CLIENTES */
         $data['listadoClientes'] = $this->Clientes->getClientes();
+        log_message('debug', "#TRAZA | WEMA-DESA-APP | Cliente | Index | Cliente:  ".json_encode($data['listadoClientes'],true));
+        log_message('debug', "#TRAZA | WEMA-DESA-APP | Cliente | Index | ORGB:  ".json_encode($data['listadoClientes']));
 
         return view('Modules\wema\Views\clientes\index', $data);
     }
@@ -140,6 +142,8 @@ class Cliente extends BaseController
     */
     public function getClientes(){
         $resp = $this->Clientes->getClientes();
+        log_message('debug', "#TRAZA | WEMA-DESA-APP | Cuenta | Index | Cliente:  ".json_encode($resp));
+
         echo json_encode($resp);
     }
 
