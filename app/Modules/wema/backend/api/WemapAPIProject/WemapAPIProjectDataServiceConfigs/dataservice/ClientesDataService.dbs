@@ -1,4 +1,90 @@
 <data enableBatchRequests="true" name="ClientesDataService" serviceNamespace="ClientesDataService" transports="http https local">
+  <resource method="GET" path="/clientes">
+    <description>obtiene los datos de los clientes                                    
+                                    </description>
+    <call-query href="getClientes" />
+  </resource>
+  <resource method="POST" path="/clientes">
+    <description>permite guardar un nuevo cliente en la base de datos                           
+                                    
+                                    </description>
+    <call-query href="setClientes">
+      <with-param name="nombre" query-param="nombre" />
+      <with-param name="id_tributario" query-param="id_tributario" />
+      <with-param name="telefono" query-param="telefono" />
+      <with-param name="email" query-param="email" />
+      <with-param name="calle" query-param="calle" />
+      <with-param name="num_exterior" query-param="num_exterior" />
+      <with-param name="cod_postal" query-param="cod_postal" />
+      <with-param name="num_interior" query-param="num_interior" />
+      <with-param name="razon_social" query-param="razon_social" />
+      <with-param name="representante_legal" query-param="representante_legal" />
+      <with-param name="curp" query-param="curp" />
+      <with-param name="apellidos" query-param="apellidos" />
+      <with-param name="nombres" query-param="nombres" />
+      <with-param name="fec_nacimiento" query-param="fec_nacimiento" />
+      <with-param name="ocupacion" query-param="ocupacion" />
+      <with-param name="usr_alta" query-param="usr_alta" />
+      <with-param name="usr_app_alta" query-param="usr_app_alta" />
+      <with-param name="ticl_id" query-param="ticl_id" />
+      <with-param name="tipe_id" query-param="tipe_id" />
+      <with-param name="naci_id" query-param="naci_id" />
+      <with-param name="empr_id" query-param="empr_id" />
+      <with-param name="gene_id" query-param="gene_id" />
+      <with-param name="pana_id" query-param="pana_id" />
+      <with-param name="imagen" query-param="imagen" />
+      <with-param name="nom_imagen" query-param="nom_imagen" />
+    </call-query>
+  </resource>
+  <resource method="PUT" path="/clientes">
+    <description>actualiza datos del cliente en core.clientes                           
+                                    </description>
+    <call-query href="updateClientes">
+      <with-param name="nombre" query-param="nombre" />
+      <with-param name="id_tributario" query-param="id_tributario" />
+      <with-param name="telefono" query-param="telefono" />
+      <with-param name="email" query-param="email" />
+      <with-param name="calle" query-param="calle" />
+      <with-param name="num_exterior" query-param="num_exterior" />
+      <with-param name="cod_postal" query-param="cod_postal" />
+      <with-param name="num_interior" query-param="num_interior" />
+      <with-param name="razon_social" query-param="razon_social" />
+      <with-param name="representante_legal" query-param="representante_legal" />
+      <with-param name="curp" query-param="curp" />
+      <with-param name="apellidos" query-param="apellidos" />
+      <with-param name="nombres" query-param="nombres" />
+      <with-param name="fec_nacimiento" query-param="fec_nacimiento" />
+      <with-param name="ocupacion" query-param="ocupacion" />
+      <with-param name="usr_alta" query-param="usr_alta" />
+      <with-param name="usr_app_alta" query-param="usr_app_alta" />
+      <with-param name="ticl_id" query-param="ticl_id" />
+      <with-param name="tipe_id" query-param="tipe_id" />
+      <with-param name="naci_id" query-param="naci_id" />
+      <with-param name="empr_id" query-param="empr_id" />
+      <with-param name="gene_id" query-param="gene_id" />
+      <with-param name="pana_id" query-param="pana_id" />
+      <with-param name="imagen" query-param="imagen" />
+      <with-param name="nom_imagen" query-param="nom_imagen" />
+      <with-param name="clie_id" query-param="clie_id" />
+    </call-query>
+  </resource>
+  <resource method="DELETE" path="/clientes">
+    <description>permite eliminado logico de un cliente en tabla core.clientes                            
+                                    </description>
+    <call-query href="deleteClientes">
+      <with-param name="clie_id" query-param="clie_id" />
+    </call-query>
+  </resource>
+  <resource method="PUT" path="/habilitarcliente">
+    <description>permite habilitar el cliente luego de hacer el borrado logico en la tabla core.clientes                         
+                                    </description>
+    <call-query href="habilitarClientes">
+      <with-param name="clie_id" query-param="clie_id" />
+    </call-query>
+  </resource>
+  <config id="WemaDataSource">
+    <property name="carbon_datasource_name">WemapDataSource</property>
+  </config>
   <query id="getClientes" useConfig="WemaDataSource">
     <sql>select c.*, t.descripcion as tipoCliente, tp.descripcion as tipoPersona, tn.descripcion as nacionalidad, tg.descripcion as genero
 from core.clientes c
@@ -33,6 +119,8 @@ left join core.tablas tpan on c.pana_id  = tpan.tabl_id</sql>
             "imagen":"$imagen",
             "nom_imagen":"$nom_imagen",
             "eliminado":"$eliminado",
+            "org": "$org",
+            "orgb": "$orgb",
             "tipoCliente":"$tipoCliente",
             "tipoPersona":"$tipoPersona",
             "nacionalidad":"$nacionalidad",
@@ -215,90 +303,4 @@ where clie_id = cast(:clie_id as integer)</sql>
     <sql>update core.clientes set eliminado = false where clie_id = cast(:clie_id as integer)</sql>
     <param name="clie_id" sqlType="STRING" />
   </query>
-  <resource method="GET" path="/clientes">
-    <description>obtiene los datos de los clientes                                    
-                                    </description>
-    <call-query href="getClientes" />
-  </resource>
-  <resource method="POST" path="/clientes">
-    <description>permite guardar un nuevo cliente en la base de datos                           
-                                    
-                                    </description>
-    <call-query href="setClientes">
-      <with-param name="nombre" query-param="nombre" />
-      <with-param name="id_tributario" query-param="id_tributario" />
-      <with-param name="telefono" query-param="telefono" />
-      <with-param name="email" query-param="email" />
-      <with-param name="calle" query-param="calle" />
-      <with-param name="num_exterior" query-param="num_exterior" />
-      <with-param name="cod_postal" query-param="cod_postal" />
-      <with-param name="num_interior" query-param="num_interior" />
-      <with-param name="razon_social" query-param="razon_social" />
-      <with-param name="representante_legal" query-param="representante_legal" />
-      <with-param name="curp" query-param="curp" />
-      <with-param name="apellidos" query-param="apellidos" />
-      <with-param name="nombres" query-param="nombres" />
-      <with-param name="fec_nacimiento" query-param="fec_nacimiento" />
-      <with-param name="ocupacion" query-param="ocupacion" />
-      <with-param name="usr_alta" query-param="usr_alta" />
-      <with-param name="usr_app_alta" query-param="usr_app_alta" />
-      <with-param name="ticl_id" query-param="ticl_id" />
-      <with-param name="tipe_id" query-param="tipe_id" />
-      <with-param name="naci_id" query-param="naci_id" />
-      <with-param name="empr_id" query-param="empr_id" />
-      <with-param name="gene_id" query-param="gene_id" />
-      <with-param name="pana_id" query-param="pana_id" />
-      <with-param name="imagen" query-param="imagen" />
-      <with-param name="nom_imagen" query-param="nom_imagen" />
-    </call-query>
-  </resource>
-  <resource method="PUT" path="/clientes">
-    <description>actualiza datos del cliente en core.clientes                           
-                                    </description>
-    <call-query href="updateClientes">
-      <with-param name="nombre" query-param="nombre" />
-      <with-param name="id_tributario" query-param="id_tributario" />
-      <with-param name="telefono" query-param="telefono" />
-      <with-param name="email" query-param="email" />
-      <with-param name="calle" query-param="calle" />
-      <with-param name="num_exterior" query-param="num_exterior" />
-      <with-param name="cod_postal" query-param="cod_postal" />
-      <with-param name="num_interior" query-param="num_interior" />
-      <with-param name="razon_social" query-param="razon_social" />
-      <with-param name="representante_legal" query-param="representante_legal" />
-      <with-param name="curp" query-param="curp" />
-      <with-param name="apellidos" query-param="apellidos" />
-      <with-param name="nombres" query-param="nombres" />
-      <with-param name="fec_nacimiento" query-param="fec_nacimiento" />
-      <with-param name="ocupacion" query-param="ocupacion" />
-      <with-param name="usr_alta" query-param="usr_alta" />
-      <with-param name="usr_app_alta" query-param="usr_app_alta" />
-      <with-param name="ticl_id" query-param="ticl_id" />
-      <with-param name="tipe_id" query-param="tipe_id" />
-      <with-param name="naci_id" query-param="naci_id" />
-      <with-param name="empr_id" query-param="empr_id" />
-      <with-param name="gene_id" query-param="gene_id" />
-      <with-param name="pana_id" query-param="pana_id" />
-      <with-param name="imagen" query-param="imagen" />
-      <with-param name="nom_imagen" query-param="nom_imagen" />
-      <with-param name="clie_id" query-param="clie_id" />
-    </call-query>
-  </resource>
-  <resource method="DELETE" path="/clientes">
-    <description>permite eliminado logico de un cliente en tabla core.clientes                            
-                                    </description>
-    <call-query href="deleteClientes">
-      <with-param name="clie_id" query-param="clie_id" />
-    </call-query>
-  </resource>
-  <resource method="PUT" path="/habilitarcliente">
-    <description>permite habilitar el cliente luego de hacer el borrado logico en la tabla core.clientes                         
-                                    </description>
-    <call-query href="habilitarClientes">
-      <with-param name="clie_id" query-param="clie_id" />
-    </call-query>
-  </resource>
-  <config id="WemaDataSource">
-    <property name="carbon_datasource_name">WemapDataSource</property>
-  </config>
 </data>
