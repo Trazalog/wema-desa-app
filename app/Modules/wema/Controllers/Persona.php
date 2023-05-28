@@ -4,6 +4,7 @@ namespace Modules\wema\Controllers;
 use App\Controllers\BaseController;
 use Modules\wema\Models\Personas; 
 use Modules\wema\Models\Generales; 
+use Modules\wema\Models\Clientes; 
 
 
 class Persona extends BaseController
@@ -12,6 +13,8 @@ class Persona extends BaseController
     {
         $this->Personas = new Personas();
         $this->Generales = new Generales();
+        $this->Clientes = new Clientes();
+
     }
     /**
         * Carga pantalla principal de ABM personas
@@ -36,7 +39,7 @@ class Persona extends BaseController
         $data['listadoNivelEducativo'] = $this->Generales->getTabla("niveles_educativos");
 
 
-        return view('Modules\wema\Views\persona\index',$data);
+        return view('Modules\wema\Views\persona\index',$data).view('Modules\wema\Views\clientes\modalGenericoCliente');
     }
 
     /**
@@ -167,6 +170,25 @@ class Persona extends BaseController
     public function cargarEntrevista(){
         $data['listadoPersonas'] = $this->Personas->getPersonas();
         return view('Modules\wema\Views\persona\entrevistas',$data);    
+    }
+
+
+    public function modalCliente($clie_id = null){
+        /* LISTADO DE GENEROS */
+        $data['listadoGeneros'] = $this->Generales->getTabla("generos");
+
+        /* LISTADO PAISES */
+        $data['listadoPaises'] = $this->Generales->getTabla("paises");
+
+        /* LISTADO TIPO PERSONAS */
+        $data['tipoPersona'] = $this->Generales->getTabla("tipos_personas");
+
+        /* LISTADO TIPO CLIENTES */
+        $data['tipoCliente'] = $this->Generales->getTabla("tipos_clientes");
+
+        $data['cliente'] = $this->Clientes->getClientexId($clie_id);
+
+        return view('Modules\wema\Views\clientes\modalCliente', $data);
     }
 
 }
