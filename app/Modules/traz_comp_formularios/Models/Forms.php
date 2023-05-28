@@ -129,7 +129,7 @@ class Forms extends Model{
             }
             $this->db->update('frm.instancias_formularios');
         }
-        log_message('DEBUG',"#TRAZA | #TRAZ-COMP-FORMULARIOS | #FORMS | actualizar() >> info_id actualizado: ". $info_id);
+        log_message('DEBUG',"#TRAZA | #TRAZ_COMP_FORMULARIOS | Model | Forms | actualizar() >> info_id actualizado: ". $info_id);
         return $info_id;
     }
     /**
@@ -269,11 +269,14 @@ class Forms extends Model{
                     $o->valor4_base64 = null;
 
                     if($o->tipo_dato == 'image' || $o->tipo_dato == 'file'){
-                        
                         $nom = "-file-".$o->name;
-                        
                         if(!empty($_FILES[$nom]['tmp_name'])){
                             $o->valor4_base64 = base64_encode(file_get_contents($_FILES[$nom]['tmp_name']));
+                        }
+                    }
+                    if($o->tipo_dato == 'question'){
+                        if(!empty($_FILES['audio']['tmp_name'])){
+                            $o->valor4_base64 = base64_encode(file_get_contents($_FILES['audio']['tmp_name']));
                         }
                     }
                     
@@ -296,14 +299,14 @@ class Forms extends Model{
 
                     unset($o);
                 }
+            }else{
+                array_push($array, $o);
             }
             unset($o);
         }
 
-        // if($aux && !$this->db->insert_batch('frm.instancias_formularios', $aux)) return FALSE;
         $this->db->table('frm.instancias_formularios')->insertBatch($array);
         $queryInfo = $this->db->query('SELECT MAX(info_id) as info_id FROM frm.instancias_formularios');
-        // $eso = $queryInfo->getResultObject();
         $newInfo = $queryInfo->getResultObject()[0]->info_id;
         log_message('info',"#TRAZA | #TRAZ-COMP-FORMULARIOS | Model | Forms | guardar() >> info_id generado ". $newInfo);
 
@@ -317,5 +320,23 @@ class Forms extends Model{
     public function generarInstancia($form_id){
         $res = $this->guardar($form_id);
         return $res;
+    }
+    /**
+        * Acutaliza un record de la instancia del formulario dinámico
+        * @param array $data audio grabado
+        * @return array respuesta del procedimiento
+	*/
+    public function actualizarCuestionario($info_id, $data){
+        if(empty($data)) return array('info_id' => $info_id, "status" => false, "msg" => "No se actualizo nada, data estaba vacio");
+        
+        if(!empty($data['tmp_name'])){
+            $datos['valor4_base64'] = base64_encode(file_get_contents($data['tmp_name']));
+            $this->db->table('frm.instancias_formularios')
+                    ->where('info_id', $info_id)
+                    ->like('name',$data['name'])
+                    ->update($datos);
+            }
+        log_message('info',"#TRAZA | #TRAZ_COMP_FORMULARIOS | Model | Forms | actualizar() >> info_id actualizado: ". $info_id);
+        return array('info_id' => $info_id, "status" => true, "msg" => "Record guardado correctamente.");
     }
 }

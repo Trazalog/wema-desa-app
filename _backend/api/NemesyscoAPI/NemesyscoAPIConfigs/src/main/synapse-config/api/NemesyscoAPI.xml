@@ -70,8 +70,19 @@ var aux = mc.getProperty('listaAudios');]]></script>
                     <arg evaluator="json" expression="$.empresa.image"/>
                 </args>
             </payloadFactory>
+            <loopback/>
         </inSequence>
-        <outSequence/>
+        <outSequence>
+            <log level="full">
+                <property name="MESSAGE" value="FIRST"/>
+            </log>
+            <payloadFactory description="Mensaje error" media-type="json">
+                <format>{"respuesta":{"status" : "true","msg":"Todo correcto"}}</format>
+                <args/>
+            </payloadFactory>
+            <log level="full"/>
+            <send/>
+        </outSequence>
         <faultSequence/>
     </resource>
 </api>

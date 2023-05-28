@@ -73,22 +73,22 @@ class Form extends BaseController
         echo json_encode($res);
     }
     /**
-        * Guarda el cuestionario previamente inicializado
-        * @param integer $form_id id formulario asociado; $_FILES audios grabados
+        * Actualiza el cuestionario previamente creado e inicializado
+        * NOTA: Si traer $form_id, guarda instancia nueva. Si trae $info_id, acutaliza instacia guardada
+        * @param integer $info_id id instancia formulario asociado; $ form_id id formulario configurado; $_FILES audios grabados
         * @return array $res respuesta de la query de guardado
 	*/
-    public function guardarCuestionario($form_id = false){
+    public function guardarCuestionario($form_id = false, $info_id = false){
         log_message('info',"#TRAZA | #TRAZ_COMP_FORMULARIOS | Controllers | Form | guardar()");
 
         $audios = $_FILES['audio'];
 
-        // if ($new) {
+        if (empty($info_id)) {
             $res['info_id'] = $this->Forms->guardarCuestionario($form_id, $audios);
             $res['status'] = true;
-        // } else {
-        //     $res['info_id'] = $this->Forms->actualizar($info_id, $data);
-        // }
-        // echo json_encode($res);
+        } else {
+            $res = $this->Forms->actualizarCuestionario($info_id, $audios);
+        }
         echo json_encode($res);
     }
     /**

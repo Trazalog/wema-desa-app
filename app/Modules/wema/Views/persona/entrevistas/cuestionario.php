@@ -154,7 +154,10 @@ function startRecording(e) {
     var constraints = {audio: true};
 
 	navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {
-		audioContext = new AudioContext();
+        //Es necesario crear la instancia con la restriccion, si no toma 48Khz
+		audioContext = new AudioContext({
+            sampleRate: 11025
+        });
 		gumStream = stream;
 		input = audioContext.createMediaStreamSource(stream);
 
@@ -209,8 +212,9 @@ function stopRecording(e) {
         // link.click();
         
         var filename = $("#pregunta-"+indice).find('input').val();
-        formData.append("audio[]",blob, filename);
-
+        formData.append("audio",blob, filename);
+        //envio audio a grabar
+        sendAudios();
         if(stepper._currentIndex === (stepper._steps.length - 1)){
             Swal.fire({
                 title: 'Gracias',
@@ -241,13 +245,15 @@ function stopRecording(e) {
 
 function sendAudios(){
     form_id = $("#formEntrevista").attr('data-form');
+    aux = $("#formEntrevista").find('form').attr('id').split('-');
+    info_id = aux.pop();
     $.ajax({
         type:'POST',
         dataType: 'JSON',
         processData: false,
         contentType: false,
         data:formData,
-        url: '<?= base_url()?>/guardarCuestionario/'+form_id,
+        url: '<?= base_url()?>/guardarCuestionario/'+form_id+'/'+info_id,
         success: function(resp) {
             wc();
             if(resp.status){
@@ -258,10 +264,6 @@ function sendAudios(){
         },
         error: function(result){
             notificar(notiError);
-        },
-        complete: ()=>{
-            // reseteo indice preguntas
-            indice = 1;
         }
     });
 }
