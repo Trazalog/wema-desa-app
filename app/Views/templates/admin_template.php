@@ -29,8 +29,11 @@
   <link rel="stylesheet" href="<?= base_url()?>/public/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="<?= base_url()?>/public/dist/css/adminlte.min.css">
-
+  
   <link rel="stylesheet" href="<?= base_url()?>/public/dist/css/stylesTrazalog.css">
+  <!-- Plugin form multiples tabs JS -->
+  <link rel="stylesheet" href="<?= base_url()?>/public/plugins/bs-stepper/css/bs-stepper.min.css">
+  
 
   <!-- Balkan and Balkan style -->  
   <script src="<?= base_url() ?>/lib/balkan/orgchart/orgchart.js"></script>
@@ -50,8 +53,14 @@
   <script src="<?= base_url()?>/lib/scriptsGenerales.js"></script>
   <!--Scripts para Formularios -->
   <script src="<?= base_url()?>/lib/forms.js"></script>
+  <!--Recorder JS -->
+  <script src="<?= base_url()?>/lib/recorderjs/dist/recorder.js"></script>
   <!-- Masonry Plugin -->
   <script src="<?= base_url()?>/public/plugins/masonry/masonry.pkgd.min.js"></script>
+
+  <script src="https://unpkg.com/wavesurfer.js"></script>
+  <script src="https://unpkg.com/wavesurfer.js@6.6.3/dist/plugin/wavesurfer.microphone.min.js"></script>
+
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
@@ -206,7 +215,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="<?= site_url('persona/entrevista') ?>" class="nav-link">
+            <a href="<?= site_url('persona/cargarListadoEntrevistados') ?>" class="nav-link">
               <i class="far fa-circle nav-icon"></i>
               <p>
                 Entrevista
@@ -262,6 +271,8 @@
 
 <script>
   $.widget.bridge('uibutton', $.ui.button)
+  //Definicion de variables JS con valores PHP
+  frmUrl = "<?= site_url('form') ?>";
 </script>
 <!-- Bootstrap 4 -->
 <script src="<?= base_url()?>/public/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -285,6 +296,8 @@
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <!-- <script src="<?= base_url()?>/public/dist/js/pages/dashboard.js"></script> -->
 
+<!-- plugin form multiples tabs JS-->
+<script src="<?= base_url()?>/public/plugins/bs-stepper/js/bs-stepper.min.js"></script>
 
 
 
