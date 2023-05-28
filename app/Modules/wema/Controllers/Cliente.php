@@ -4,6 +4,7 @@ namespace Modules\wema\Controllers;
 use App\Controllers\BaseController;
 use Modules\wema\Models\Clientes; 
 use Modules\wema\Models\Generales; 
+use Modules\wema\Models\Personas; 
 
 
 
@@ -37,6 +38,8 @@ class Cliente extends BaseController
 
         /* LISTADO DE CLIENTES */
         $data['listadoClientes'] = $this->Clientes->getClientes();
+        log_message('debug', "#TRAZA | WEMA-DESA-APP | Cliente | Index | Cliente:  ".json_encode($data['listadoClientes'],true));
+        log_message('debug', "#TRAZA | WEMA-DESA-APP | Cliente | Index | ORGB:  ".json_encode($data['listadoClientes']));
 
         return view('Modules\wema\Views\clientes\index', $data);
     }
@@ -140,6 +143,8 @@ class Cliente extends BaseController
     */
     public function getClientes(){
         $resp = $this->Clientes->getClientes();
+        log_message('debug', "#TRAZA | WEMA-DESA-APP | Cuenta | Index | Cliente:  ".json_encode($resp));
+
         echo json_encode($resp);
     }
 
@@ -167,4 +172,58 @@ class Cliente extends BaseController
         $resp= $this->Clientes->habilitarCliente($data);
         echo json_encode($resp);
     }
+
+     /**
+        * Recibe id del cliente
+        * @param  array $clie_id cliente
+        * @return view personas
+    */
+    public function getPersonas($clie_id = null){
+
+        /* LISTADO PERSONAS */
+        $data['listadoPersonas'] = $this->Clientes->getPersonas($clie_id);
+
+        /* LISTADO DE GENEROS */
+        $data['listadoGeneros'] = $this->Generales->getTabla("generos");
+
+        /* LISTADO PAISES */
+        $data['listadoPaises'] = $this->Generales->getTabla("paises");
+
+        /* LISTADO ESTADO CIVIL */
+        $data['listadoEstadoCivil'] = $this->Generales->getTabla("estados_civiles");
+      
+        /* LISTADO NIVELES EDUCATIVOS */
+        $data['listadoNivelEducativo'] = $this->Generales->getTabla("niveles_educativos");
+
+        $data['clie_id'] = $clie_id;
+        
+        return view('Modules\wema\Views\persona\index',$data).view('Modules\wema\Views\clientes\modalGenericoCliente');
+    }
+
+
+    public function getModalCliente(){
+        /* LISTADO DE GENEROS */
+        $data['listadoGeneros'] = $this->Generales->getTabla("generos");
+
+        /* LISTADO PAISES */
+        $data['listadoPaises'] = $this->Generales->getTabla("paises");
+
+        /* LISTADO TIPO PERSONAS */
+        $data['tipoPersona'] = $this->Generales->getTabla("tipos_personas");
+
+        /* LISTADO TIPO CLIENTES */
+        $data['tipoCliente'] = $this->Generales->getTabla("tipos_clientes");
+
+        /* LISTADO DE CLIENTES */
+        $data['listadoClientes'] = $this->Clientes->getClientes();
+
+        return viewview('Modules\wema\Views\clientes\modalGenericoCliente',$data);
+    }
+/* 
+    public function traerModal($clie_id = null){
+     
+        $data['listadoClientes'] = $this->Clientes->getClientes();
+        return view('Modules\wema\Views\clientes\prueba', $data);
+    } */
+
 }

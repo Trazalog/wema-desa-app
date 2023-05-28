@@ -1,5 +1,94 @@
-<data enableBatchRequests="true" name="PersonaDataService" transports="http https local">
-  <query id="getPersonas" useConfig="WemapDataSource">
+
+<data transports="http https local" name="PersonaDataService" enableBatchRequests="true">
+  <resource path="/persona" method="GET">
+    <description>Listado personas de core.personas                           
+                                    </description>
+    <call-query href="getPersonas" />
+  </resource>
+  <resource path="/persona" method="POST">
+    <description>Guarda persona en tabla core.personas                     </description>
+    <call-query href="setPersona">
+      <with-param name="apellidos" query-param="apellidos" />
+      <with-param name="nombres" query-param="nombres" />
+      <with-param name="curp" query-param="curp" />
+      <with-param name="fec_nacimiento" query-param="fec_nacimiento" />
+      <with-param name="ocupacion" query-param="ocupacion" />
+      <with-param name="telefono" query-param="telefono" />
+      <with-param name="email" query-param="email" />
+      <with-param name="calle" query-param="calle" />
+      <with-param name="num_exterior" query-param="num_exterior" />
+      <with-param name="cod_postal" query-param="cod_postal" />
+      <with-param name="num_interior" query-param="num_interior" />
+      <with-param name="usr_app_alta" query-param="usr_app_alta" />
+      <with-param name="usr_app_ult_modif" query-param="usr_app_ult_modif" />
+      <with-param name="gene_id" query-param="gene_id" />
+      <with-param name="pana_id" query-param="pana_id" />
+      <with-param name="esci_id" query-param="esci_id" />
+      <with-param name="naci_id" query-param="naci_id" />
+      <with-param name="educ_id" query-param="educ_id" />
+      <with-param name="ubic_id" query-param="ubic_id" />
+      <with-param name="clie_id" query-param="clie_id" />
+      <with-param name="imagen" query-param="imagen" />
+      <with-param name="nom_imagen" query-param="nom_imagen" />
+    </call-query>
+  </resource>
+  <resource path="/persona" method="PUT">
+    <description>Updatea datos de persona en core.personas por pers_id                       
+                                    
+                                    
+                                    </description>
+    <call-query href="updatePersona">
+      <with-param name="apellidos" query-param="apellidos" />
+      <with-param name="nombres" query-param="nombres" />
+      <with-param name="curp" query-param="curp" />
+      <with-param name="fec_nacimiento" query-param="fec_nacimiento" />
+      <with-param name="ocupacion" query-param="ocupacion" />
+      <with-param name="telefono" query-param="telefono" />
+      <with-param name="email" query-param="email" />
+      <with-param name="calle" query-param="calle" />
+      <with-param name="num_exterior" query-param="num_exterior" />
+      <with-param name="cod_postal" query-param="cod_postal" />
+      <with-param name="num_interior" query-param="num_interior" />
+      <with-param name="usr_app_alta" query-param="usr_app_alta" />
+      <with-param name="usr_app_ult_modif" query-param="usr_app_ult_modif" />
+      <with-param name="gene_id" query-param="gene_id" />
+      <with-param name="pana_id" query-param="pana_id" />
+      <with-param name="esci_id" query-param="esci_id" />
+      <with-param name="naci_id" query-param="naci_id" />
+      <with-param name="educ_id" query-param="educ_id" />
+      <with-param name="ubic_id" query-param="ubic_id" />
+      <with-param name="clie_id" query-param="clie_id" />
+      <with-param name="imagen" query-param="imagen" />
+      <with-param name="pers_id" query-param="pers_id" />
+      <with-param name="nom_imagen" query-param="nom_imagen" />
+    </call-query>
+  </resource>
+  <resource path="/persona" method="DELETE">
+    <description>Borrado logico de persona por pers_id en core.personas                               
+                                    
+                                    </description>
+    <call-query href="deletePersona">
+      <with-param name="pers_id" query-param="pers_id" />
+    </call-query>
+  </resource>
+  <resource path="/habilitarpersona" method="PUT">
+    <description>actualiza eliminado en true para poder habilitar una persona                    
+                                    </description>
+    <call-query href="habilitarPersona">
+      <with-param name="pers_id" query-param="pers_id" />
+    </call-query>
+  </resource>
+  <resource path="/persona/id/{pers_id}" method="GET">
+    <description>Obtiene datos de persona por pers_id                     
+                                    </description>
+    <call-query href="getPersonaxId">
+      <with-param name="pers_id" query-param="pers_id" />
+    </call-query>
+  </resource>
+  <config id="WemapDataSource">
+    <property name="carbon_datasource_name">WemapDataSource</property>
+  </config>
+  <query useConfig="WemapDataSource" id="getPersonas">
     <sql>select *,p.eliminado as estado, t.descripcion as genero, t1.descripcion as pais, 
 t2.descripcion as estado_civil, t3.descripcion as nacimiento,
 t4.descripcion as educacion, t5.descripcion as ubicacion 
@@ -43,7 +132,7 @@ left join core.tablas t5 on t5.tabl_id = p.ubic_id</sql>
     }
 }</result>
   </query>
-  <query id="setPersona" useConfig="WemapDataSource">
+  <query useConfig="WemapDataSource" id="setPersona">
     <sql>INSERT INTO core.personas  
     (apellidos,
     nombres,
@@ -136,7 +225,7 @@ from
     <param name="imagen" sqlType="STRING" />
     <param name="nom_imagen" sqlType="STRING" />
   </query>
-  <query id="updatePersona" useConfig="WemapDataSource">
+  <query useConfig="WemapDataSource" id="updatePersona">
     <sql>update core.personas p
 set
 apellidos = :apellidos,
@@ -187,15 +276,15 @@ where pers_id = cast(:pers_id as integer)</sql>
     <param name="pers_id" sqlType="STRING" />
     <param name="nom_imagen" sqlType="STRING" />
   </query>
-  <query id="deletePersona" useConfig="WemapDataSource">
+  <query useConfig="WemapDataSource" id="deletePersona">
     <sql>update core.personas set eliminado = true where pers_id = cast(:pers_id as integer)</sql>
     <param name="pers_id" sqlType="STRING" />
   </query>
-  <query id="habilitarPersona" useConfig="WemapDataSource">
+  <query useConfig="WemapDataSource" id="habilitarPersona">
     <sql>update core.personas set eliminado = false where pers_id = cast(:pers_id as integer)</sql>
     <param name="pers_id" sqlType="STRING" />
   </query>
-  <query id="getPersonaxId" useConfig="WemapDataSource">
+  <query useConfig="WemapDataSource" id="getPersonaxId">
     <sql>select *,p.eliminado as estado, t.descripcion as genero, t1.descripcion as pais, 
 t2.descripcion as estado_civil, t3.descripcion as nacimiento,
 t4.descripcion as educacion, t5.descripcion as ubicacion 
@@ -241,92 +330,4 @@ where p.pers_id = cast(:pers_id as integer)</sql>
 }</result>
     <param name="pers_id" sqlType="STRING" />
   </query>
-  <resource method="GET" path="/persona">
-    <description>Listado personas de core.personas                           
-                                    </description>
-    <call-query href="getPersonas" />
-  </resource>
-  <resource method="POST" path="/persona">
-    <description>Guarda persona en tabla core.personas                     </description>
-    <call-query href="setPersona">
-      <with-param name="apellidos" query-param="apellidos" />
-      <with-param name="nombres" query-param="nombres" />
-      <with-param name="curp" query-param="curp" />
-      <with-param name="fec_nacimiento" query-param="fec_nacimiento" />
-      <with-param name="ocupacion" query-param="ocupacion" />
-      <with-param name="telefono" query-param="telefono" />
-      <with-param name="email" query-param="email" />
-      <with-param name="calle" query-param="calle" />
-      <with-param name="num_exterior" query-param="num_exterior" />
-      <with-param name="cod_postal" query-param="cod_postal" />
-      <with-param name="num_interior" query-param="num_interior" />
-      <with-param name="usr_app_alta" query-param="usr_app_alta" />
-      <with-param name="usr_app_ult_modif" query-param="usr_app_ult_modif" />
-      <with-param name="gene_id" query-param="gene_id" />
-      <with-param name="pana_id" query-param="pana_id" />
-      <with-param name="esci_id" query-param="esci_id" />
-      <with-param name="naci_id" query-param="naci_id" />
-      <with-param name="educ_id" query-param="educ_id" />
-      <with-param name="ubic_id" query-param="ubic_id" />
-      <with-param name="clie_id" query-param="clie_id" />
-      <with-param name="imagen" query-param="imagen" />
-      <with-param name="nom_imagen" query-param="nom_imagen" />
-    </call-query>
-  </resource>
-  <resource method="PUT" path="/persona">
-    <description>Updatea datos de persona en core.personas por pers_id                       
-                                    
-                                    
-                                    </description>
-    <call-query href="updatePersona">
-      <with-param name="apellidos" query-param="apellidos" />
-      <with-param name="nombres" query-param="nombres" />
-      <with-param name="curp" query-param="curp" />
-      <with-param name="fec_nacimiento" query-param="fec_nacimiento" />
-      <with-param name="ocupacion" query-param="ocupacion" />
-      <with-param name="telefono" query-param="telefono" />
-      <with-param name="email" query-param="email" />
-      <with-param name="calle" query-param="calle" />
-      <with-param name="num_exterior" query-param="num_exterior" />
-      <with-param name="cod_postal" query-param="cod_postal" />
-      <with-param name="num_interior" query-param="num_interior" />
-      <with-param name="usr_app_alta" query-param="usr_app_alta" />
-      <with-param name="usr_app_ult_modif" query-param="usr_app_ult_modif" />
-      <with-param name="gene_id" query-param="gene_id" />
-      <with-param name="pana_id" query-param="pana_id" />
-      <with-param name="esci_id" query-param="esci_id" />
-      <with-param name="naci_id" query-param="naci_id" />
-      <with-param name="educ_id" query-param="educ_id" />
-      <with-param name="ubic_id" query-param="ubic_id" />
-      <with-param name="clie_id" query-param="clie_id" />
-      <with-param name="imagen" query-param="imagen" />
-      <with-param name="pers_id" query-param="pers_id" />
-      <with-param name="nom_imagen" query-param="nom_imagen" />
-    </call-query>
-  </resource>
-  <resource method="DELETE" path="/persona">
-    <description>Borrado logico de persona por pers_id en core.personas                               
-                                    
-                                    </description>
-    <call-query href="deletePersona">
-      <with-param name="pers_id" query-param="pers_id" />
-    </call-query>
-  </resource>
-  <resource method="PUT" path="/habilitarpersona">
-    <description>actualiza eliminado en true para poder habilitar una persona                    
-                                    </description>
-    <call-query href="habilitarPersona">
-      <with-param name="pers_id" query-param="pers_id" />
-    </call-query>
-  </resource>
-  <resource method="GET" path="/persona/id/{pers_id}">
-    <description>Obtiene datos de persona por pers_id                     
-                                    </description>
-    <call-query href="getPersonaxId">
-      <with-param name="pers_id" query-param="pers_id" />
-    </call-query>
-  </resource>
-  <config id="WemapDataSource">
-    <property name="carbon_datasource_name">WemapDataSource</property>
-  </config>
 </data>

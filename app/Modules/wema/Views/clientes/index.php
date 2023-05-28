@@ -16,7 +16,7 @@
           </div>
            <div class="col-sm-3"></div> 
           <div class="col-sm-2">
-          <button type="button" class="btn btn-outline-primary btn-block btn-sm"><i class="fa fa-info float-left"></i> Información de la cuenta</button>
+          <button type="button" class="btn btn-outline-primary btn-block btn-sm" onclick="modalprueba()"><i class="fa fa-info float-left"></i> Información de la cuenta</button>
           </div>
         </div>
         <div class="row mb-2">
@@ -66,7 +66,7 @@
                         echo'<td>
                                 <div class="btn-group"> 
                                   <i class="fa fa-search" style="cursor: pointer;margin: 3px;" title="Ver Detalles" onclick="verCliente(this)"></i>
-                                  <a style="color:black" href="'.site_url('persona').'"><i class="fa fa-users" style="cursor: pointer;margin: 3px;" title="Ver personas"> </i></a>
+                                  <a style="color:black" href="'. site_url('getPersonas/'.$clientes->clie_id) .'"><i class="fa fa-users" style="cursor: pointer;margin: 3px;" title="Ver personas"></i></a>
                                   <label class="switch" id="miLabel">
                                   <div class="bootstrap-switch-container float-right" style="width: 10px; margin-left: 24px;" >
                                     <input type="checkbox" name="habilitarCliente" data-bootstrap-switch '.$check.'>
@@ -119,7 +119,7 @@
                     <button type="button" id="btn-personas" class="btn btn-outline-primary btn-block btn-sm" hidden><i class="fas fa-users"></i> Personas </button>
                 </div>
                 <div class="col-2" >
-                    <button type="button" id="btn-organigrama" class="btn btn-outline-primary btn-block btn-sm" hidden><i class="fas fa-sitemap" ></i> Organigrama </button>
+                    <button type="button" id="btn-organigrama" data-target="#modalOrganigrama" class="btn btn-outline-primary btn-block btn-sm btn-organigrama" hidden><i class="fas fa-sitemap" ></i> Organigrama </button>
                 </div>
                 
                 <div class="col-2" >
@@ -136,6 +136,8 @@
             <div class="modal-body">
             <form id="frm-nuevoCliente">
               <input id="clie_id" name="clie_id" type="text" hidden>
+              <input id="orgb" name="orgb" type="text" hidden>
+              <input id="org" name="org" type="text" hidden>
                         <div class="row" style="margin-top:-7px">
                           <div class="col">
                             <div class="card card-info">
@@ -232,10 +234,10 @@
                                             <select name="tipoPersona" id="tipoPersona" class="form-control requerido">
                                               <option value="" selected disabled> - Seleccionar - </option>
                                               <?php 
-                                              foreach ($tipoPersona as $key => $pers) {
-                                                echo "<option value='$pers->tabl_id'>$pers->valor</option>";
-                                              }
-                                            ?>
+                                                foreach ($tipoPersona as $key => $pers) {
+                                                  echo "<option value='$pers->tabl_id'>$pers->valor</option>";
+                                                }
+                                              ?>
                                             </select>
                                           </div>
                                       </div>
@@ -498,6 +500,54 @@
     </div>
 </div>
 
+
+      <!-- Modal Organigrama imagen -->
+      <div class="modal fade" id="modalOrganigrama">
+          <div class="modal-dialog modal-xl">
+              <div class="modal-content">
+                  <div class="modal-header">
+                      <h4 class="modal-title">Organigrama</h4>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                      </button>
+                  </div>
+
+                  
+                  <div class="modal-body">
+                    <div id="tree"></div>
+                  </div>
+                  
+                  <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                      <button type="button" class="btn btn-primary" data-dismiss="modal">Agregar</button>
+                  </div>                  
+              </div>
+          </div>
+      </div>
+
+      <div class="modal fade" id="modalNoOrganigrama">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Organigrama</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+            
+                <div class="modal-body">
+                        
+                </div>
+
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                  <button type="button" class="btn btn-primary" data-dismiss="modal">Agregar</button>
+                </div>                
+            </div>
+        </div>
+      </div>
+
+
 <script>
 
 /* definicion de datatablet */
@@ -581,11 +631,6 @@
 
   });
 
-  /* oculta/muestra inputs de modal agregar cliente */
-  $('#miLabel').on("change",function(){
-    alert('holaa')
-  });
-  
 
   /* avtiva botones para cliente fisico */
   function activaBotonesClientesFisicos(){
@@ -638,9 +683,8 @@ function guardarCliente(){
   //validacion datos del formulario
   if(!validaForm('#frm-nuevoCliente')) return;
 
-  if(!rfcValido($('#curp').val()))return;
+  if(!rfcValido($('#rfc').val()))return;
 
-  debugger;
   $.ajax({
     type:'POST',
     dataType: 'JSON',
@@ -687,8 +731,13 @@ function verCliente(e){
     $('#btn-cuestionario').prop('hidden', false); 
     $('#nuevo_cliente #cliente_id').prop('hidden', false);
 
+    /*Verificar si tiene organigrama*/
+
+
     /* datos generales */
     $('#nuevo_cliente #clie_id').val(json.clie_id);
+    $('#nuevo_cliente #orgb').val(json.orgb);
+    $('#nuevo_cliente #org').val(json.org);
     $('#nuevo_cliente #cliente_id').text( "(id: " + json.clie_id + ")");
     $('#nuevo_cliente #nombreComercial').val(json.nombre);
     $('#nuevo_cliente #tipoCliente').val(json.ticl_id);
@@ -997,12 +1046,12 @@ function actualizarTablaCliente(){
           estilo='';
           clase='';
     }
-
+ 
       fila="<tr data-json= '"+ JSON.stringify(value) +"'>" +
           '<td>'+
             '<div class="btn-group"> '+
             '<i class="fa fa-search" style="cursor: pointer;margin: 3px;" title="Ver Detalles" onclick="verCliente(this)"></i>'+
-            '<i class="fa fa-users" style="cursor: pointer;margin: 3px;" title="Ver personas" ></i>' +
+            '<a style="color:black" href=" <?= site_url() ?>getPersonas/'+ value.clie_id +'"><i class="fa fa-users" style="cursor: pointer;margin: 3px;" title="Ver personas"></i></a>' + 
              '<label class="switch" id="miLabel">'+
              '<div class="bootstrap-switch-container float-right" style="width: 15px; margin-left: 24px;" >'+
                '<input type="checkbox" name="habilitarCliente" data-bootstrap-switch '+ check +'>'+
@@ -1070,6 +1119,69 @@ function actualizarTablaCliente(){
   }   
   });
 }
+
+/* Modal Organigrama */
+$(document).on("click", ".btn-organigrama", function() {
+
+  var nodos = $('#orgb').val();
+  /*console.log("nodos: "+ nodos);*/ 
+
+  console.log(nodos.length === 0);
+
+  if(nodos.length != 0){
+
+    var nodes = JSON.parse(nodos);
+    /*console.log("nodes: "+ nodes);  */
+    
+    $('#modalOrganigrama').modal('show');    
+
+    for (var i = 0; i < nodes.length; i++) {
+        var node = nodes[i];
+        switch (node.title) {
+            case "QA":
+                node.tags = ["QA"];
+                break;
+            case "Marketer":
+            case "Designer":
+            case "Sales Manager":
+                node.tags = ["Marketing"];
+                break;
+        }
+    }
+
+    var chart='';
+    chart = new OrgChart(document.getElementById("tree"), {    
+        mouseScrool: OrgChart.action.ctrlZoom,    
+        enableSearch: false,
+        mode: 'dark',
+        layout: OrgChart.mixed,
+        scaleInitial: OrgChart.match.boundary,
+        nodeBinding: {
+            field_0: "name",
+            field_1: "title",
+            img_0: "img"
+        },
+        nodes: nodes
+    });
+    
+  }else{
+    Swal.fire({
+      title: 'Deinición Organigrama',
+      text: 'El cliente aun no tiene organigrama asociado/definido',
+      icon: 'warning',
+      showCancelButton: false,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Aceptar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+      
+      }    
+    })
+
+  }
+ 
+});
 </script>
 
 <?= $this->endSection() ?>

@@ -14,12 +14,18 @@ if(!isset($routes)) {
  $routes->post('/getPersonas', '\Modules\wema\Controllers\Persona::getPersonas');
  $routes->get('/persona/cargarListadoEntrevistados', '\Modules\wema\Controllers\Persona::cargarListadoEntrevistados');
  $routes->get('/persona/initCuestionario/id/(:num)', '\Modules\wema\Controllers\Persona::initCuestionario/$1');
+ $routes->get('/persona/entrevista', '\Modules\wema\Controllers\Persona::cargarEntrevista');
+ $routes->get('/modalCliente/(:num)', '\Modules\wema\Controllers\Persona::modalCliente/$1');
 
 
 
 /* RUTAS CUENTAS */
 $routes->get('/cuenta', '\Modules\wema\Controllers\Cuenta::index');
-
+//$routes->get('/getCuentas', '\Modules\wema\Controllers\Cuenta::getEmpresas');
+$routes->post('/guardarCuenta', '\Modules\wema\Controllers\Cuenta::guardarCuenta');
+$routes->post('/editarCuenta', '\Modules\wema\Controllers\Cuenta::editarCuenta');
+$routes->get('/eliminarCuenta/(:num)', '\Modules\wema\Controllers\Cuenta::eliminarCuenta/$1');
+$routes->get('/habilitarCuenta/(:num)', '\Modules\wema\Controllers\Cuenta::habilitarCuenta/$1');
 
 
 /* RUTAS CLIENTE */
@@ -29,6 +35,9 @@ $routes->post('/getClientes', '\Modules\wema\Controllers\Cliente::getClientes');
 $routes->post('/editarCliente', '\Modules\wema\Controllers\Cliente::editarCliente');
 $routes->get('/eliminarCliente/(:num)', '\Modules\wema\Controllers\Cliente::eliminarCliente/$1');
 $routes->get('/habilitarCliente/(:num)', '\Modules\wema\Controllers\Cliente::habilitarCliente/$1');
+$routes->get('/getPersonas/(:num)', '\Modules\wema\Controllers\Cliente::getPersonas/$1');
+//$routes->get('/getClientexId/(:num)', '\Modules\wema\Controllers\Cliente::getClientexId/$1');
+
 
 
 // $routes->get('/filemanager/(:any)', 'Modules\Filemanager\Controllers\Filemanager::index');

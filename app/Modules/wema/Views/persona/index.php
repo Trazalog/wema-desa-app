@@ -10,14 +10,14 @@
              <ul class="breadcrumb">
              <!-- <button type="button" class="completed"><i class="fa fa-folder"></i></button> -->
 			        <li class="completed" ><a><i class="fa fa-folder-open"></i></a></li>
-			        <li class="completed" ><a>CONFIANZA Y TECNOLOGIA</a></li>
-			        <li class="active"><a>BIMBO S.A de C.V.</a></li>
+			        <li class="completed" ><a><?= isset($listadoPersonas[0]->nombreEmpresa) ? $listadoPersonas[0]->nombreEmpresa : 'Cuenta' ?></a></li>
+			        <li class="active"><a><?= isset($listadoPersonas[0]->nombreCliente) ? $listadoPersonas[0]->nombreCliente : 'Cliente' ?></a></li>
 		        </ul> 
         
           </div>
            <div class="col-sm-3"></div> 
           <div class="col-sm-2">
-          <button type="button" class="btn btn-outline-primary btn-block btn-sm"><i class="fa fa-info float-left"></i> Información del Cliente</button>
+          <a class="btn btn-outline-primary btn-block btn-sm" type="button" onclick="modalCliente(<?= (isset($clie_id)) ? $clie_id : '' ?>)" ><i class="fa fa-info float-left"></i> Información del Cliente</a>
           </div>
         </div>
         <div class="row mb-2">
@@ -935,6 +935,19 @@ function actualizaTablaPersonas(){
       });
       
   }   
+  });
+}
+
+function modalCliente(clie_id){
+//debugger;
+/* harcodeo para poder acceder desde navegacion */
+  if(clie_id == undefined){
+    var clie_id = '7';
+  }
+
+  $.get('<?= base_url()?>/modalCliente/' + clie_id, function (data){
+    $("#contenidoModal").html(data);
+    $('#modalGenerico').modal('show');
   });
 }
 </script>
