@@ -119,7 +119,7 @@
                     <a type="button" id="btn-personas" class="btn btn-outline-primary btn-block btn-sm" hidden><i class="fas fa-users"></i> Personas </a>
                 </div>
                 <div class="col-2" >
-                    <button type="button" id="btn-organigrama" class="btn btn-outline-primary btn-block btn-sm" hidden><i class="fas fa-sitemap" ></i> Organigrama </button>
+                    <button type="button" id="btn-organigrama" data-target="#modalOrganigrama" class="btn btn-outline-primary btn-block btn-sm btn-organigrama" hidden><i class="fas fa-sitemap" ></i> Organigrama </button>
                 </div>
                 
                 <div class="col-2" >
@@ -136,6 +136,8 @@
             <div class="modal-body">
             <form id="frm-nuevoCliente">
               <input id="clie_id" name="clie_id" type="text" hidden>
+              <input id="orgb" name="orgb" type="text" hidden>
+              <input id="org" name="org" type="text" hidden>
                         <div class="row" style="margin-top:-7px">
                           <div class="col">
                             <div class="card card-info">
@@ -498,6 +500,54 @@
     </div>
 </div>
 
+
+      <!-- Modal Organigrama imagen -->
+      <div class="modal fade" id="modalOrganigrama">
+          <div class="modal-dialog modal-xl">
+              <div class="modal-content">
+                  <div class="modal-header">
+                      <h4 class="modal-title">Organigrama</h4>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                      </button>
+                  </div>
+
+                  
+                  <div class="modal-body">
+                    <div id="tree"></div>
+                  </div>
+                  
+                  <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                      <button type="button" class="btn btn-primary" data-dismiss="modal">Agregar</button>
+                  </div>                  
+              </div>
+          </div>
+      </div>
+
+      <div class="modal fade" id="modalNoOrganigrama">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Organigrama</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+            
+                <div class="modal-body">
+                        
+                </div>
+
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                  <button type="button" class="btn btn-primary" data-dismiss="modal">Agregar</button>
+                </div>                
+            </div>
+        </div>
+      </div>
+
+
 <script>
 
 /* definicion de datatablet */
@@ -682,8 +732,13 @@ function verCliente(e){
     $('#btn-cuestionario').prop('hidden', false); 
     $('#nuevo_cliente #cliente_id').prop('hidden', false);
 
+    /*Verificar si tiene organigrama*/
+
+
     /* datos generales */
     $('#nuevo_cliente #clie_id').val(json.clie_id);
+    $('#nuevo_cliente #orgb').val(json.orgb);
+    $('#nuevo_cliente #org').val(json.org);
     $('#nuevo_cliente #cliente_id').text( "(id: " + json.clie_id + ")");
     $('#nuevo_cliente #nombreComercial').val(json.nombre);
     $('#nuevo_cliente #tipoCliente').val(json.ticl_id);
@@ -1066,23 +1121,82 @@ function actualizarTablaCliente(){
   });
 }
 
-
-
 /* trae modal con los datos de la cuenta  */
 function modalCuenta(empr_id){
 
-  /* harcodeo para poder acceder desde navegacion */
-  if(empr_id == undefined){
-    var empr_id = '7';
-  }
-
-  $.get('<?= base_url()?>/modalCuenta/'+ empr_id, function (data){
-    $('#modalGenericoCuenta').modal('show');
-    $("#contenidoModal").html(data);
-    //$("#IdDondeQuieroMiVIsta").html(data);
-  })
+/* harcodeo para poder acceder desde navegacion */
+if(empr_id == undefined){
+  var empr_id = '7';
 }
 
+$.get('<?= base_url()?>/modalCuenta/'+ empr_id, function (data){
+  $('#modalGenericoCuenta').modal('show');
+  $("#contenidoModal").html(data);
+})
+}
+/* Modal Organigrama */
+$(document).on("click", ".btn-organigrama", function() {
+
+
+  var nodos = $('#orgb').val();
+  /*console.log("nodos: "+ nodos);*/ 
+
+  console.log(nodos.length === 0);
+
+  if(nodos.length != 0){
+
+    var nodes = JSON.parse(nodos);
+    /*console.log("nodes: "+ nodes);  */
+    
+    $('#modalOrganigrama').modal('show');    
+
+    for (var i = 0; i < nodes.length; i++) {
+        var node = nodes[i];
+        switch (node.title) {
+            case "QA":
+                node.tags = ["QA"];
+                break;
+            case "Marketer":
+            case "Designer":
+            case "Sales Manager":
+                node.tags = ["Marketing"];
+                break;
+        }
+    }
+
+    var chart='';
+    chart = new OrgChart(document.getElementById("tree"), {    
+        mouseScrool: OrgChart.action.ctrlZoom,    
+        enableSearch: false,
+        mode: 'dark',
+        layout: OrgChart.mixed,
+        scaleInitial: OrgChart.match.boundary,
+        nodeBinding: {
+            field_0: "name",
+            field_1: "title",
+            img_0: "img"
+        },
+        nodes: nodes
+    });
+    
+  }else{
+    Swal.fire({
+      title: 'Deinición Organigrama',
+      text: 'El cliente aun no tiene organigrama asociado/definido',
+      icon: 'warning',
+      showCancelButton: false,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Aceptar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+      
+      }    
+    })
+
+  }
+ 
+});
 </script>
 
 <?= $this->endSection() ?>

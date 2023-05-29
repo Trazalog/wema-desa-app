@@ -58,6 +58,20 @@ class Personas extends Model{
 
         return $aux;
     }
+    /**
+        * Obtiene una persona por pers_id(PK)
+        * @param $pers_id
+        * @return array datos de la persona coincidente en core.personas
+	*/
+    public function getPersonaPorId($pers_id){
+        log_message('debug','#TRAZA | WEMA-DESA-APP | Model | Personas | getPersonas()');
+
+        $url = REST_PERSONA.'/persona/id/'.$pers_id;
+        $aux = $this->REST->callAPI("GET",$url);
+        $data = json_decode($aux['data']);
+        
+        return $data->personas->persona;
+    }
 
     /**
         * habilita una persona en core.personas por pers_id

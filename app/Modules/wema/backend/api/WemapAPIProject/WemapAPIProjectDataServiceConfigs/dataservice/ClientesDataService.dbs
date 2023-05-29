@@ -131,6 +131,8 @@ left join core.tablas tpan on c.pana_id  = tpan.tabl_id</sql>
             "imagen":"$imagen",
             "nom_imagen":"$nom_imagen",
             "eliminado":"$eliminado",
+            "org": "$org",
+            "orgb": "$orgb",
             "tipoCliente":"$tipoCliente",
             "tipoPersona":"$tipoPersona",
             "nacionalidad":"$nacionalidad",
