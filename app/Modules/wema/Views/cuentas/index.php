@@ -7,17 +7,11 @@
       <div class="container-fluid">
         <div class="row mb-2"> 
           <div class="col-sm-7">
-             <ul class="breadcrumb">
-             <!-- <button type="button" class="completed"><i class="fa fa-folder"></i></button> -->
-			        <li class="completed" ><a><i class="fa fa-folder-open"></i></a></li>
-			        <li class="completed" ><a>CONFIANZA Y TECNOLOGIA</a></li>
-			        <li class="active"><a>BIMBO S.A de C.V.</a></li>
-		        </ul> 
+          
         
           </div>
            <div class="col-sm-3"></div> 
           <div class="col-sm-2">
-          <button type="button" class="btn btn-outline-primary btn-block btn-sm"><i class="fa fa-info float-left"></i> Información del Cuentas</button>
           </div>
         </div>
         <div class="row mb-2">
@@ -66,11 +60,11 @@
                     echo'<td>
                             <div class="btn-group"> 
                               <i class="fa fa-search" style="cursor: pointer;margin: 3px;" title="Ver Detalles" onclick="verCuenta(this);"></i>
+                              <a style="color:black" href="'. site_url('getClientes/'.$empresa->empr_id) .'"><i class="fa fa-users" style="cursor: pointer;margin: 3px;" title="Ver Clientes"></i></a>
                               <label class="switch">
                                 <div class="bootstrap-switch-container float-right" style="width: 15px; margin-left: 24px;" >
                                 <input type="checkbox" name="habilitarCuenta" data-bootstrap-switch '.$check.'>
                                 </div>
-                                <i class="fa fa-users" style="cursor: pointer;margin: 3px;" title="Ver Listado"  onclick="listadoClienteCuenta(this);"></i>
                               </label>
                             </div>
                           </td>
@@ -105,7 +99,7 @@
                 <div class="col-3">
                   <h5 class="modal-title" id="mdl-title">Nueva Cuenta</h5>
                 </div>
-                <label class="switch" onclick="habilitarCuenta();">
+                <label class="switch">
                 <div id="btn-habilitarCuenta" class="bootstrap-switch-container" style="width: 126px; margin-left: -42px;" hidden>
                   <input type="checkbox" name="habilitarCuentaEditar" data-bootstrap-switch-editar checked>
                 </div>
@@ -114,7 +108,7 @@
                     <button type="button" id="btn-editar" class="btn btn-outline-primary btn-block btn-sm" onclick="habilitaEditarCuenta()" hidden><i class="fa fa-edit"></i> Editar</button>
                 </div>
                 <div class="col-3" >
-                    <button type="button" id="btn-clientes" class="btn btn-outline-primary btn-block btn-sm" hidden><i class="fas fa-inbox" ></i> Clientes</button>
+                    <a type="button" id="btn-clientes" class="btn btn-outline-primary btn-block btn-sm" href="" hidden><i class="fa fa-users" ></i> Clientes</a>
                 </div>
                 <div class="col-2">
                 <button type="button" class="close"  data-dismiss="modal" aria-label="Close" onclick="limpiaForm('#nueva_cuenta')">
@@ -412,13 +406,24 @@
                                     <div class="col-md-4">
                                       <div class="form-group">
                                           <label>Número Exterior<strong class="text-danger">*</strong>: </label>
-                                          <input type="text" class="form-control requerido" id="numeroExterior" name="numeroExterior">
+                                          <div class="input-group">
+                                            <div class="input-group-prepend">
+                                              <span class="input-group-text"><i class="fas fa-list-ol"></i></span>
+                                            </div>
+                                            <input type="text" class="form-control requerido" id="numeroExterior" name="numeroExterior">
+                                          </div>
                                       </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
                                           <label>Número Interior <strong class="text-danger">*</strong>: </label>
-                                          <input type="text" class="form-control requerido" id="numeroInterior" name="numeroInterior">
+                                          <div class="input-group">
+                                            <div class="input-group-prepend">
+                                              <span class="input-group-text"><i class="fas fa-list-ol"></i></span>
+                                            </div>
+                                            <input type="text" class="form-control requerido" id="numeroInterior" name="numeroInterior">
+                                          </div>
+                                           
                                         </div>
                                     </div>
 
@@ -446,9 +451,9 @@
                 </form><!-- fin form -->
             </div><!-- fin modal-body -->
             <div class="modal-footer ">
-              <div  class="col-mt-1 col-12 justify-content-center" style="margin-top:-5px">
-                <button type="button" class="btn btn-secondary float-left" data-dismiss="modal" onclick='limpiaForm("#nueva_cuenta")'>Cancelar</button>
-                <button type="button" class="btn btn-success float-left" id="btn-accion-cuenta" style="margin-left: 5px;" onclick="guardarCuenta()">Crear</button>
+              <div class="col-mt-1 col-12 justify-content-center" style="margin-top:-5px">
+                <button type="button" class="btn btn-secondary float-right" data-dismiss="modal" onclick="limpiaForm('#nueva_cuenta')" >Cancelar</button>
+                <button type="button" class="btn btn-info float-right" id='btn-accion-cuenta' style="margin-left: 5px;" onclick="guardarCuenta()">Crear</button>
               </div>
             </div>
           </div>
@@ -473,7 +478,7 @@
                   <form id="formAgregarLogo" enctype="multipart/form-data">
                       <div class="modal-body">
                           <input type="hidden" id="idAgregaLogo" name="idAgregaLogo">
-                          <input id="inputLogo" name="inputImagen" type="file" class="form-control input-md" onclick="cargaVistaPrevia(this)">
+                          <input id="inputLogo" name="inputLogo" type="file" class="form-control input-md" onclick="cargaVistaPrevia(this)">
                       </div>
                       <div class="modal-footer">
                           <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
@@ -581,6 +586,7 @@
       remueveRequerido('#frm-nuevaCuenta','.personaFisica');
   }
 
+  /* oculta columnas por default de modal */
   function ocultaColumnasForm(){
     ocultaColumna('#frm-nuevaCuenta', '.col_personaMoral');
     remueveRequerido('#frm-nuevaCuenta' ,'.personaMoral');
@@ -588,6 +594,7 @@
     remueveRequerido('#frm-nuevaCuenta' ,'.personaFisica');
   }
 
+  /* abrir modal agregar cuenta */
   $("#nueva_cuenta").on("hide.bs.modal", function() {
     ocultaColumnasForm();
     $('#btn-accion-cuenta').attr('onclick', 'guardarCuenta()');
@@ -610,13 +617,11 @@
 $(document).on("click", ".agregaLogo", function() {
   $('#modalAgregarLogo').modal('show');
   event.preventDefault();
-  $("#nuevo_cuenta").css('overflow-y', 'auto');//habilita el scroll de nuevo
+  $("#nueva_cuenta").css('overflow-y', 'auto');//habilita el scroll de nuevo
 });
 
-function cerrarModalImagen(){
-  $('#modalAgregarLogo').modal('hide');
-}
 
+/* carga logo en modal */
 function cargaVistaPrevia(input){
   if(input.files && input.files[0]){
       // var idImagen = $(input).attr('id');
@@ -632,6 +637,8 @@ function cargaVistaPrevia(input){
   }
 }
 
+
+/* guardar nueva cuenta con datos del modal */
 function guardarCuenta(){
   console.log("guardarCuenta");
   var formData = new FormData($('#frm-nuevaCuenta')[0]);
@@ -641,8 +648,7 @@ function guardarCuenta(){
     let imagenFile = $('#inputLogo').prop('files')[0]; 
     formData.append("imagen", imagenFile);
   }
-  
-  console.log(formData);
+
   if(!validaForm('#frm-nuevaCuenta')) return;
   
   if(!rfcValido($('#rfcCuenta').val())){
@@ -650,7 +656,6 @@ function guardarCuenta(){
     return
   };
 
-  //debugger
   $.ajax({
     type:'POST',
     dataType: 'JSON',
@@ -676,7 +681,7 @@ function guardarCuenta(){
       $('#nueva_cuenta').modal('hide');
       $('#frm-nuevaCuenta')[0].reset();
       limpiaForm('#nueva_cuenta');
-      /*actualizaTablaCuentas();*/
+      actualizaTablaCuentas();
     }
   });
 }
@@ -687,10 +692,9 @@ function actualizaTablaCuentas(){
         type: 'POST',
         cache: false,
         dataType: "json",
-        url: "<?= base_url()?>/getEmpresas",
+        url: "<?= base_url()?>/getCuentas",
   success:function(data){
-
-    tabla = $('#tabla_cuentass').DataTable();
+    tabla = $('#tabla_cuentas').DataTable();
     tabla.clear().draw();
 
     $.each(data, function (i, value) {
@@ -721,8 +725,8 @@ function actualizaTablaCuentas(){
       fila="<tr data-json= '"+ JSON.stringify(value) +"'>" +
           '<td>'+
             '<div class="btn-group"> '+
-            '<i class="fa fa-search" style="cursor: pointer;margin: 3px;" title="Ver Detalles" onclick="verCuentas(this)"></i>'+
-            '<i class="fa fa-users" style="cursor: pointer;margin: 3px;" title="Ver Cuentas" ></i>' +
+            '<i class="fa fa-search" style="cursor: pointer;margin: 3px;" title="Ver Detalles" onclick="verCuenta(this)"></i>'+
+            '<a style="color:black" href="<?= site_url()?>getClientes/'+ value.empr_id+' "><i class="fa fa-users" style="cursor: pointer;margin: 3px;" title="Ver Clientes"></i></a>'+
              '<label class="switch" id="miLabel">'+
              '<div class="bootstrap-switch-container float-right" style="width: 15px; margin-left: 24px;" >'+
                '<input type="checkbox" name="habilitarCuenta" data-bootstrap-switch '+ check +'>'+
@@ -746,7 +750,7 @@ function actualizaTablaCuentas(){
           onSwitchChange:function(e, state){
             var tr = $(e.target).closest('tr');
             var json = $(tr).data('json');
-            console.log(state);
+           
             if(!state){
               Swal.fire({
                 title: '¿Esta seguro que desea deshabilitar la cuenta?',
@@ -796,20 +800,18 @@ function actualizaTablaCuentas(){
 /* Guarda los datos editados de la cuenta */
 function editarCuenta(){
 
-  var formData = new FormData($('#frm-nuevoCuenta')[0]);
-  console.log(formData);
-  let logo = document.getElementById("imagenCuenta").files;
-  if(logo.lenght!= 0){
-    let imagenFile = $('#imagenCuenta').prop('files')[0]; 
+  var formData = new FormData($('#frm-nuevaCuenta')[0]);
+  let logo = document.getElementById("inputLogo").files;
+  if($('#inputLogo')[0].files.length !== 0){
+    let imagenFile = $('#inputLogo').prop('files')[0]; 
     formData.append("imagen", imagenFile);
   }
 
-  // debugger;
-  formData.append("empr_id",$('#frm-nuevoCuenta #empr_id').val());
+  formData.append("empr_id",$('#frm-nuevaCuenta #empr_id').val());
   //validacion datos del formulario
-  if(!validaForm('#frm-nuevoCuenta')) return;
+  if(!validaForm('#frm-nuevaCuenta')) return;
 
-
+/* validacion RFC */
   if(!rfcValido($('#rfcCuenta').val())){
     $('#rfcCuenta').addClass('is-invalid');
     return};
@@ -822,17 +824,21 @@ function editarCuenta(){
     url: '<?= base_url()?>/editarCuenta',
     data:formData,
     success: function(resp) {
-      notificar(notiSuccess);
-        $('#nuevo_cueenta').modal('hide');
-        $('#frm-nuevoCuenta')[0].reset();
-        limpiaForm('#nuevo_cuenta');
+      if(resp['status']){
+        notificar(notiSuccess);
+        $('#nueva_cuenta').modal('hide');
+        $('#frm-nuevaCuenta')[0].reset();
+        limpiaForm('#nueva_cuenta');
+      }
+      else{
+      notificar(notiError);
+      }
     },
     error: () => {
       notificar(notiError);
     },
     complete: function() {
-      notificar(notiSuccess);
-      //actualizarTablaCuenta();
+      actualizaTablaCuentas();
     }
     });
 }
@@ -841,8 +847,7 @@ function editarCuenta(){
 $("[name='habilitarCuentaEditar']").bootstrapSwitch({
   /* habilitar/deshabilitar personas */
   onSwitchChange:function(e, state){
-    var tr = $(e.target).closest('tr');
-    var json = $(tr).data('json');
+    var empr_id = $('#empresa_id').val();
     console.log(state);
     if(!state){
       Swal.fire({
@@ -855,7 +860,7 @@ $("[name='habilitarCuentaEditar']").bootstrapSwitch({
         confirmButtonText: 'Si, deshabilitar!'
       }).then((result) => {
       if (result.isConfirmed) {
-        deshabilitaCuenta(json.empr_id);
+        deshabilitaCuenta(empr_id);
       }
       else{
         //vuelve a el estado original y el ultimo paramaetro es para cortar la ejecucion
@@ -874,7 +879,7 @@ $("[name='habilitarCuentaEditar']").bootstrapSwitch({
         confirmButtonText: 'Si, habilitar!'
       }).then((result) => {
       if (result.isConfirmed) {
-        habilitaCuenta(json.empr_id);
+        habilitaCuenta(empr_id);
       }
       else{
         //vuelve a el estado original y el ultimo paramaetro es para cortar la ejecucion
@@ -891,7 +896,6 @@ $("[name='habilitarCuenta']").bootstrapSwitch({
    onSwitchChange:function(e, state){
     var tr = $(e.target).closest('tr');
     var json = $(tr).data('json');
-    console.log(state);
     if(!state){
       Swal.fire({
         title: '¿Esta seguro que desea deshabilitar la cuenta?',
@@ -935,7 +939,6 @@ $("[name='habilitarCuenta']").bootstrapSwitch({
 
 /* funcion para deshabilitar una cuenta */
 function deshabilitaCuenta(empr_id){
-  console.log(empr_id);
   $.get('<?= base_url()?>/eliminarCuenta/' + empr_id, function (data){
           Swal.fire(
               'Deshabilitado!',
@@ -947,7 +950,6 @@ function deshabilitaCuenta(empr_id){
 
 /* funcion para habilitar una cuenta */
 function habilitaCuenta(empr_id){
-  console.log(empr_id);
   $.get('<?= base_url()?>/habilitarCuenta/' + empr_id, function (data){
           Swal.fire(
             'Habilitado!',
@@ -957,6 +959,8 @@ function habilitaCuenta(empr_id){
   })
 }
 
+
+/* ver datos de la cuenta en modal */
 function verCuenta(e){
     $('#btn-accion-cuenta').hide();
     $('#mdl-title').html('Cuenta');
@@ -971,7 +975,8 @@ function verCuenta(e){
 
     var tr = $(e).closest('tr');
     var json = $(tr).data('json');
-    $('#nueva_cuenta #empr_id').val(json.empr_id);
+    $('#btn-clientes').attr('href','<?=  site_url('') ?>getClientes/'+json.empr_id);
+    $('#nueva_cuenta #empresa_id').val(json.empr_id);
     $('#nueva_cuenta #empresa_id').text( "(id: " + json.empr_id + ")");
     $('#nueva_cuenta #nombreCuenta').val(json.nombre);
     $('#nueva_cuenta #rfcCuenta').val(json.id_tributario);
@@ -1039,6 +1044,7 @@ function listadoClienteCuenta(e){
     $('#list_cuenta_clientes').modal('show');
 }
 
+/* habilita la edicion de la cienta */
 function habilitaEditarCuenta(e){
    console.log("habilitaEditarCuenta");
     $('#btn-habilitarCuenta').prop('hidden', false);
@@ -1049,12 +1055,6 @@ function habilitaEditarCuenta(e){
     $('#btn-editar').prop('hidden', true);
     $('#btn-clientes').prop('hidden', false);
     $('#btn-clientes').prop('hidden', true);
-}
-
-/* Elimina los estilos de los input correctos-incorrectos */
-function limpiaForm(formulario){
-  $(formulario).find(".is-valid").removeClass().addClass('form-control');
-  $(formulario).find(".is-invalid").removeClass().addClass('form-control');
 }
 
 

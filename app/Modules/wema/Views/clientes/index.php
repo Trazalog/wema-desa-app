@@ -10,13 +10,13 @@
              <ul class="breadcrumb">
              <!-- <button type="button" class="completed"><i class="fa fa-folder"></i></button> -->
 			        <li class="completed" ><a><i class="fa fa-folder-open"></i></a></li>
-			        <li class="completed" ><a>CONFIANZA Y TECNOLOGIA</a></li>
+			        <li class="completed" ><a><?= isset($listadoClientes[0]->nombreEmpresa) ? $listadoClientes[0]->nombreEmpresa : 'Cliente' ?></a></li>
 		        </ul> 
         
           </div>
            <div class="col-sm-3"></div> 
           <div class="col-sm-2">
-          <button type="button" class="btn btn-outline-primary btn-block btn-sm" onclick="modalprueba()"><i class="fa fa-info float-left"></i> Información de la cuenta</button>
+          <button type="button" class="btn btn-outline-primary btn-block btn-sm" onclick="modalCuenta(<?= (isset($empr_id)) ? $empr_id : '' ?>)"><i class="fa fa-info float-left"></i> Información de la cuenta</button>
           </div>
         </div>
         <div class="row mb-2">
@@ -116,7 +116,7 @@
                     <button type="button" id="btn-editar" class="btn btn-outline-primary btn-block btn-sm" onclick="habilitaEditarCliente()" hidden><i class="fa fa-edit"></i> Editar </button>
                 </div>
                 <div class="col-2" >
-                    <button type="button" id="btn-personas" class="btn btn-outline-primary btn-block btn-sm" hidden><i class="fas fa-users"></i> Personas </button>
+                    <a type="button" id="btn-personas" class="btn btn-outline-primary btn-block btn-sm" hidden><i class="fas fa-users"></i> Personas </a>
                 </div>
                 <div class="col-2" >
                     <button type="button" id="btn-organigrama" data-target="#modalOrganigrama" class="btn btn-outline-primary btn-block btn-sm btn-organigrama" hidden><i class="fas fa-sitemap" ></i> Organigrama </button>
@@ -722,6 +722,7 @@ function verCliente(e){
     var tr = $(e).closest('tr');
     var json = $(tr).data('json'); 
 
+    $('#btn-personas').attr('href','<?=  site_url('') ?>getPersonas/'+json.clie_id);
     $('#btn-accion').hide();
     $('#mdl-title').html('Cliente');
     $('#frm-nuevoCliente').find('.form-control').prop('disabled', true);
@@ -1122,6 +1123,22 @@ function actualizarTablaCliente(){
 
 /* Modal Organigrama */
 $(document).on("click", ".btn-organigrama", function() {
+
+
+/* trae modal con los datos de la cuenta  */
+function modalCuenta(empr_id){
+
+  /* harcodeo para poder acceder desde navegacion */
+  if(empr_id == undefined){
+    var empr_id = '7';
+  }
+
+  $.get('<?= base_url()?>/modalCuenta/'+ empr_id, function (data){
+    $('#modalGenericoCuenta').modal('show');
+    $("#contenidoModal").html(data);
+    //$("#IdDondeQuieroMiVIsta").html(data);
+  })
+}
 
   var nodos = $('#orgb').val();
   /*console.log("nodos: "+ nodos);*/ 
