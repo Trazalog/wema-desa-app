@@ -1144,7 +1144,9 @@ function modalCuenta(empr_id){
 /* Modal Organigrama */
 $(document).on("click", ".btn-organigrama", function() {
 
-  var nodos = {};
+  var  nodos = {};
+  var nodes = [];   
+
   nodos = $('#orgb').val();
   /*console.log("nodos: "+ nodos);*/
   /*console.log(nodos.length === 0);*/
@@ -1166,12 +1168,14 @@ $(document).on("click", ".btn-organigrama", function() {
     });
     
   }else{
-    var nodes = JSON.parse(nodos);
+     
+    delete nodes;
+    nodes = JSON.parse(nodos); 
     /*console.log("nodes: "+ nodes);  */    
     $('#modalOrganigrama').modal('show');
 
     OrgChart.SEARCH_PLACEHOLDER = "Busqueda"; // the default value is "Search"
-    var chart='';
+    var chart={};
     chart = new OrgChart(document.getElementById("tree"), {    
         mouseScrool: OrgChart.action.ctrlZoom,    
         enableSearch: true,
