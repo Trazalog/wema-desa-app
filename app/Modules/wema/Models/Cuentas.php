@@ -83,4 +83,40 @@ class Cuentas extends Model{
         
         return $aux;
     }
+
+     /**
+        * trae los clientes que pertenecen a una empresa
+        * @param array $data datos clientes
+        * @return array respuesta del servicio
+	*/
+    public function getClientes($data){
+        log_message('debug','#TRAZA | WEMA-DESA-APP | Model | Cuentas | getClientes()');
+
+        $url = REST_EMPRESA."/empresas/clientes/".$data;
+        $aux = $this->REST->callAPI("GET",$url);
+        $dato = json_decode($aux['data']);
+        if(!empty($dato->clientes->cliente)){
+            return $dato->clientes->cliente;
+        }
+        else return array(); 
+    }
+
+     /**
+        * trae los datos de una empresa por su id
+        * @param empr_id $id de la empresa
+        * @return array respuesta del servicio
+	*/
+    public function getCuentaxId($data){
+        log_message('debug','#TRAZA | WEMA-DESA-APP | Model | Cuentas | getCuentaxId()');
+
+        $url = REST_EMPRESA."/empresas/getEmpresa/".$data;
+        $aux = $this->REST->callAPI("GET",$url);
+        $dato = json_decode($aux['data']);
+        if(!empty($dato->empresas->empresa)){
+            return $dato->empresas->empresa;
+        }
+        else return array(); 
+    }
+
+
 }

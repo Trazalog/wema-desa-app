@@ -26,7 +26,10 @@ class Clientes extends Model{
         $aux = $this->REST->callAPI("GET",$url);
         $data = json_decode($aux['data']);
 
-        return $data->clientes->cliente;
+        if(!empty($data->clientes->cliente)){
+            return $data->clientes->cliente;
+        }
+        else return array(); 
     }
 
      /**

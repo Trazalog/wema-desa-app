@@ -5,6 +5,7 @@ use App\Controllers\BaseController;
 use Modules\wema\Models\Clientes; 
 use Modules\wema\Models\Generales; 
 use Modules\wema\Models\Personas; 
+use Modules\wema\Models\Cuentas; 
 
 
 
@@ -15,6 +16,8 @@ class Cliente extends BaseController
     {
         $this->Clientes = new Clientes();
         $this->Generales = new Generales();
+        $this->Cuentas = new Cuentas();
+
     }
     /**
         * Carga pantalla principal de ABM clientes
@@ -41,7 +44,8 @@ class Cliente extends BaseController
         log_message('debug', "#TRAZA | WEMA-DESA-APP | Cliente | Index | Cliente:  ".json_encode($data['listadoClientes'],true));
         log_message('debug', "#TRAZA | WEMA-DESA-APP | Cliente | Index | ORGB:  ".json_encode($data['listadoClientes']));
 
-        return view('Modules\wema\Views\clientes\index', $data);
+        return view('Modules\wema\Views\clientes\index', $data)
+        .view('Modules\wema\Views\cuentas\modalGenericoCuenta');
     }
 
 
@@ -217,13 +221,30 @@ class Cliente extends BaseController
         /* LISTADO DE CLIENTES */
         $data['listadoClientes'] = $this->Clientes->getClientes();
 
-        return viewview('Modules\wema\Views\clientes\modalGenericoCliente',$data);
+        return view('Modules\wema\Views\clientes\modalGenericoCliente',$data);
     }
-/* 
-    public function traerModal($clie_id = null){
-     
-        $data['listadoClientes'] = $this->Clientes->getClientes();
-        return view('Modules\wema\Views\clientes\prueba', $data);
-    } */
+
+
+    public function modalCuenta($empr_id = null){
+        /* LISTADO CUENTAS - Adapatar a Cuentas, ahora trae personas */
+        $data['empresa'] = $this->Cuentas->getCuentaxId($empr_id);
+
+        /* LISTADO DE GENEROS */
+        $data['listadoGeneros'] = $this->Generales->getTabla("generos");
+        
+        /* LISTADO DE PERSONAS */
+        $data['listadoPersonas'] = $this->Generales->getTabla("tipos_personas");
+        
+        /* LISTADO DE PERSONAS */
+        $data['listadoTipompresas'] = $this->Generales->getTabla("tipos_empresas");
+
+        /* LISTADO TIPO CLIENTES */
+        $data['listadoCliente'] = $this->Generales->getTabla("tipos_clientes");
+
+        /* LISTADO PAISES */
+        $data['listadoPaises'] = $this->Generales->getTabla("paises");
+
+        return view('Modules\wema\Views\cuentas\modalCuenta', $data);
+    } 
 
 }
