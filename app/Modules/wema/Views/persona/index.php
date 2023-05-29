@@ -436,8 +436,6 @@
 
 <script>
 
-
-
 /* definicion de datatablet */
   $(function () {
     $("#tabla_personas").DataTable({
