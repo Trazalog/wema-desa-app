@@ -1,11 +1,10 @@
-
-<data transports="http https local" name="PersonaDataService" enableBatchRequests="true">
-  <resource path="/persona" method="GET">
+<data enableBatchRequests="true" name="PersonaDataService" transports="http https local">
+  <resource method="GET" path="/persona">
     <description>Listado personas de core.personas                           
                                     </description>
     <call-query href="getPersonas" />
   </resource>
-  <resource path="/persona" method="POST">
+  <resource method="POST" path="/persona">
     <description>Guarda persona en tabla core.personas                     </description>
     <call-query href="setPersona">
       <with-param name="apellidos" query-param="apellidos" />
@@ -32,7 +31,7 @@
       <with-param name="nom_imagen" query-param="nom_imagen" />
     </call-query>
   </resource>
-  <resource path="/persona" method="PUT">
+  <resource method="PUT" path="/persona">
     <description>Updatea datos de persona en core.personas por pers_id                       
                                     
                                     
@@ -63,7 +62,7 @@
       <with-param name="nom_imagen" query-param="nom_imagen" />
     </call-query>
   </resource>
-  <resource path="/persona" method="DELETE">
+  <resource method="DELETE" path="/persona">
     <description>Borrado logico de persona por pers_id en core.personas                               
                                     
                                     </description>
@@ -71,14 +70,14 @@
       <with-param name="pers_id" query-param="pers_id" />
     </call-query>
   </resource>
-  <resource path="/habilitarpersona" method="PUT">
+  <resource method="PUT" path="/habilitarpersona">
     <description>actualiza eliminado en true para poder habilitar una persona                    
                                     </description>
     <call-query href="habilitarPersona">
       <with-param name="pers_id" query-param="pers_id" />
     </call-query>
   </resource>
-  <resource path="/persona/id/{pers_id}" method="GET">
+  <resource method="GET" path="/persona/id/{pers_id}">
     <description>Obtiene datos de persona por pers_id                     
                                     </description>
     <call-query href="getPersonaxId">
@@ -88,7 +87,7 @@
   <config id="WemapDataSource">
     <property name="carbon_datasource_name">WemapDataSource</property>
   </config>
-  <query useConfig="WemapDataSource" id="getPersonas">
+  <query id="getPersonas" useConfig="WemapDataSource">
     <sql>select *,p.eliminado as estado, t.descripcion as genero, t1.descripcion as pais, 
 t2.descripcion as estado_civil, t3.descripcion as nacimiento,
 t4.descripcion as educacion, t5.descripcion as ubicacion 
@@ -127,12 +126,13 @@ left join core.tablas t5 on t5.tabl_id = p.ubic_id</sql>
             "educacion":"$educacion",
             "estado":"$estado",
             "imagen":"$imagen",
-            "nom_imagen":"$nom_imagen"
+            "nom_imagen":"$nom_imagen",
+            "@getEncuestas":"$pers_id->pers_id"
         }]
     }
 }</result>
   </query>
-  <query useConfig="WemapDataSource" id="setPersona">
+  <query id="setPersona" useConfig="WemapDataSource">
     <sql>INSERT INTO core.personas  
     (apellidos,
     nombres,
@@ -225,7 +225,7 @@ from
     <param name="imagen" sqlType="STRING" />
     <param name="nom_imagen" sqlType="STRING" />
   </query>
-  <query useConfig="WemapDataSource" id="updatePersona">
+  <query id="updatePersona" useConfig="WemapDataSource">
     <sql>update core.personas p
 set
 apellidos = :apellidos,
@@ -276,15 +276,15 @@ where pers_id = cast(:pers_id as integer)</sql>
     <param name="pers_id" sqlType="STRING" />
     <param name="nom_imagen" sqlType="STRING" />
   </query>
-  <query useConfig="WemapDataSource" id="deletePersona">
+  <query id="deletePersona" useConfig="WemapDataSource">
     <sql>update core.personas set eliminado = true where pers_id = cast(:pers_id as integer)</sql>
     <param name="pers_id" sqlType="STRING" />
   </query>
-  <query useConfig="WemapDataSource" id="habilitarPersona">
+  <query id="habilitarPersona" useConfig="WemapDataSource">
     <sql>update core.personas set eliminado = false where pers_id = cast(:pers_id as integer)</sql>
     <param name="pers_id" sqlType="STRING" />
   </query>
-  <query useConfig="WemapDataSource" id="getPersonaxId">
+  <query id="getPersonaxId" useConfig="WemapDataSource">
     <sql>select *,p.eliminado as estado, t.descripcion as genero, t1.descripcion as pais, 
 t2.descripcion as estado_civil, t3.descripcion as nacimiento,
 t4.descripcion as educacion, t5.descripcion as ubicacion 
@@ -329,5 +329,24 @@ where p.pers_id = cast(:pers_id as integer)</sql>
     }
 }</result>
     <param name="pers_id" sqlType="STRING" />
+  </query>
+  <query id="getEncuestas" useConfig="WemapDataSource">
+    <sql>select if2."label" ,if2."name",if2.valor4_base64 
+from frm.instancias_formularios if2 
+join eva.encuestas_personas ep on if2.info_id = ep.info_id
+join core.personas p on p.pers_id = ep.pers_id
+where ep.pers_id = cast(:pers_id as integer)</sql>
+    <param type="IN" name="pers_id" sqlType="STRING" paramType="SCALAR" optional="false" />
+    <result outputType="json">{
+    "encuestas":{
+       "encuesta":[
+          {
+            "pregunta":"$label",
+            "name":"$name",
+            "audioCodificado":"$valor4_base64"
+           }
+       ]
+    }
+}</result>
   </query>
 </data>

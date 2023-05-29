@@ -44,6 +44,7 @@
                 <th>CURP</th>
                 <th>Apellidos</th>
                 <th>Nombres</th>
+                <th>Encuestado</th>
               </tr>
               </thead>
               <tbody>
@@ -51,12 +52,14 @@
                   echo  '<tr data-json=\''.json_encode($persona).'\'>';
                   echo  '<td class="centrar">
                           <div class="btn-group">
-                            <a  href="'. site_url('persona/initCuestionario/id/'.$persona->pers_id) .'"><i class="fa fa-comments" style="cursor: pointer;margin: 3px;" title="Entrevistar"></i></a>
-                          </div>
+                            <a href="'. site_url('persona/initCuestionario/id/'.$persona->pers_id) .'"><i class="fa fa-comments" style="cursor: pointer;margin: 3px;" title="Entrevistar"></i></a>';
+                  echo (!empty($persona->encuestas->encuesta)) ? '<a href="'. site_url('/evaluarCuestionario/info_id/'.$persona->pers_id) .'"><i class="fa fa-user-check" style="cursor: pointer;margin: 3px;" title="Evaluar Entrevista"></i></a>' : '';
+                  echo    '</div>
                         </td>
                         <td>'.$persona->curp.'</td>
                         <td>'.$persona->apellidos.'</td>
                         <td>'.$persona->nombres.'</td>
+                        <td>'. (!empty($persona->encuestas->encuesta) ? 'Si' : '--').'</td>
                       </tr>';
                 }?>
               </tbody>
