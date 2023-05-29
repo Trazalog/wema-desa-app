@@ -1171,15 +1171,34 @@ $(document).on("click", ".btn-organigrama", function() {
      
     delete nodes;
     nodes = JSON.parse(nodos); 
-    /*console.log("nodes: "+ nodes);  */    
+    console.log("nodes: "+ nodes);  
+    console.log("length: "+ nodes.length);  
+    
+    for (var i = 0; i < nodes.length; i++) {
+        var node = nodes[i];
+        switch (node.title) {
+            case "QA":
+                node.tags = ["QA"];
+                break;
+            case "Marketer":
+            case "Designer":
+            case "Sales Manager":
+                node.tags = ["Marketing"];
+                break;
+        }
+        console.log("node for: "+ JSON.stringify(node));
+    }
+  
+        
     $('#modalOrganigrama').modal('show');
 
     OrgChart.SEARCH_PLACEHOLDER = "Busqueda"; // the default value is "Search"
-    var chart={};
+    var chart=[];
     chart = new OrgChart(document.getElementById("tree"), {    
         mouseScrool: OrgChart.action.ctrlZoom,    
         enableSearch: true,
         enableDragDrop: true,
+        nodeMouseClick: false,
         mode: 'dark',
         layout: OrgChart.mixed,
         scaleInitial: OrgChart.match.boundary,
@@ -1187,41 +1206,24 @@ $(document).on("click", ".btn-organigrama", function() {
             field_0: "name",
             field_1: "title",
             img_0: "img"
-        },
-        nodeCircleMenu: {
-          details: {
-              icon: OrgChart.icon.details(24, 24, '#aeaeae'),
-              text: "Detalle Nodo",
-              color: "white"
-          },
-          edit: {
-              icon: OrgChart.icon.edit(24, 24, '#aeaeae'),
-              text: "Editar Nodo",
-              color: "white"
-          },
-          add: {
-              icon: OrgChart.icon.add(24, 24, '#aeaeae'),
-              text: "Agregar Nodo",
-              color: "white"
-          },
-          remove: {
-              icon: OrgChart.icon.remove(24, 24, '#aeaeae'),
-              text: "Remover Nodo",
-              color: '#fff',
-          },
-          addLink: {
-              icon: OrgChart.icon.link(24, 24, '#aeaeae'),
-              text: "Agregar link",
-              color: '#fff',
-              draggable: true
-          }
-        },
+        },        
         nodeMenu: {
-            details: { text: "Detalles" },
-            edit: { text: "Editar" },
-            add: { text: "Agregar" },
-            remove: { text: "Remover" }
-        },
+            details: { 
+              text: "Detalles" ,
+              onClick: detalleNodo
+            },
+            edit: { 
+              text: "Editar",
+              onClick: editarNodo
+            },
+            add: { 
+              text: "Agregar",
+              onClick: agregarNodo
+            },
+            remove: { 
+              text: "Eliminar" 
+            }
+        },        
         align: OrgChart.ORIENTATION,
         toolbar: {
             fullScreen: false,
@@ -1231,61 +1233,72 @@ $(document).on("click", ".btn-organigrama", function() {
         },
         nodes: nodes
     });
+    /*
+    Agrega nodo nuevo en blanco.
+    */ 
+    function agregarNodo(nodeId){
 
+      var node = chart.get(nodeId);      
+      console.log("node: "+ JSON.stringify(node));      
+      var data = { pers_id : "", id: ((nodes.length*1)+1), pid: node.id};
+      chart.addNode(data); //Agrega al tree
+      console.log("data: "+ JSON.stringify(data));
+      console.log("nodes new: "+ JSON.stringify(nodes));
+    }
+    
+    /*
+    Editar un nodo, asigna y edita, esta persona no debe existir en ningun otro nodo.
+    Campos del personal a asignar al nodo.
+    */ 
+    function editarNodo(nodeId){
+      
+      var node = chart.get(nodeId);   
+      console.log("node: "+ JSON.stringify(node));
+    }
+
+    
+    function detalleNodo(nodeId){
+      
+      var node = chart.get(nodeId);
+      console.log("node: "+ JSON.stringify(node));
+    }
+
+
+    /*Visualiza Vista*/
     function preview() {
       OrgChart.pdfPrevUI.show(chart, {
           format: 'A4'
       });
     }
 
-      chart.nodeCircleMenuUI.on('click', function (sender, args) {
-          switch (args.menuItem.text) {
-              case "Detalle Nodo": 
-                  chart.editUI.show(args.nodeId, true);
-              break;
-              case "Agregar Nodo": {
-                  var id = chart.generateId();
-                  chart.addNode({ id: id, pid: args.nodeId, tags: ["it-team-member"] });
-              }
-              break;
-              case "Editar Nodo": chart.editUI.show(args.nodeId);
-              break;
-              case "Remover Nodo": chart.removeNode(args.nodeId);
-              break;
-              default:
-          };
+    /*Visualiza Vista PDF*/
+    function nodePdfPreview(nodeId) {
+      OrgChart.pdfPrevUI.show(chart, {
+        format: 'A4',
+        nodeId: nodeId
       });
+    }
 
-      chart.nodeCircleMenuUI.on('drop', function (sender, args) {
-          chart.addClink(args.from, args.to).draw(OrgChart.action.update);
-      });
+    /*Pruebas*/ 
+    function addSharholder(nodeId) {
+      chart.addNode({ id: OrgChart.randomId(), pid: nodeId, tags: ["menu-without-add"] });
+    }
 
-      function nodePdfPreview(nodeId) {
-          OrgChart.pdfPrevUI.show(chart, {
-              format: 'A4',
-              nodeId: nodeId
-          });
-      }
+    function addAssistant(nodeId) {
+      var node = chart.getNode(nodeId);
+      var data = { id: OrgChart.randomId(), pid: node.stParent.id, tags: ["assistant"] };
+      chart.addNode(data);
+    }
 
-      function addSharholder(nodeId) {
-          chart.addNode({ id: OrgChart.randomId(), pid: nodeId, tags: ["menu-without-add"] });
-      }
+    function addDepartment(nodeId) {
+      var node = chart.getNode(nodeId);
+      var data = { id: OrgChart.randomId(), pid: node.stParent.id, tags: ["department"] };
+      chart.addNode(data);
+    }
 
-      function addAssistant(nodeId) {
-          var node = chart.getNode(nodeId);
-          var data = { id: OrgChart.randomId(), pid: node.stParent.id, tags: ["assistant"] };
-          chart.addNode(data);
-      }
-
-      function addDepartment(nodeId) {
-          var node = chart.getNode(nodeId);
-          var data = { id: OrgChart.randomId(), pid: node.stParent.id, tags: ["department"] };
-          chart.addNode(data);
-      }
-
-      function addManager(nodeId) {
-          chart.addNode({ id: OrgChart.randomId(), stpid: nodeId });
-      }
+    function addManager(nodeId) {
+      chart.addNode({ id: OrgChart.randomId(), stpid: nodeId });
+    }
   }
 
 });
