@@ -188,7 +188,7 @@ function imagePerfil($img64,$imgName){
 
     if(isset($img64) && isset($imgName)){
        
-        $rec = pg_unescape_bytea($img64);
+        $rec = base64_decode($img64);
         $ext = obtenerExtension($imgName);
         $image = "$ext$rec";
     }else{

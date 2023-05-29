@@ -1121,24 +1121,22 @@ function actualizarTablaCliente(){
   });
 }
 
-/* Modal Organigrama */
-$(document).on("click", ".btn-organigrama", function() {
-
-
 /* trae modal con los datos de la cuenta  */
 function modalCuenta(empr_id){
 
-  /* harcodeo para poder acceder desde navegacion */
-  if(empr_id == undefined){
-    var empr_id = '7';
-  }
-
-  $.get('<?= base_url()?>/modalCuenta/'+ empr_id, function (data){
-    $('#modalGenericoCuenta').modal('show');
-    $("#contenidoModal").html(data);
-    //$("#IdDondeQuieroMiVIsta").html(data);
-  })
+/* harcodeo para poder acceder desde navegacion */
+if(empr_id == undefined){
+  var empr_id = '7';
 }
+
+$.get('<?= base_url()?>/modalCuenta/'+ empr_id, function (data){
+  $('#modalGenericoCuenta').modal('show');
+  $("#contenidoModal").html(data);
+})
+}
+/* Modal Organigrama */
+$(document).on("click", ".btn-organigrama", function() {
+
 
   var nodos = $('#orgb').val();
   /*console.log("nodos: "+ nodos);*/ 
