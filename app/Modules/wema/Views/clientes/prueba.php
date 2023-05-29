@@ -11,7 +11,7 @@
                                           <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-user"></i></span>
                                           </div>
-                                          <input type="text" class="form-control requerido" id="apellidos" name="apellidos" value="<?php $listadoClientes[0]->id_tributario?>">
+                                          <input type="text" class="form-control requerido" id="apellidos" name="apellidos" value="<?php $listadoEmpresas[0]->id_tributario?>">
                                         </div>
                                       </div>
                                     </div>
@@ -22,7 +22,7 @@
                                           <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-user"></i></span>
                                           </div>
-                                          <input type="text" class="form-control requerido" id="nombres" name="nombres" value="<?php $listadoClientes[0]->nombres?>">
+                                          <input type="text" class="form-control requerido" id="nombres" name="nombres" value="<?php $listadoEmpresas[0]->nombre?>">
                                         </div>
                                       </div>
                                     </div>

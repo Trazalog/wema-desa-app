@@ -2,3 +2,5 @@
 writable/
 
 .vscode/
+
+app/Config/Constants.php

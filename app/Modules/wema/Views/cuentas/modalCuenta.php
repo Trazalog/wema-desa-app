@@ -1,9 +1,9 @@
-<!-- COMPLETA MODAL GENERICO DE CLIENTES -->
+<!-- COMPLETA MODAL GENERICO DE CUENTAS -->
 <?php $this->extend('templates/admin_template') ?>
 <?= $this->section('content') ?>
-<form id="frm-Cliente">
-              <input id="clie_id" name="clie_id" type="text" hidden value="<?= $cliente[0]->clie_id ?>">
-                        <div class="row" style="margin-top:-7px">
+<form id="frm-Cuenta">
+                        <input id="empr_id" name="empr_id" type="text" hidden>
+                        <div class="row">
                           <div class="col">
                             <div class="card card-info">
                               <div class="card-header">
@@ -11,61 +11,65 @@
                               </div><!-- fin card title -->
                                <div class="car-body">
                                 <div class="container">
-                                  <div class="row align-items-center mt-3">
+                                  <div class="row">
+
                                     <div class="col-md-4 ">
                                       <div class="form-group">
-                                        <p id="cliente_id" style="margin-top: -19px;margin-bottom: -7px; font-style: italic;" hidden></p>
-                                        <label>Nombre Comercial <strong class="text-danger">*</strong>: </label>
+                                        <p id="empresa_id" style="margin-top: 2px;margin-bottom: -7px; font-style: italic;" hidden><?= $empresa[0]->empr_id ?></p>
+                                        <label id="n_cuenta" style="margin-top: 20px">Nombre Cuenta <strong class="text-danger">*</strong>: </label>
                                         <div class="input-group">
                                           <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-user"></i></span>
                                           </div>
-                                          <input type="text" class="form-control requerido" id="nombreComercial" name="nombreComercial" value="<?= $cliente[0]->nombre ?>">
+                                          <input type="text" class="form-control requerido" id="nombreCuenta" name="nombreCuenta" value="<?= $empresa[0]->nombre ?>">
                                         </div>
                                       </div>
                                     </div>
+
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                          <label>Tipo Cliente <strong class="text-danger">*</strong>: </label>
+                                          <label id="t_cuenta" style="margin-top: 20px">Tipo Cuenta <strong class="text-danger">*</strong>: </label>
                                           <div class="input-group">
                                             <div class="input-group-prepend">
                                               <span class="input-group-text"><i class="fas fa-user"></i></span>
                                             </div>
-                                            <select name="tipoCliente" id="tipoCliente" class="form-control requerido">
+                                            <select name="tipoCuenta" id="tipoCuenta" class="form-control requerido">
                                               <?php 
-                                                foreach ($tipoCliente as $key => $cli) {
-                                                  ($cliente[0]->ticl_id == $cli->tabl_id) ? $selected = 'selected' : $selected = '';
-                                                  echo "<option value='$cli->tabl_id' $selected>$cli->valor</option>";
-                                                }
-                                              ?> 
+                                                  foreach ($listadoTipompresas as $key => $tipoEmpresa) {
+                                                    ($empresa[0]->tiem_id == $tipoEmpresa->tabl_id) ? $selected = 'selected' : $selected = '';
+                                                    echo "<option value='$tipoEmpresa->tabl_id'  $selected>$tipoEmpresa->valor</option>";
+                                                  }
+                                              ?>
                                             </select>
                                           </div>
                                         </div>
                                     </div>
+
                                     <div class="col-md-4 centrar">
                                       <div class="form-group">
                                         <!-- <label>Imagen </label> -->
                                         <div class="" style="position:initial;">
                                           <!-- <i class="fas fa-user" style="right:250px;"></i> -->
                                           <?php 
-                                            if($cliente[0]->nom_imagen) 
+                                            if($empresa[0]->nom_imagen) 
                                             {
-                                              $src = imagePerfil($cliente[0]->imagen, $cliente[0]->nom_imagen);
+                                              $src = imagePerfil($empresa[0]->imagen, $empresa[0]->nom_imagen);
                                             }
                                             else{ 
                                               $src = "";  
                                             }
                                           ?>
-                                          <img id="logoCliente" src='<?= $src ?>' class="profile-user-img img-fluid img-circle" style="height: 100px; width: 100px" >
-                                          <button class="btn btn-sm">
-                                            <i id="verImagenCliente" src='' class="fas fa-eye"></i>
+                                          <img id="imagenCuenta" src='<?= $src ?>' class="profile-user-img img-fluid img-circle" style="height: 100px; width: 100px"  >
+                                          <button class="btn btn-sm" style="/*margin-top:-20px;margin-right:150px*/">
+                                            <i id="verImagenCuenta" class="fas fa-eye"></i>
                                           </button>
-                                          <button class="btn btn-sm agregaLogo" style="/*margin-top:-5px;margin-right:150px*/">
+                                          <button class="btn btn-sm agregaLogoCuenta" style="/*margin-top:-5px;margin-right:150px*/">
                                             <i class="fas fa-upload"></i>
                                           </button>
                                         </div>
                                       </div>
                                     </div>
+                                
                                     <div class="col-md-4">
                                       <div class="form-group">
                                         <label>RFC <strong class="text-danger">*</strong>: </label>
@@ -73,31 +77,30 @@
                                           <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-id-card"></i></span>
                                           </div>
-                                          <input type="text" class="form-control requerido" id="rfc" name="rfc" value="<?= $cliente[0]->id_tributario ?>">
+                                          <input type="text" class="form-control requerido" id="rfcCuenta" name="rfcCuenta" value="<?= $empresa[0]->id_tributario ?>">
                                         </div>
                                       </div>
                                     </div>
+
                                     <div class="col-md-4">
-                                        <div class="form-group">
-                                          <label>Nacionalidad <strong class="text-danger">*</strong>: </label>
-                                          <div class="input-group">
-                                            <div class="input-group-prepend">
-                                              <span class="input-group-text"><i class="fas fa-globe-americas"></i></span>
-                                            </div>
-                                            <select name="nacionalidad" id="nacionalidad" class="form-control requerido"> 
-                                              <?php 
-                                              foreach ($listadoPaises as $key => $pa) {
-                                                ($cliente[0]->naci_id == $pa->tabl_id) ? $selected = 'selected' : $selected = '';
-                                                echo "<option value='$pa->tabl_id' $selected>$pa->valor</option>";
-                                              }
-                                              ?> 
-                                            </select>
+                                      <div class="form-group">
+                                        <label>Nacionalidad <strong class="text-danger">*</strong>: </label>
+                                        <div class="input-group">
+                                          <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-globe-americas"></i></span>
                                           </div>
+                                          <select name="nacionalidad" id="nacionalidad" class="form-control requerido">
+                                            <?php 
+                                              foreach ($listadoPaises as $key => $pa) {
+                                                ($empresa[0]->ubic_id == $pa->tabl_id) ? $selected = 'selected' : $selected = '';
+                                                echo "<option value='$pa->tabl_id'  $selected>$pa->valor</option>";
+                                              }
+                                            ?>
+                                          </select>
                                         </div>
+                                      </div>
                                     </div>
-                                    <!-- <div class="col-md-4">
-                                    </div> -->
-                                    
+
                                     <div class="col-md-4">
                                       <div class="form-group">
                                         <label>Tipo de Persona <strong class="text-danger">*</strong>: </label>
@@ -105,18 +108,19 @@
                                             <div class="input-group-prepend">
                                               <span class="input-group-text"><i class="fas fa-genderless"></i></span>
                                             </div>
-                                            <select name="tipoPersona" id="tipoPersona" class="form-control requerido">
+                                            <select name="tipoPersonaCuenta" id="tipoPersonaCuenta" class="form-control requerido">
                                               <?php 
-                                              foreach ($tipoPersona as $key => $pers) {
-                                                ($cliente[0]->tipe_id == $pers->tabl_id) ? $selected = 'selected' : $selected = '';
-                                                echo "<option value='$pers->tabl_id' $selected>$pers->valor</option>";
-                                              }
-                                            ?>
+                                                  foreach ($listadoPersonas as $key => $pers) {
+                                                    ($empresa[0]->tipe_id == $pers->tabl_id) ? $selected = 'selected' : $selected = '';
+                                                    echo "<option value='$pers->tabl_id' $selected>$pers->valor</option>";
+                                                  }
+                                              ?>
                                             </select>
                                           </div>
                                       </div>
                                     </div>
-
+                                                                      
+                                
                                     <!-- inputs persona moral -->
                                     <div class="col-md-8 col_personaMoral" hidden>
                                       <div class="form-group">
@@ -125,7 +129,7 @@
                                           <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-wallet"></i></span>
                                           </div>
-                                          <input type="text" name="razonSocial" id="razonSocial" class="form-control requerido personaMoral" value="<?= $cliente[0]->razon_social ?>"> 
+                                          <input type="text" name="razonSocial" id="razonSocial" class="form-control requerido personaMoral" value="<?= $empresa[0]->razon_social ?>"> 
                                         </div>
                                       </div>
                                     </div>
@@ -136,7 +140,7 @@
                                           <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-balance-scale"></i></span>
                                           </div>
-                                          <input type="text" name="representanteLegal" id="representanteLegal" class="form-control requerido personaMoral" value="<?= $cliente[0]->representante_legal ?>">  
+                                          <input type="text" name="representanteLegal" id="representanteLegal" class="form-control requerido personaMoral" value="<?= $empresa[0]->representante_legal ?>">  
                                         </div>
                                       </div>
                                     </div>
@@ -150,7 +154,7 @@
                                           <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-id-card"></i></span>
                                           </div>
-                                          <input type="text" class="form-control requerido personaFisica" id="curp" name="curp" value="<?= $cliente[0]->curp ?>">
+                                          <input type="text" class="form-control requerido personaFisica" id="curp" name="curp" value="<?= $empresa[0]->id_persona ?>">
                                         </div>
                                       </div>
                                     </div>
@@ -162,7 +166,7 @@
                                           <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-user"></i></span>
                                           </div>
-                                          <input type="text" class="form-control requerido personaFisica" id="nombres" name="nombres" value="<?= $cliente[0]->nombres ?>">
+                                          <input type="text" class="form-control requerido personaFisica" id="nombres" name="nombres" value="<?= $empresa[0]->nombres ?>">
                                         </div>
                                       </div>
                                     </div>
@@ -174,7 +178,7 @@
                                           <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-user"></i></span>
                                           </div>
-                                          <input type="text" class="form-control requerido personaFisica" id="apellidos" name="apellidos" value="<?= $cliente[0]->apellidos ?>">
+                                          <input type="text" class="form-control requerido personaFisica" id="apellidos" name="apellidos" value="<?= $empresa[0]->apellidos ?>">
                                         </div>
                                       </div>
                                     </div>
@@ -189,8 +193,8 @@
                                             <select name="genero" id="genero" class="form-control requerido personaFisica">
                                               <?php 
                                                 foreach ($listadoGeneros as $key => $gen) {
-                                                ($cliente[0]->gene_id == $gen->tabl_id) ? $selected = 'selected' : $selected = '';
-                                                  echo "<option value='$gen->tabl_id' $selected>$gen->valor</option>";
+                                                    ($empresa[0]->gene_id == $gen->tabl_id) ? $selected = 'selected' : $selected = '';
+                                                    echo "<option value='$gen->tabl_id' $selected>$gen->valor</option>";
                                                 }
                                               ?>
                                             </select>
@@ -205,7 +209,7 @@
                                           <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-birthday-cake"></i></span>
                                           </div>
-                                          <input type="date" class="form-control float-left requerido personaFisica" id="fechaNacimiento" name="fechaNacimiento" value="<?= substr($cliente[0]->fec_nacimiento,0,10) ?>">
+                                          <input type="date" class="form-control float-left requerido personaFisica" id="fechaNacimiento" name="fechaNacimiento" value="<?= substr($empresa[0]->fec_nacimiento,0,10)?>">
                                         </div>
                                       </div>
                                     </div>
@@ -220,7 +224,7 @@
                                           <select name="paisNacimiento" id="paisNacimiento" class="form-control requerido personaFisica">
                                             <?php 
                                               foreach ($listadoPaises as $key => $pa) {
-                                                ($cliente[0]->pana_id == $pa->tabl_id) ? $selected = 'selected' : $selected = '';
+                                                ($empresa[0]->naci_id == $pa->tabl_id) ? $selected = 'selected' : $selected = '';
                                                 echo "<option value='$pa->tabl_id' $selected>$pa->valor</option>";
                                               }
                                             ?>
@@ -236,11 +240,11 @@
                                           <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-briefcase"></i></span>
                                           </div>
-                                          <input type="text" class="form-control requerido personaFisica" id="ocupacion" name="ocupacion"  value="<?= $cliente[0]->ocupacion ?>"> 
+                                          <input type="text" class="form-control requerido personaFisica" id="ocupacion" name="ocupacion" value="<?= $empresa[0]->ocupacion ?>">
                                         </div>
                                       </div>
                                     </div>
-                                    </section>
+                                  
 
                                 </div><!-- fin content-->
                               </div><!-- fin car-body-->
@@ -256,7 +260,7 @@
                               </div><!-- fin card title -->
                                <div class="car-body">
                                 <div class="container">
-                                  <div class="row mt-3">
+                                  <div class="row">
                                     <div class="col-md-4">
                                       <div class="form-group">
                                         <label>Teléfono <strong class="text-danger">*</strong>: </label>
@@ -264,32 +268,32 @@
                                           <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-phone"></i></span>
                                           </div>
-                                          <input id="telefono" type="text" name="telefono" class="form-control requerido"  value="<?= $cliente[0]->telefono ?>">
+                                          <input id="telefono" name="telefono" type="text" class="form-control requerido" data-inputmask="&quot;mask&quot;: &quot;(999) 999-9999&quot;" data-mask="" inputmode="text" value="<?= $empresa[0]->num_telefono ?>">
                                         </div>
                                       </div>
                                     </div>
                                     <div class="col-md-4">
-                                        <div class="form-group">
+                                      <div class="form-group">
                                         <label>Correo electrónico <strong class="text-danger">*</strong>: </label>
                                         <div class="input-group">
                                           <div class="input-group-prepend">
                                             <span class="input-group-text">@</span>
-                                          </div><input type="text" class="form-control requerido" name="correo" id="correo"  value="<?= $cliente[0]->email ?>">
+                                          </div><input type="text" class="form-control requerido" id="correo" name="correo" value="<?= $empresa[0]->email ?>">
                                         </div>
-                                        </div>
+                                      </div>
                                     </div>
+
                                     <div class="col-md-4">
-                                          <div class="form-group">
-                                            <label>Calle <strong class="text-danger">*</strong>: </label>
-                                            <div class="input-group">
-                                              <div class="input-group-prepend">
-                                                <span class="input-group-text"><i class="fas fa-road"></i></span>
-                                              </div>
-                                              <input type="text" class="form-control requerido" id="calle" name="calle"  value="<?= $cliente[0]->calle ?>">
-                                            </div>
+                                      <div class="form-group">
+                                        <label>Calle <strong class="text-danger">*</strong>: </label>
+                                        <div class="input-group">
+                                          <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-road"></i></span>
                                           </div>
-                                    </div>
-                                
+                                          <input type="text" class="form-control requerido" id="calle" name="calle" value="<?= $empresa[0]->calle ?>">
+                                        </div>
+                                      </div>
+                                    </div>                                                                  
                                  
                                     <div class="col-md-4">
                                       <div class="form-group">
@@ -298,7 +302,7 @@
                                             <div class="input-group-prepend">
                                               <span class="input-group-text"><i class="fas fa-list-ol"></i></span>
                                             </div>
-                                            <input type="text" class="form-control requerido" id="numeroExterior" name="numeroExterior"  value="<?= $cliente[0]->num_exterior ?>">
+                                            <input type="text" class="form-control requerido" id="numeroExterior" name="numeroExterior" value="<?= $empresa[0]->num_exterior ?>">
                                           </div>
                                       </div>
                                     </div>
@@ -309,21 +313,23 @@
                                             <div class="input-group-prepend">
                                               <span class="input-group-text"><i class="fas fa-list-ol"></i></span>
                                             </div>
-                                            <input type="text" class="form-control requerido" id="numeroInterior" name="numeroInterior"  value="<?= $cliente[0]->num_interior?>">
+                                            <input type="text" class="form-control requerido" id="numeroInterior" name="numeroInterior" value="<?= $empresa[0]->num_interior ?>">
                                           </div>
+                                           
                                         </div>
                                     </div>
+
                                     <div class="col-md-4">
                                       <div class="form-group">
                                         <label>Codigo Postal / Colonia <strong class="text-danger">*</strong>: </label>
                                         <div class="input-group">
                                           <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="fas fa-list-ol"></i></span>
+                                            <span class="input-group-text"><i class="fas fa-search"></i></span>
                                           </div>
-                                        <input type="text" class="form-control requerido" id="CodigoColonia" name="CodigoColonia"  value="<?= $cliente[0]->cod_postal ?>">
+                                          <input type="text" class="form-control requerido" id="CodigoColonia" name="CodigoColonia" value="<?= $empresa[0]->cod_postal ?>">
+                                        </div>
                                       </div>
-                                      </div>
-                                    </div>
+                                    </div>                                    
                                     
                                   </div>
     
@@ -336,79 +342,197 @@
                         </div><!-- fin row -->
                 </form><!-- fin form -->
 
-<!-- Modal Agregar imagen -->
-<div class="modal fade" id="modalAgregarLogo">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Agregar</h4>
-                <button type="button" class="close" onclick="cerrarModalImagen()" aria-label="Close">
-                  <span aria-hidden="true">×</span>
-                </button>
-            </div>
+   <!-- Modal Agregar imagen -->
+   <div class="modal fade" id="modalAgregarLogoCuenta">
+          <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                  <div class="modal-header">
+                      <h4 class="modal-title">Agregar</h4>
+                      <button type="button" class="close" onclick="cerrarModalImagen()"  aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                      </button>
+                  </div>
 
-            <form id="formAgregarLogo" enctype="multipart/form-data">
-                <div class="modal-body">
-                    <input type="hidden" id="idAgregaLogo" name="idAgregaLogo">
-                    <input id="inputLogo" type="file" class="form-control input-md">
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" onclick="cerrarModalImagen()">Cancelar</button>
-                    <button type="button" class="btn btn-primary" onclick="cargaVistaPreviaCliente()" >Agregar</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
+                  <form id="formAgregarLogoCuenta" enctype="multipart/form-data">
+                      <div class="modal-body">
+                          <input type="hidden" id="idAgregaLogoCuenta" name="idAgregaLogoCuenta">
+                          <input id="inputLogoCuenta"  type="file" class="form-control input-md" >
+                      </div>
+                      <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" onclick="cerrarModalImagen()" >Cancelar</button>
+                          <button type="button" class="btn btn-primary" onclick="cargaVistaPreviaCuenta()"  >Agregar</button>
+                      </div>
+                  </form>
+              </div>
+          </div>
+      </div>
+<script>  
+
+    $( document ).ready(function() {
 
 
-<script>
+    $('#btn-accion-cuenta').hide();
+    $('#mdl-title-cuenta').html('Cuenta');
+    $('#btn-editar-cuenta').prop('hidden', false);
+    $('#btn-clientes-cuenta').prop('hidden', false);
+    $('#btn-habilitarCuenta').prop('hidden', true);
+    $('#frm-Cuenta').find('.form-control').prop('disabled', true);
+    $('#modalGenericoCuenta #empresa_id').prop('hidden', false);
+    $('#modalGenericoCuenta #n_cuenta').css("margin-top","0px");
+    $('#btn-clientes-cuenta').attr('href','<?=  site_url('') ?>getClientes/'+ <?= $empresa[0]->empr_id ?>);
+        /* botones persona fisica */
+        if($('#tipoPersonaCuenta').val() == 'tipos_personasFisica'){
+        activaBotonesCuentasFisicos();
+        }
 
-$( document ).ready(function() {
+        /* botones persona moral */
+        if($('#tipoPersonaCuenta').val() == 'tipos_personasMoral'){
+          activaBotonesCuentasMoral();
+        }
+    });
 
-    $('#btn-accion-cliente').hide();
-    $('#mdl-title-cliente').html('Cliente');
-    $('#frm-Cliente').find('.form-control').prop('disabled', true);
-    $('#btn-editar-cliente').prop('hidden', false);
-    $('#btn-personas').prop('hidden', false);
-    $('#btn-organigrama').prop('hidden', false);
-    $('#btn-cuestionario').prop('hidden', false);
-    $('#btn-habilitarCliente').prop('hidden', true);
-
-    //boton Personas cabecera de modal
-    $('#btn-personas').attr('href','<?=  site_url('') ?>getPersonas/'+<?= $cliente[0]->clie_id?>);
-
-    /* botones persona fisica */
-    if($('#tipoPersona').val() == 'tipos_personasFisica'){
-      activaBotonesClientesFisicos();
-    }
+    /* oculta/muestra inputs de modal agregar cliente */
+    $('#tipoPersonaCuenta').on("change",function(){
     
-    /* botones persona moral */
-    if($('#tipoPersona').val() == 'tipos_personasMoral'){
-      activaBotonesClientesMoral();
+    /* botones persona fisica */
+    if($('#tipoPersonaCuenta').val() == 'tipos_personasFisica'){
+      
+      activaBotonesCuentasFisicos();
     }
-});
 
-/* oculta/muestra inputs de modal agregar cliente */
-$('#tipoPersona').on("change",function(){
+    /* botones persona moral */
+    if($('#tipoPersonaCuenta').val() == 'tipos_personasMoral'){
+      
+      activaBotonesCuentasMoral();
+    }
 
-/* botones persona fisica */
-if($('#tipoPersona').val() == 'tipos_personasFisica'){
-  activaBotonesClientesFisicos();
+    });
+
+
+    /* avtiva botones para cliente fisico */
+  function activaBotonesCuentasFisicos(){
+      /* oculta botones */
+      ocultaColumna('#frm-Cuenta', '.col_personaMoral');
+      
+      /* elimina clase requerido */
+      remueveRequerido('#frm-Cuenta' ,'.personaMoral');
+
+      /* muestra botones */
+      muestraColumna('#frm-Cuenta', '.col_personaFisica');
+   
+      /* agrega clase requerido */
+      agregaRequerido('#frm-Cuenta','.personaFisica');
+
+  }
+
+  /* activa botones para cuenta  moral */
+  function activaBotonesCuentasMoral(){
+      /* muestra botones */
+      muestraColumna('#frm-Cuenta', '.col_personaMoral');
+
+      /* agrega clase requerido */
+      agregaRequerido('#frm-Cuenta','.personaMoral');
+ 
+      /* oculta botones */
+      ocultaColumna('#frm-Cuenta', '.col_personaFisica')
+
+      /* remueve clase requerido */
+      remueveRequerido('#frm-Cuenta','.personaFisica');
+  }
+
+  function ocultaColumnasForm(){
+    ocultaColumna('#frm-Cuenta', '.col_personaMoral');
+    remueveRequerido('#frm-Cuenta' ,'.personaMoral');
+    ocultaColumna('#frm-Cuenta', '.col_personaFisica');
+    remueveRequerido('#frm-Cuenta' ,'.personaFisica');
+  }
+
+/* habilita la edicion de la cienta */
+  function habilitaEditarCuenta(e){
+    $('#btn-habilitarCuenta').prop('hidden', false);
+    $('#btn-accion-cuenta').show();
+    $('#btn-accion-cuenta').html('Modificar');
+    $('#btn-accion-cuenta').attr('onclick', 'editarCuenta()');
+    $('#frm-Cuenta').find('.form-control').prop('disabled', false);
+    $('#btn-editar-cuenta').prop('hidden', true);
+    $('#btn-clientes').prop('hidden', false);
+    $('#btn-clientes').prop('hidden', true);
 }
 
-/* botones persona moral */
-if($('#tipoPersona').val() == 'tipos_personasMoral'){
-  activaBotonesClientesMoral();
+/* inicializacion botones on/off  de tabla*/
+$("[name='habilitarCuentaEditar']").bootstrapSwitch({
+  /* habilitar/deshabilitar personas */
+  onSwitchChange:function(e, state){
+    var empr_id = "<?= $empresa[0]->empr_id ?>";
+    if(!state){
+      Swal.fire({
+        title: '¿Esta seguro que desea deshabilitar la cuenta?',
+        text: 'Si continua, ningun usuario de la cuenta podra ingresar al sistema, y sus datos desaparecerán de algunos reportes e indicadores',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si, deshabilitar!'
+      }).then((result) => {
+      if (result.isConfirmed) {
+        deshabilitaCuenta(empr_id);
+      }
+      else{
+        //vuelve a el estado original y el ultimo paramaetro es para cortar la ejecucion
+        $(this).bootstrapSwitch('state', !state ,true);
+      }
+      })
+    }
+    else{
+      Swal.fire({
+        title: '¿Esta seguro que desea habilitar la cuenta?',
+        text: "Ten en cuenta que se habilitaras la cuenta",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si, habilitar!'
+      }).then((result) => {
+      if (result.isConfirmed) {
+        habilitaCuenta(empr_id);
+      }
+      else{
+        //vuelve a el estado original y el ultimo paramaetro es para cortar la ejecucion
+        $(this).bootstrapSwitch('state', !state ,true);
+      }
+    });
+    } 
+  }
+});
+
+
+/* funcion para deshabilitar una cuenta */
+function deshabilitaCuenta(empr_id){
+  $.get('<?= base_url()?>/eliminarCuenta/' + empr_id, function (data){
+          Swal.fire(
+              'Deshabilitado!',
+              'la cuenta fue deshabilitada.',
+              'success'
+        );
+  })
 }
 
-});
+/* funcion para habilitar una cuenta */
+function habilitaCuenta(empr_id){
+  $.get('<?= base_url()?>/habilitarCuenta/' + empr_id, function (data){
+          Swal.fire(
+            'Habilitado!',
+            'La cuenta fue habilitada.',
+            'success'
+          );
+  })
+}
 
  /*Accion ojo de imagen */
- document.getElementById('verImagenCliente').onclick = function (){
+ document.getElementById('verImagenCuenta').onclick = function (){
         event.preventDefault();
-        var nom_imagen = '<?= $cliente[0]->nom_imagen ?>';
-        var imagen = '<?= $cliente[0]->imagen ?>' 
+        var nom_imagen = '<?= $empresa[0]->nom_imagen ?>';
+        var imagen = '<?= $empresa[0]->imagen ?>' 
         if(nom_imagen){
           var codificacion = obtenerExtension(nom_imagen);
           /* decodificacion imagen base64 */
@@ -416,103 +540,60 @@ if($('#tipoPersona').val() == 'tipos_personasMoral'){
           var newTab = window.open();
           newTab.document.body.innerHTML = '<img src="'+ codificacion + decodedData +'" >';
           newTab.document.close();
-          $('#logoCliente').attr('src', codificacion + decodedData);
+          $('#imagenCuenta').attr('src', codificacion + decodedData);
         }else{
-          $('#logoCliente').attr('src', '');
+          $('#imagenCuenta').attr('src', '');
         }   
 }
 
 
+//funcion para cerrar el modal de agregar imagen para que no cierre todos los modales
+function cerrarModalImagen(){
+  $('#modalAgregarLogoCuenta').modal('hide');
+}
+
+
 /* Carga vista previa de logo cliente */
-function cargaVistaPreviaCliente(){
-  var input = $('#inputLogo').prop('files');
-  if(input && input[0]){
+function cargaVistaPreviaCuenta(){
+
+    var input = $('#inputLogoCuenta').prop('files');
+
+    if(input && input[0]){
+    
       var reader = new FileReader();
 
       reader.addEventListener("load", function (e) {
-          $('#logoCliente').prop('src', e.target.result);
-          $('#logoCliente').hide();
-          $('#logoCliente').fadeIn(850);   
+          $('#imagenCuenta').css('background-image', 'url('+e.target.result +')');
+          $('#imagenCuenta').hide();
+          $('#imagenCuenta').fadeIn(850);   
       }, false);
-
+        $('#imagenCuenta').attr('src', '');
       reader.readAsDataURL(input[0]);
-  }
-  cerrarModalImagen();
-}
- 
-/* activa botones para cliente fisico */
-function activaBotonesClientesFisicos(){
-  /* oculta botones */
-  ocultaColumna('#frm-Cliente', '.col_personaMoral');
-  
-  /* elimina clase requerido */
-  remueveRequerido('#frm-Cliente' ,'.personaMoral');
-
-  /* muestra botones */
-  muestraColumna('#frm-Cliente', '.col_personaFisica');
-
-  /* agrega clase requerido */
-  agregaRequerido('#frm-Cliente','.personaFisica');
-
+    }
+    cerrarModalImagen();
 }
 
-/* activa botones para cliente moral */
-function activaBotonesClientesMoral(){
-  /* muestra botones */
-  muestraColumna('#frm-Cliente', '.col_personaMoral');
+/* Guarda los datos editados de la cuenta */
+function editarCuenta(){
 
-  /* agrega clase requerido */
-  agregaRequerido('#frm-Cliente','.personaMoral');
-
-  /* oculta botones */
-  ocultaColumna('#frm-Cliente', '.col_personaFisica')
-
-  /* remueve clase requerido */
-  remueveRequerido('#frm-Cliente','.personaFisica');
-}
-
-/* oculta todas las columanas pertenecientes a persona moral y fisicas */
-function ocultaColumnasForm(){
-ocultaColumna('#frm-Cliente', '.col_personaMoral');
-remueveRequerido('#frm-Cliente' ,'.personaMoral');
-ocultaColumna('#frm-Cliente', '.col_personaFisica');
-remueveRequerido('#frm-Cliente' ,'.personaFisica');
-}
-
-/*boton que habilita editar los datos de una persona en el modal */
-function habilitaEditarCliente(){
-
-$('#btn-editar-cliente').prop('hidden', true);
-$('#btn-personas').prop('hidden', true);
-$('#btn-organigrama').prop('hidden', true);
-$('#btn-cuestionario').prop('hidden', true); 
-$('#btn-habilitarCliente').prop('hidden', false);
-$('#btn-accion-cliente').show();
-$('#btn-accion-cliente').html('Modificar');
-$('#btn-accion-cliente').attr('onclick', 'editarCliente()');
-$('#frm-Cliente').find('.form-control').prop('disabled', false);
-
-} 
-
-
-/* Guarda los datos editados de la persona */
-function editarCliente(){
-
-var formData = new FormData($('#frm-Cliente')[0]);
-
-let logo = document.getElementById("inputLogo").files;
-if(logo.lenght!= 0){
-  let imagenFile = $('#inputLogo').prop('files')[0]; 
+var formData = new FormData($('#frm-Cuenta')[0]);
+let logo = document.getElementById("inputLogoCuenta").files;
+if($('#inputLogoCuenta')[0].files.length !== 0){
+  let imagenFile = $('#inputLogoCuenta').prop('files')[0]; 
   formData.append("imagen", imagenFile);
 }
 
-formData.append("clie_id",$('#frm-Cliente #clie_id').val());
-//validacion datos del formulario
-if(!validaForm('#frm-Cliente')) return;
+//debugger;
+formData.append("empr_id",<?= $empresa[0]->empr_id ?>);
+/* le pego a tipoPersona el #tipoPersonaCuenta para reutilizar el editar de cuentas */
+formData.append("tipoPersona",$('#tipoPersonaCuenta').val());
 
-//valida rfc sea correcto
-if(!rfcValido($('#rfc').val())){
-  $('#rfc').addClass('is-invalid');
+//validacion datos del formulario
+if(!validaForm('#frm-Cuenta')) return;
+
+
+if(!rfcValido($('#rfcCuenta').val())){
+  $('#rfcCuenta').addClass('is-invalid');
   return};
 
 $.ajax({
@@ -520,109 +601,31 @@ $.ajax({
   dataType: 'JSON',
   processData: false,
   contentType: false,
-  url: '<?= base_url()?>/editarCliente',
+  url: '<?= base_url()?>/editarCuenta',
   data:formData,
   success: function(resp) {
-    notificar(notiSuccess);
-      $('#nuevo_cliente').modal('hide');
-      $('#frm-Cliente')[0].reset();
-      limpiaForm('#nuevo_cliente');
+    if(resp['status']){
+      notificar(notiSuccess);
+      $('#modalGenericoCuenta').modal('hide');
+      
+    }
+    else{
+    notificar(notiError);
+    }
   },
   error: () => {
     notificar(notiError);
-  },
-  complete: function() {
-    notificar(notiSuccess);
-    $('#modalGenerico').modal('hide');
   }
   });
-}
-
-
-/* inicializacion botones on/off */
-$("[name='habilitarClienteEditar']").bootstrapSwitch({
-/* habilitar/deshabilitar personas desde modal editar persona*/
- onSwitchChange:function(e, state){
-  var clie_id = $('#clie_id').val();
-  if(!state){
-    Swal.fire({
-      title: '¿Está seguro?',
-      text: 'Si deshabilita al cliente, el mismo no aparecerá en algunos reportes o indicadores, y no podrá asignar cuestionarios a sus Personas asociadas',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Si, deshabilitar!'
-    }).then((result) => {
-    if (result.isConfirmed) {
-      deshabilitaCliente(clie_id);
-    }
-    else{
-      //vuelve a el estado original y el ultimo paramaetro es para cortar la ejecucion
-      $(this).bootstrapSwitch('state', !state ,true);
-    }
-    })
-  }
-  else{
-    Swal.fire({
-      title: 'Habilitar cliente?',
-      text: "Ten en cuenta que se habilitaras el cliente",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Si, habilitar!'
-    }).then((result) => {
-    if (result.isConfirmed) {
-      habilitaCliente(clie_id);
-    }
-    else{
-      //vuelve a el estado original y el ultimo paramaetro es para cortar la ejecucion
-      $(this).bootstrapSwitch('state', !state ,true);
-    }
-  });
-  } 
-}
-});
-
-/* funcion para deshabilitar una persona */
-function deshabilitaCliente(clie_id){
-  $.get('<?= base_url()?>/eliminarCliente/' + clie_id, function (data){
-          Swal.fire(
-              'Deshabilitado!',
-              'El cliente fue deshabilitado.',
-              'success'
-        );
-  })
-}
-
-
-/* funcion para habilitar una persona */
-function habilitaCliente(clie_id){
-  $.get('<?= base_url()?>/habilitarCliente/' + clie_id, function (data){
-          Swal.fire(
-            'Habilitado!',
-            'El cliente fue habilitado.',
-            'success'
-          );
-  })
 }
 
 
 /* abrir modal agregar imagen */
-$(document).on("click", ".agregaLogo", function() {
-  $('#modalAgregarLogo').modal('show');
+$(document).on("click", ".agregaLogoCuenta", function() {
+  $('#modalAgregarLogoCuenta').modal('show');
   event.preventDefault();
-  $("#modalGenerico").css('overflow-y', 'auto');//habilita el scroll de nuevo
+  $("#modalGenericoCuenta").css('overflow-y', 'auto');//habilita el scroll de nuevo
 });
 
 
-//funcion para cerrar el modal de agregar imagen para que no cierre todos los modales
-function cerrarModalImagen(){
-  $('#modalAgregarLogo').modal('hide');
-}
-
 </script>
-
-
-

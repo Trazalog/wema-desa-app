@@ -27,7 +27,10 @@ class Personas extends Model{
         $data = json_decode($aux['data']);
         log_message('debug','#TRAZA | WEMA-DESA-APP | Model | Personas | getPersonas()'.$aux['data']);
 
-        return $data->personas->persona;
+        if(!empty($data->personas->persona)){
+            return $data->personas->persona;
+        }
+        else return array(); 
     }
     /**
         * Alta de una persona en core.personas
