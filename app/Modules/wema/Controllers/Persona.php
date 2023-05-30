@@ -4,6 +4,7 @@ namespace Modules\wema\Controllers;
 use App\Controllers\BaseController;
 use Modules\wema\Models\Personas; 
 use Modules\wema\Models\Generales; 
+use Modules\wema\Models\Clientes; 
 
 
 class Persona extends BaseController
@@ -12,6 +13,8 @@ class Persona extends BaseController
     {
         $this->Personas = new Personas();
         $this->Generales = new Generales();
+        $this->Clientes = new Clientes();
+
     }
     /**
         * Carga pantalla principal de ABM personas
@@ -36,7 +39,7 @@ class Persona extends BaseController
         $data['listadoNivelEducativo'] = $this->Generales->getTabla("niveles_educativos");
 
 
-        return view('Modules\wema\Views\persona\index',$data);
+        return view('Modules\wema\Views\persona\index',$data).view('Modules\wema\Views\clientes\modalGenericoCliente');
     }
 
     /**
@@ -70,7 +73,7 @@ class Persona extends BaseController
             'naci_id' =>  $request->getPost('nacionalidad'),
             'educ_id' =>  $request->getPost('escolaridad'),
             'ubic_id' =>  $request->getPost('nacionalidad'),
-            'clie_id' =>  empresa(),
+            'clie_id' =>  $request->getPost('clie_id'),
             'imagen' => !empty($_FILES['imagen']['name'])  ? base64_encode(file_get_contents($fotoPerfil->getTempName())) : '',
             'nom_imagen' => !empty($_FILES['imagen']['name'])  ? $fotoPerfil->getName() : ''
         );
@@ -111,7 +114,7 @@ class Persona extends BaseController
             'naci_id' =>  $request->getPost('nacionalidad'),
             'educ_id' =>  $request->getPost('escolaridad'),
             'ubic_id' =>  $request->getPost('nacionalidad'),
-            'clie_id' =>  empresa(),
+            'clie_id' =>  $request->getPost('clie_id'),
             'imagen' => !empty($_FILES['imagen']['name'])  ? base64_encode(file_get_contents($fotoPerfil->getTempName())) : '',
             'nom_imagen' => !empty($_FILES['imagen']['name'])  ? $fotoPerfil->getName() : ''
         );
@@ -160,13 +163,85 @@ class Persona extends BaseController
         return json_encode($resp);
     }
     /**
-        * Carga pantalla con entrevistas para personas
+        * Carga pantalla para entrevistar personas
         * @param  
-        * @return view entrevistas.php
+        * @return view listadoPersonas.php
 	*/
-    public function cargarEntrevista(){
+    public function cargarListadoEntrevistados(){
+        log_message('debug','#TRAZA | WEMA-DESA-APP | Controller | Persona | cargarListadoEntrevistados()');
         $data['listadoPersonas'] = $this->Personas->getPersonas();
-        return view('Modules\wema\Views\persona\entrevistas',$data);    
+        return view('Modules\wema\Views\persona\entrevistas\listadoPersonas',$data);    
+    }
+    /**
+        * Pantalla con cuestionario para reazliar entrevista
+        * @param $pers_id id de persona entrevistado
+        * @return view cuestionario.php
+	*/
+    public function initCuestionario($pers_id){
+        log_message('debug','#TRAZA | WEMA-DESA-APP | Controller | Persona | initCuestionario()');
+
+        if(!empty($pers_id)) $data['persona'] = $this->Personas->getPersonaPorId($pers_id);
+
+        $data['cuestionario'] = new \stdClass;
+        $data['cuestionario']->preguntas = array();
+        $data['cuestionario']->preguntas[0] = new \stdClass();
+        $data['cuestionario']->preguntas[0]->titulo = "Economía";
+        $data['cuestionario']->preguntas[0]->pregunta = "¿Como se siente si escucha la frase lorem ipsum?";
+        $data['cuestionario']->preguntas[0]->descripcion = "Desarrollo de la pregunta N° 1";
+        $data['cuestionario']->preguntas[0]->nota = "Aclaración opcional sobre pregunta N° 1";
+        $data['cuestionario']->preguntas[0]->video = "https://share.synthesia.io/embeds/videos/7afef1d6-1f8b-45ee-961e-e22a6aa94f6f";
+        $data['cuestionario']->preguntas[1] = new \stdClass();
+        $data['cuestionario']->preguntas[1]->titulo = "Gestíon";
+        $data['cuestionario']->preguntas[1]->pregunta = "¿Esta usted asociado a alguna actividad ilícita en la empresa?";
+        $data['cuestionario']->preguntas[1]->descripcion = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean ut purus in justo aliquet ornare. Curabitur pulvinar nunc et erat convallis consectetur. Duis facilisis sollicitudin lorem, ac tempor nibh vehicula eu. Integer at nunc quis ex rutrum sagittis. Vestibulum augue enim, laoreet scelerisque vestibulum ut, convallis vel ligula. Donec odio arcu, ullamcorper nec eleifend nec, faucibus accumsan libero. Integer tincidunt vestibulum eleifend. Phasellus vel euismod arcu. Nulla cursus urna pellentesque, venenatis nisl nec, vulputate elit.Integer nisi massa, fringilla ornare hendrerit quis, laoreet ut sem. Suspendisse euismod semper ex, non volutpat mauris faucibus eu. Fusce commodo quam in tincidunt condimentum. Maecenas suscipit erat sit amet nisl feugiat interdum. Vestibulum nulla eros, porta nec scelerisque sed, malesuada ac diam. Sed quis tristique ligula. Nulla vehicula mi massa, pellentesque lobortis lorem cursus eu.";
+        $data['cuestionario']->preguntas[1]->nota = "Aclaración opcional sobre pregunta N° 2";
+        $data['cuestionario']->preguntas[1]->video = "https://share.synthesia.io/embeds/videos/7afef1d6-1f8b-45ee-961e-e22a6aa94f6f";
+        $data['cuestionario']->preguntas[2] = new \stdClass();
+        $data['cuestionario']->preguntas[2]->titulo = "Diseño";
+        $data['cuestionario']->preguntas[2]->pregunta = "¿Usted vio algo inusual en el comportamiento de su compañero?";
+        $data['cuestionario']->preguntas[2]->descripcion = "Desarrollo de la pregunta N° 3";
+        $data['cuestionario']->preguntas[2]->nota = "Aclaración opcional sobre pregunta N° 3";
+        $data['cuestionario']->preguntas[2]->video = "https://share.synthesia.io/embeds/videos/7afef1d6-1f8b-45ee-961e-e22a6aa94f6f";
+        $data['cuestionario']->preguntas[3] = new \stdClass();
+        $data['cuestionario']->preguntas[3]->titulo = "Cultura";
+        $data['cuestionario']->preguntas[3]->pregunta = "¿Presenció alguna actividad ilícita en su jornada laboral?";
+        $data['cuestionario']->preguntas[3]->descripcion = "Desarrollo de la pregunta N° 4";
+        $data['cuestionario']->preguntas[3]->nota = "Aclaración opcional sobre pregunta N° 4";
+        $data['cuestionario']->preguntas[3]->video = "https://share.synthesia.io/embeds/videos/7afef1d6-1f8b-45ee-961e-e22a6aa94f6f";
+        
+        return view('Modules\wema\Views\persona\entrevistas\cuestionario',$data);    
+    }
+
+
+    public function modalCliente($clie_id = null){
+        /* LISTADO DE GENEROS */
+        $data['listadoGeneros'] = $this->Generales->getTabla("generos");
+
+        /* LISTADO PAISES */
+        $data['listadoPaises'] = $this->Generales->getTabla("paises");
+
+        /* LISTADO TIPO PERSONAS */
+        $data['tipoPersona'] = $this->Generales->getTabla("tipos_personas");
+
+        /* LISTADO TIPO CLIENTES */
+        $data['tipoCliente'] = $this->Generales->getTabla("tipos_clientes");
+
+        $data['cliente'] = $this->Clientes->getClientexId($clie_id);
+
+        return view('Modules\wema\Views\clientes\modalCliente', $data);
+    }
+
+    /**
+        * Recibe id del cliente
+        * @param  array $clie_id cliente
+        * @return view personas
+    */
+    function getPersonasxIdClientes($clie_id)
+    {
+        /* LISTADO DE CLIENTES */
+        $resp = $this->Clientes->getPersonas($clie_id);
+         
+        echo json_encode($resp);
     }
 
 }

@@ -87,7 +87,7 @@ define('base_url', $base);
 
 /* CONEXIONES SERVICIOS */
 //define('HOST', 'http://10.142.0.13:8280');
-define('HOST', 'http://DESKTOP-G3KC4PP:8290');
+define('HOST', 'http://localhost:8290');
 
 
 define('REST_CLIENTE', HOST.'/services/ClientesDataService');

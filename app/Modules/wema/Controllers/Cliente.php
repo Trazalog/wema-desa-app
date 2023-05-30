@@ -5,6 +5,7 @@ use App\Controllers\BaseController;
 use Modules\wema\Models\Clientes; 
 use Modules\wema\Models\Generales; 
 use Modules\wema\Models\Personas; 
+use Modules\wema\Models\Cuentas; 
 
 
 
@@ -15,6 +16,8 @@ class Cliente extends BaseController
     {
         $this->Clientes = new Clientes();
         $this->Generales = new Generales();
+        $this->Cuentas = new Cuentas();
+
         $this->Personas = new Personas();
     }
     /**
@@ -46,7 +49,8 @@ class Cliente extends BaseController
         log_message('debug', "#TRAZA | WEMA-DESA-APP | Cliente | Index | Cliente:  ".json_encode($data['listadoPersonas'],true));
         
 
-        return view('Modules\wema\Views\clientes\index', $data);
+        return view('Modules\wema\Views\clientes\index', $data)
+        .view('Modules\wema\Views\cuentas\modalGenericoCuenta');
     }
 
 
@@ -84,7 +88,7 @@ class Cliente extends BaseController
             'naci_id' =>  $request->getPost('nacionalidad'),
             'gene_id' =>  $request->getPost('genero'),
             'pana_id' =>  $request->getPost('paisNacimiento'),
-            'empr_id' =>  '1',
+            'empr_id' =>  $request->getPost('empr_id'),
             'imagen' => !empty($_FILES['imagen']['name'])  ? base64_encode(file_get_contents($fotoPerfil->getTempName())) : '',
             'nom_imagen' => !empty($_FILES['imagen']['name'])  ? $fotoPerfil->getName() : '',
         );
@@ -129,7 +133,7 @@ class Cliente extends BaseController
             'naci_id' =>  $request->getPost('nacionalidad'),
             'gene_id' =>  $request->getPost('genero'),
             'pana_id' =>  $request->getPost('paisNacimiento'),
-            'empr_id' =>  '1',
+            'empr_id' =>   $request->getPost('empr_id'),
             'imagen' => !empty($_FILES['imagen']['name'])  ? base64_encode(file_get_contents($fotoPerfil->getTempName())) : '',
             'nom_imagen' => !empty($_FILES['imagen']['name'])  ? $fotoPerfil->getName() : '',
             
@@ -175,6 +179,89 @@ class Cliente extends BaseController
             'clie_id' => $clie_id
         );
         $resp= $this->Clientes->habilitarCliente($data);
+        echo json_encode($resp);
+    }
+
+     /**
+        * Recibe id del cliente
+        * @param  array $clie_id cliente
+        * @return view personas
+    */
+    public function getPersonas($clie_id = null){
+
+        /* LISTADO PERSONAS */
+        $data['listadoPersonas'] = $this->Clientes->getPersonas($clie_id);
+
+        /* LISTADO DE GENEROS */
+        $data['listadoGeneros'] = $this->Generales->getTabla("generos");
+
+        /* LISTADO PAISES */
+        $data['listadoPaises'] = $this->Generales->getTabla("paises");
+
+        /* LISTADO ESTADO CIVIL */
+        $data['listadoEstadoCivil'] = $this->Generales->getTabla("estados_civiles");
+      
+        /* LISTADO NIVELES EDUCATIVOS */
+        $data['listadoNivelEducativo'] = $this->Generales->getTabla("niveles_educativos");
+
+        $data['clie_id'] = $clie_id;
+        
+        return view('Modules\wema\Views\persona\index',$data).view('Modules\wema\Views\clientes\modalGenericoCliente');
+    }
+
+
+    public function getModalCliente(){
+        /* LISTADO DE GENEROS */
+        $data['listadoGeneros'] = $this->Generales->getTabla("generos");
+
+        /* LISTADO PAISES */
+        $data['listadoPaises'] = $this->Generales->getTabla("paises");
+
+        /* LISTADO TIPO PERSONAS */
+        $data['tipoPersona'] = $this->Generales->getTabla("tipos_personas");
+
+        /* LISTADO TIPO CLIENTES */
+        $data['tipoCliente'] = $this->Generales->getTabla("tipos_clientes");
+
+        /* LISTADO DE CLIENTES */
+        $data['listadoClientes'] = $this->Clientes->getClientes();
+
+        return view('Modules\wema\Views\clientes\modalGenericoCliente',$data);
+    }
+
+
+    public function modalCuenta($empr_id = null){
+        /* LISTADO CUENTAS - Adapatar a Cuentas, ahora trae personas */
+        $data['empresa'] = $this->Cuentas->getCuentaxId($empr_id);
+
+        /* LISTADO DE GENEROS */
+        $data['listadoGeneros'] = $this->Generales->getTabla("generos");
+        
+        /* LISTADO DE PERSONAS */
+        $data['listadoPersonas'] = $this->Generales->getTabla("tipos_personas");
+        
+        /* LISTADO DE PERSONAS */
+        $data['listadoTipompresas'] = $this->Generales->getTabla("tipos_empresas");
+
+        /* LISTADO TIPO CLIENTES */
+        $data['listadoCliente'] = $this->Generales->getTabla("tipos_clientes");
+
+        /* LISTADO PAISES */
+        $data['listadoPaises'] = $this->Generales->getTabla("paises");
+
+        return view('Modules\wema\Views\cuentas\modalCuenta', $data);
+    } 
+
+    /**
+        * Recibe id de la empresa
+        * @param  array $empr_id empresa
+        * @return view clientes
+    */
+    function getClientesXIdEmpresa($empr_id)
+    {
+        /* LISTADO DE CLIENTES */
+        $resp = $this->Cuentas->getClientes($empr_id);
+         
         echo json_encode($resp);
     }
 }

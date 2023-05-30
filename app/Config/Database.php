@@ -31,11 +31,11 @@ class Database extends Config
      * @var array
      */
     public $default = [
-        'DSN'      => 'pgsql:host=10.142.0.13;port=5432;dbname=tools_prod_t',
+        'DSN'      => '',
         'hostname' => '10.142.0.13',
         'username' => 'postgres',
-        'password' => '!Password00',
-        'database' => 'tools_prod_t',
+        'password' => '$ueDYY0v47*r',
+        'database' => 'wemap_d',
         'DBDriver' => 'Postgre',//'MySQLi'
         'DBPrefix' => '',
         'pConnect' => false,
@@ -47,7 +47,7 @@ class Database extends Config
         'compress' => false,
         'strictOn' => false,
         'failover' => [],
-        'port'     => 5432,
+        'port'     => 7432,
     ];
 
     /**

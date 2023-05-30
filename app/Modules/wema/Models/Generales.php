@@ -35,4 +35,23 @@ class Generales extends Model{
     }
 
 
+    /**
+        * Obtiene listado de ubicaciones(colonias,estados, municipios) por un valor
+        * @param  $valor string; 
+        * @return array listado con ubicaciones
+	*/
+    public function getUbicaciones($valor){
+        log_message('debug', "#TRAZA | WEMA-DESA-APP | Model | Generales | getUbicaciones($valor)");
+        
+        $url = REST_CORE."/tablas/ubicaciones/$valor";
+
+        $aux = $this->rest->callAPI("GET",$url);
+        $resp = json_decode($aux['data']);
+
+        if(!empty($resp->ubicaciones->ubicacion)){
+            return $resp->ubicaciones->ubicacion;
+        }else{
+            return array();
+        } 
+    }
 }

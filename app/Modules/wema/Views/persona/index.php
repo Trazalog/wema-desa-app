@@ -10,14 +10,14 @@
              <ul class="breadcrumb">
              <!-- <button type="button" class="completed"><i class="fa fa-folder"></i></button> -->
 			        <li class="completed" ><a><i class="fa fa-folder-open"></i></a></li>
-			        <li class="completed" ><a>CONFIANZA Y TECNOLOGIA</a></li>
-			        <li class="active"><a>BIMBO S.A de C.V.</a></li>
+			        <li class="completed" ><a><?= isset($listadoPersonas[0]->nombreEmpresa) ? $listadoPersonas[0]->nombreEmpresa : 'Cuenta' ?></a></li>
+			        <li class="active"><a><?= isset($listadoPersonas[0]->nombreCliente) ? $listadoPersonas[0]->nombreCliente : 'Cliente' ?></a></li>
 		        </ul> 
         
           </div>
            <div class="col-sm-3"></div> 
           <div class="col-sm-2">
-          <button type="button" class="btn btn-outline-primary btn-block btn-sm"><i class="fa fa-info float-left"></i> Información del Cliente</button>
+          <a class="btn btn-outline-primary btn-block btn-sm" type="button" onclick="modalCliente(<?= (isset($clie_id)) ? $clie_id : '' ?>)" ><i class="fa fa-info float-left"></i> Información del Cliente</a>
           </div>
         </div>
         <div class="row mb-2">
@@ -120,7 +120,9 @@
 
             <div class="modal-body">
             <form id="frm-nuevaPersona">
-              <input id="pers_id" name="pers_id" type="text" disabled hidden>
+              <input id="pers_id" name="pers_id" type="text" hidden>
+              <!-- clie_id = 1 es harkodeo -->
+              <input id="clie_id" name="clie_id" type="text" value="<?= (isset($clie_id)) ? $clie_id : '1' ?>" hidden>
                         <div class="row" style="margin-top:-7px">
                           <div class="col">
                             <div class="card card-info">
@@ -378,7 +380,7 @@
                                           <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-list-ol"></i></span>
                                           </div>
-                                        <input type="text" class="form-control requerido" id="CodigoColonia" name="CodigoColonia">
+                                        <input type="text" class="form-control requerido" id="CodigoColonia" name="CodigoColonia" style="width :88%">
                                       </div>
                                       </div>
                                     </div>
@@ -435,8 +437,6 @@
 
 
 <script>
-
-
 
 /* definicion de datatablet */
   $(function () {
@@ -830,11 +830,12 @@ function cargaVistaPrevia(){
  
 /* actualiza tabla personas */
 function actualizaTablaPersonas(){
+  clie_id ="<?= isset($clie_id) ? $clie_id : '1'  ?>";
   $.ajax({
         type: 'POST',
         cache: false,
         dataType: "json",
-        url: "<?= base_url()?>/getPersonas",
+        url: "<?= base_url()?>/personasCliente/" + clie_id,
   success:function(data){
 
     tabla = $('#tabla_personas').DataTable();
@@ -937,6 +938,95 @@ function actualizaTablaPersonas(){
   }   
   });
 }
+
+function modalCliente(clie_id){
+//debugger;
+/* harcodeo para poder acceder desde navegacion */
+  if(clie_id == undefined){
+    var clie_id = '7';
+  }
+
+  $.get('<?= base_url()?>/modalCliente/' + clie_id, function (data){
+    $("#contenidoModal").html(data);
+    $('#modalGenerico').modal('show');
+  });
+}
+
+
+/* buscador codigo postal/colonia  */
+$('#CodigoColonia').select2({
+  ajax:{
+    url: "<?= base_url()?>/ubicaciones/",
+    datatype: 'json',
+    delay: 250,
+    data: function (params){
+      return {
+        patron: params.term,
+        page:params.page
+      };
+    },
+    processResults: function (data, params) {
+                params.page = params.page || 1;
+                data1= JSON.parse(data);
+                var results = [];
+                $.each(data1, function(i, obj) {
+                    results.push({
+                        id: obj.tabl_id,
+                        text: obj.camino,
+                        valor: obj.valor
+                    });
+                });
+                return {
+                    results: results,
+                    pagination: {
+                        more: (params.page * 30) < results.length
+                    }
+                };
+            }
+  },
+  languaje:"es",
+  placeholder:"Buscar...",
+  minimumInputLength: 3,
+  maximumInputLength: 8,
+  dropdownCssClass: "ubicaciones",
+  templateResult: function (ubicacion) {
+
+  if (ubicacion.loading) {
+      return "Buscando...";
+  }
+
+  var $container = $(
+      "<div class='select2-result-repository clearfix'>" +
+      "<div class='select2-result-repository__meta'>" +
+          "<div class='select2-result-repository__title'></div>" +
+          "<div class='select2-result-repository__description'></div>" +
+      "</div>" +
+      "</div>"
+  );
+
+  $container.find(".select2-result-repository__title").text(ubicacion.id);
+  $container.find(".select2-result-repository__description").text(ubicacion.text);
+
+  return $container;
+  },
+  templateSelection: function (ubicacion) {
+    return ubicacion.id || ubicacion.text;
+  },
+  language: {
+            noResults: function() {
+                return '<option>No hay coincidencias</option>';
+            },
+            inputTooShort: function () {
+                return 'Ingrese 3 o mas dígitos para comenzar la búsqueda'; 
+            },
+            inputTooLong: function () {
+                return 'Hasta 8 dígitos permitidos'; 
+            }
+        },
+        escapeMarkup: function(markup) {
+            return markup;
+        },
+});
 </script>
 
 <?= $this->endSection() ?>

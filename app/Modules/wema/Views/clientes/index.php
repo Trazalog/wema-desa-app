@@ -10,13 +10,13 @@
              <ul class="breadcrumb">
              <!-- <button type="button" class="completed"><i class="fa fa-folder"></i></button> -->
 			        <li class="completed" ><a><i class="fa fa-folder-open"></i></a></li>
-			        <li class="completed" ><a>CONFIANZA Y TECNOLOGIA</a></li>
+			        <li class="completed" ><a><?= isset($listadoClientes[0]->nombreEmpresa) ? $listadoClientes[0]->nombreEmpresa : 'Cliente' ?></a></li>
 		        </ul> 
         
           </div>
            <div class="col-sm-3"></div> 
           <div class="col-sm-2">
-          <button type="button" class="btn btn-outline-primary btn-block btn-sm"><i class="fa fa-info float-left"></i> Información de la cuenta</button>
+          <button type="button" class="btn btn-outline-primary btn-block btn-sm" onclick="modalCuenta(<?= (isset($empr_id)) ? $empr_id : '' ?>)"><i class="fa fa-info float-left"></i> Información de la cuenta</button>
           </div>
         </div>
         <div class="row mb-2">
@@ -66,7 +66,7 @@
                         echo'<td>
                                 <div class="btn-group"> 
                                   <i class="fa fa-search" style="cursor: pointer;margin: 3px;" title="Ver Detalles" onclick="verCliente(this)"></i>
-                                  <a style="color:black" href="'.site_url('persona').'"><i class="fa fa-users" style="cursor: pointer;margin: 3px;" title="Ver personas"> </i></a>
+                                  <a style="color:black" href="'. site_url('getPersonas/'.$clientes->clie_id) .'"><i class="fa fa-users" style="cursor: pointer;margin: 3px;" title="Ver personas"></i></a>
                                   <label class="switch" id="miLabel">
                                   <div class="bootstrap-switch-container float-right" style="width: 10px; margin-left: 24px;" >
                                     <input type="checkbox" name="habilitarCliente" data-bootstrap-switch '.$check.'>
@@ -116,7 +116,7 @@
                     <button type="button" id="btn-editar" class="btn btn-outline-primary btn-block btn-sm" onclick="habilitaEditarCliente()" hidden><i class="fa fa-edit"></i> Editar </button>
                 </div>
                 <div class="col-2" >
-                    <button type="button" id="btn-personas" class="btn btn-outline-primary btn-block btn-sm" hidden><i class="fas fa-users"></i> Personas </button>
+                    <a type="button" id="btn-personas" class="btn btn-outline-primary btn-block btn-sm" hidden><i class="fas fa-users"></i> Personas </a>
                 </div>
                 <div class="col-2" >
                     <button type="button" id="btn-organigrama" data-target="#modalOrganigrama" class="btn btn-outline-primary btn-block btn-sm btn-organigrama" hidden><i class="fas fa-sitemap" ></i> Organigrama </button>
@@ -136,6 +136,8 @@
             <div class="modal-body">
             <form id="frm-nuevoCliente">
               <input id="clie_id" name="clie_id" type="text" hidden>
+              <!-- harkodeo $empr_id = 1 -->
+              <input id="empr_id" name="empr_id" type="text"  value="<?= isset($empr_id) ? $empr_id : '1'  ?>" hidden>
               <input id="orgb" name="orgb" type="text" hidden>
               <input id="org" name="org" type="text" hidden>
                         <div class="row" style="margin-top:-7px">
@@ -664,11 +666,6 @@
 
   });
 
-  /* oculta/muestra inputs de modal agregar cliente */
-  $('#miLabel').on("change",function(){
-    alert('holaa')
-  });
-  
 
   /* avtiva botones para cliente fisico */
   function activaBotonesClientesFisicos(){
@@ -721,9 +718,8 @@ function guardarCliente(){
   //validacion datos del formulario
   if(!validaForm('#frm-nuevoCliente')) return;
 
-  if(!rfcValido($('#curp').val()))return;
+  if(!rfcValido($('#rfc').val()))return;
 
-  debugger;
   $.ajax({
     type:'POST',
     dataType: 'JSON',
@@ -761,6 +757,7 @@ function verCliente(e){
     var tr = $(e).closest('tr');
     var json = $(tr).data('json'); 
 
+    $('#btn-personas').attr('href','<?=  site_url('') ?>getPersonas/'+json.clie_id);
     $('#btn-accion').hide();
     $('#mdl-title').html('Cliente');
     $('#frm-nuevoCliente').find('.form-control').prop('disabled', true);
@@ -1051,11 +1048,13 @@ function cargaVistaPrevia(input){
  
 /* Actualiza la tabla sin recargar */
 function actualizarTablaCliente(){
+  empr_id ="<?= isset($empr_id) ? $empr_id : '1'  ?>";
+  debugger;
   $.ajax({
         type: 'POST',
         cache: false,
         dataType: "json",
-        url: "<?= base_url()?>/getClientes",
+        url: "<?= base_url()?>/clientesEmpresa/" + empr_id,
   success:function(data){
 
     tabla = $('#tabla_clientes').DataTable();
@@ -1085,12 +1084,12 @@ function actualizarTablaCliente(){
           estilo='';
           clase='';
     }
-
+ 
       fila="<tr data-json= '"+ JSON.stringify(value) +"'>" +
           '<td>'+
             '<div class="btn-group"> '+
             '<i class="fa fa-search" style="cursor: pointer;margin: 3px;" title="Ver Detalles" onclick="verCliente(this)"></i>'+
-            '<i class="fa fa-users" style="cursor: pointer;margin: 3px;" title="Ver personas" ></i>' +
+            '<a style="color:black" href=" <?= site_url() ?>getPersonas/'+ value.clie_id +'"><i class="fa fa-users" style="cursor: pointer;margin: 3px;" title="Ver personas"></i></a>' + 
              '<label class="switch" id="miLabel">'+
              '<div class="bootstrap-switch-container float-right" style="width: 15px; margin-left: 24px;" >'+
                '<input type="checkbox" name="habilitarCliente" data-bootstrap-switch '+ check +'>'+

@@ -25,8 +25,12 @@ class Personas extends Model{
         $url = REST_PERSONA.'/persona';
         $aux = $this->REST->callAPI("GET",$url);
         $data = json_decode($aux['data']);
+        log_message('debug','#TRAZA | WEMA-DESA-APP | Model | Personas | getPersonas()'.$aux['data']);
 
-        return $data->personas->persona;
+        if(!empty($data->personas->persona)){
+            return $data->personas->persona;
+        }
+        else return array(); 
     }
     /**
         * Alta de una persona en core.personas
@@ -53,6 +57,20 @@ class Personas extends Model{
         $aux = $this->REST->callAPI("PUT",$url, $data);
 
         return $aux;
+    }
+    /**
+        * Obtiene una persona por pers_id(PK)
+        * @param $pers_id
+        * @return array datos de la persona coincidente en core.personas
+	*/
+    public function getPersonaPorId($pers_id){
+        log_message('debug','#TRAZA | WEMA-DESA-APP | Model | Personas | getPersonas()');
+
+        $url = REST_PERSONA.'/persona/id/'.$pers_id;
+        $aux = $this->REST->callAPI("GET",$url);
+        $data = json_decode($aux['data']);
+        
+        return $data->personas->persona;
     }
 
     /**
