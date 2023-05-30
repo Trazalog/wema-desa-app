@@ -83,7 +83,7 @@ class Cliente extends BaseController
             'naci_id' =>  $request->getPost('nacionalidad'),
             'gene_id' =>  $request->getPost('genero'),
             'pana_id' =>  $request->getPost('paisNacimiento'),
-            'empr_id' =>  '1',
+            'empr_id' =>  $request->getPost('empr_id'),
             'imagen' => !empty($_FILES['imagen']['name'])  ? base64_encode(file_get_contents($fotoPerfil->getTempName())) : '',
             'nom_imagen' => !empty($_FILES['imagen']['name'])  ? $fotoPerfil->getName() : '',
         );
@@ -128,7 +128,7 @@ class Cliente extends BaseController
             'naci_id' =>  $request->getPost('nacionalidad'),
             'gene_id' =>  $request->getPost('genero'),
             'pana_id' =>  $request->getPost('paisNacimiento'),
-            'empr_id' =>  '1',
+            'empr_id' =>   $request->getPost('empr_id'),
             'imagen' => !empty($_FILES['imagen']['name'])  ? base64_encode(file_get_contents($fotoPerfil->getTempName())) : '',
             'nom_imagen' => !empty($_FILES['imagen']['name'])  ? $fotoPerfil->getName() : '',
             
@@ -247,4 +247,16 @@ class Cliente extends BaseController
         return view('Modules\wema\Views\cuentas\modalCuenta', $data);
     } 
 
+    /**
+        * Recibe id de la empresa
+        * @param  array $empr_id empresa
+        * @return view clientes
+    */
+    function getClientesXIdEmpresa($empr_id)
+    {
+        /* LISTADO DE CLIENTES */
+        $resp = $this->Cuentas->getClientes($empr_id);
+         
+        echo json_encode($resp);
+    }
 }
