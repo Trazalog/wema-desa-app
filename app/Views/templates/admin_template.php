@@ -47,6 +47,9 @@
   <!-- Sweet Alert 2 -->
   <script src="<?= base_url()?>/lib/sweetalert2/dist/sweetalert2.all.min.js"></script>
   <link rel="stylesheet" src="<?= base_url()?>/lib/sweetalert2/dist/sweetalert2.min.css">
+  <!-- Select2 -->
+  <link href="<?= base_url()?>/lib/select2/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="<?= base_url()?>/lib/select2/dist/js/select2.min.js"></script>
   <!-- Scripts para Notificaciones -->
   <script src="<?= base_url()?>/lib/notificaciones.js"></script>
   <!--Scripts Generales -->

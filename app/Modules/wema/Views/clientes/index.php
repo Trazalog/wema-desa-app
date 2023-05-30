@@ -136,6 +136,8 @@
             <div class="modal-body">
             <form id="frm-nuevoCliente">
               <input id="clie_id" name="clie_id" type="text" hidden>
+              <!-- harkodeo $empr_id = 1 -->
+              <input id="empr_id" name="empr_id" type="text"  value="<?= isset($empr_id) ? $empr_id : '1'  ?>" hidden>
               <input id="orgb" name="orgb" type="text" hidden>
               <input id="org" name="org" type="text" hidden>
                         <div class="row" style="margin-top:-7px">
@@ -1013,11 +1015,13 @@ function cargaVistaPrevia(input){
  
 /* Actualiza la tabla sin recargar */
 function actualizarTablaCliente(){
+  empr_id ="<?= isset($empr_id) ? $empr_id : '1'  ?>";
+  debugger;
   $.ajax({
         type: 'POST',
         cache: false,
         dataType: "json",
-        url: "<?= base_url()?>/getClientes",
+        url: "<?= base_url()?>/clientesEmpresa/" + empr_id,
   success:function(data){
 
     tabla = $('#tabla_clientes').DataTable();
@@ -1121,10 +1125,6 @@ function actualizarTablaCliente(){
   });
 }
 
-/* Modal Organigrama */
-$(document).on("click", ".btn-organigrama", function() {
-
-
 /* trae modal con los datos de la cuenta  */
 function modalCuenta(empr_id){
 
@@ -1140,48 +1140,18 @@ function modalCuenta(empr_id){
   })
 }
 
-  var nodos = $('#orgb').val();
-  /*console.log("nodos: "+ nodos);*/ 
+/* Modal Organigrama */
+$(document).on("click", ".btn-organigrama", function() {
 
-  console.log(nodos.length === 0);
+  var  nodos = {};
+  var nodes = [];   
 
-  if(nodos.length != 0){
+  nodos = $('#orgb').val();
+  /*console.log("nodos: "+ nodos);*/
+  /*console.log(nodos.length === 0);*/
 
-    var nodes = JSON.parse(nodos);
-    /*console.log("nodes: "+ nodes);  */
-    
-    $('#modalOrganigrama').modal('show');    
+  if(nodos.length === 0){
 
-    for (var i = 0; i < nodes.length; i++) {
-        var node = nodes[i];
-        switch (node.title) {
-            case "QA":
-                node.tags = ["QA"];
-                break;
-            case "Marketer":
-            case "Designer":
-            case "Sales Manager":
-                node.tags = ["Marketing"];
-                break;
-        }
-    }
-
-    var chart='';
-    chart = new OrgChart(document.getElementById("tree"), {    
-        mouseScrool: OrgChart.action.ctrlZoom,    
-        enableSearch: false,
-        mode: 'dark',
-        layout: OrgChart.mixed,
-        scaleInitial: OrgChart.match.boundary,
-        nodeBinding: {
-            field_0: "name",
-            field_1: "title",
-            img_0: "img"
-        },
-        nodes: nodes
-    });
-    
-  }else{
     Swal.fire({
       title: 'Deinición Organigrama',
       text: 'El cliente aun no tiene organigrama asociado/definido',
@@ -1194,10 +1164,142 @@ function modalCuenta(empr_id){
       if (result.isConfirmed) {
       
       }    
-    })
+    });
+    
+  }else{
+     
+    delete nodes;
+    nodes = JSON.parse(nodos); 
+    console.log("nodes: "+ nodes);  
+    console.log("length: "+ nodes.length);  
+    
+    for (var i = 0; i < nodes.length; i++) {
+        var node = nodes[i];
+        switch (node.title) {
+            case "QA":
+                node.tags = ["QA"];
+                break;
+            case "Marketer":
+            case "Designer":
+            case "Sales Manager":
+                node.tags = ["Marketing"];
+                break;
+        }
+        console.log("node for: "+ JSON.stringify(node));
+    }
+  
+        
+    $('#modalOrganigrama').modal('show');
 
+    OrgChart.SEARCH_PLACEHOLDER = "Busqueda"; // the default value is "Search"
+    var chart=[];
+    chart = new OrgChart(document.getElementById("tree"), {    
+        mouseScrool: OrgChart.action.ctrlZoom,    
+        enableSearch: true,
+        enableDragDrop: true,
+        nodeMouseClick: false,
+        mode: 'dark',
+        layout: OrgChart.mixed,
+        scaleInitial: OrgChart.match.boundary,
+        nodeBinding: {
+            field_0: "name",
+            field_1: "title",
+            img_0: "img"
+        },        
+        nodeMenu: {
+            details: { 
+              text: "Detalles" ,
+              onClick: detalleNodo
+            },
+            edit: { 
+              text: "Editar",
+              onClick: editarNodo
+            },
+            add: { 
+              text: "Agregar",
+              onClick: agregarNodo
+            },
+            remove: { 
+              text: "Eliminar" 
+            }
+        },        
+        align: OrgChart.ORIENTATION,
+        toolbar: {
+            fullScreen: false,
+            zoom: true,
+            fit: true,
+            expandAll: true
+        },
+        nodes: nodes
+    });
+    /*
+    Agrega nodo nuevo en blanco.
+    */ 
+    function agregarNodo(nodeId){
+
+      var node = chart.get(nodeId);      
+      console.log("node: "+ JSON.stringify(node));      
+      var data = { pers_id : "", id: ((nodes.length*1)+1), pid: node.id};
+      chart.addNode(data); //Agrega al tree
+      console.log("data: "+ JSON.stringify(data));
+      console.log("nodes new: "+ JSON.stringify(nodes));
+    }
+    
+    /*
+    Editar un nodo, asigna y edita, esta persona no debe existir en ningun otro nodo.
+    Campos del personal a asignar al nodo.
+    */ 
+    function editarNodo(nodeId){
+      
+      var node = chart.get(nodeId);   
+      console.log("node: "+ JSON.stringify(node));
+    }
+
+    
+    function detalleNodo(nodeId){
+      
+      var node = chart.get(nodeId);
+      console.log("node: "+ JSON.stringify(node));
+    }
+
+
+    /*Visualiza Vista*/
+    function preview() {
+      OrgChart.pdfPrevUI.show(chart, {
+          format: 'A4'
+      });
+    }
+
+    /*Visualiza Vista PDF*/
+    function nodePdfPreview(nodeId) {
+      OrgChart.pdfPrevUI.show(chart, {
+        format: 'A4',
+        nodeId: nodeId
+      });
+    }
+
+    /*Pruebas*/ 
+    function addSharholder(nodeId) {
+      chart.addNode({ id: OrgChart.randomId(), pid: nodeId, tags: ["menu-without-add"] });
+    }
+
+    function addAssistant(nodeId) {
+      var node = chart.getNode(nodeId);
+      var data = { id: OrgChart.randomId(), pid: node.stParent.id, tags: ["assistant"] };
+      chart.addNode(data);
+    }
+
+    function addDepartment(nodeId) {
+      var node = chart.getNode(nodeId);
+      var data = { id: OrgChart.randomId(), pid: node.stParent.id, tags: ["department"] };
+      chart.addNode(data);
+    }
+
+    function addManager(nodeId) {
+      chart.addNode({ id: OrgChart.randomId(), stpid: nodeId });
+    }
   }
- 
+
 });
 </script>
 
