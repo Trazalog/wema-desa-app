@@ -15,6 +15,7 @@ if(!isset($routes)) {
  $routes->get('/persona/cargarListadoEntrevistados', '\Modules\wema\Controllers\Persona::cargarListadoEntrevistados');
  $routes->get('/persona/initCuestionario/id/(:num)', '\Modules\wema\Controllers\Persona::initCuestionario/$1');
  $routes->get('/persona/entrevista', '\Modules\wema\Controllers\Persona::cargarEntrevista');
+ $routes->get('/vincularCuestionario/(:num)/(:num)', '\Modules\wema\Controllers\Persona::vincularCuestionario/$1/$2');
  $routes->get('/evaluarCuestionario/info_id/(:num)', '\Modules\wema\Controllers\Persona::evaluarCuestionario/$1');
  $routes->get('/modalCliente/(:num)', '\Modules\wema\Controllers\Persona::modalCliente/$1');
 

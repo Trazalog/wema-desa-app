@@ -79,6 +79,7 @@ class Personas extends Model{
         * @return array respuesta del servicio
 	*/
     public function habilitarPersona($data){
+        log_message('info','#TRAZA | WEMA-DESA-APP | Model | Personas | habilitarPersona($data)');
         $url = REST_PERSONA."/habilitarpersona";
         
         $aux = $this->REST->callAPI("PUT",$url, $data);
@@ -92,11 +93,28 @@ class Personas extends Model{
         * @return array respuesta del servicio
 	*/
     public function eliminarPersona($data){
-
+        log_message('info','#TRAZA | WEMA-DESA-APP | Model | Personas | eliminarPersona($data)');
         $url = REST_PERSONA."/persona";
 
         $aux = $this->REST->callAPI("DELETE",$url, $data);
 
         return $aux;
+    }
+    /**
+        * Vincula el info_id de la instancia generada con la persona entrevistada
+        * @param $pers_id datos persona; $info_id instancia generada
+        * @return array respuesta del servicio
+	*/
+    public function vincularCuestionario($pers_id,$info_id){
+        log_message('info','#TRAZA | WEMA-DESA-APP | Model | Personas | vincularCuestionario($pers_id,$info_id)');
+
+        $data['post_persona'] = array(
+            'pers_id' => $pers_id,
+            'info_id' => $info_id
+        );
+        $url = REST_PERSONA."/persona/cuestionario/vincular";
+        $resp = $this->REST->callAPI("POST",$url , $data);
+
+        return $resp;
     }
 }

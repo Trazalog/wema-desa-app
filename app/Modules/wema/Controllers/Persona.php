@@ -184,6 +184,21 @@ class Persona extends BaseController
         
         return view('Modules\wema\Views\persona\entrevistas\cuestionario',$data);    
     }
+    /**
+        * Vincula el info_id de la instancia generada con la persona entrevistada
+        * @param $pers_id id de entrevistada; $info_id id del cuestionario
+        * @return array respuesta del servicio
+	*/
+    public function vincularCuestionario($pers_id,$info_id){
+        log_message('debug','#TRAZA | WEMA-DESA-APP | Controller | Persona | vincularCuestionario()');
+
+        if(!empty($pers_id) && !empty($info_id)){
+            $resp = $this->Personas->vincularCuestionario($pers_id,$info_id);
+        } else{
+            $resp = array("status"=> "false", "msg" => "No se vinculo el cuestionario.");
+        }
+        echo json_encode($resp);        
+    }
 
 
     public function modalCliente($clie_id = null){
