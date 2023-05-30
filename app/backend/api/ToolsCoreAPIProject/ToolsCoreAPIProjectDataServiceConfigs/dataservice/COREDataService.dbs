@@ -1,5 +1,5 @@
-<data transports="http https local" name="CoreDataService" enableBatchRequests="true">
-  <resource path="/tablas" method="POST">
+<data enableBatchRequests="true" name="CoreDataService" transports="http https local">
+  <resource method="POST" path="/tablas">
     <call-query href="setTabla">
       <with-param name="tabla" query-param="tabla" />
       <with-param name="valor" query-param="valor" />
@@ -10,14 +10,14 @@
       <with-param name="tabl_id_padre" query-param="tabl_id_padre" />
     </call-query>
   </resource>
-  <resource path="/tabla/{tabla}" method="GET">
+  <resource method="GET" path="/tabla/{tabla}">
     <description>Listado de la tabla sin empresa                           
                                     </description>
     <call-query href="getTabla">
       <with-param name="tabla" query-param="tabla" />
     </call-query>
   </resource>
-  <resource path="/tabla/{tabla}/empresa/{empr_id}" method="GET">
+  <resource method="GET" path="/tabla/{tabla}/empresa/{empr_id}">
     <description>Listado de la tabla por empresa       </description>
     <call-query href="getTablaEmpresa">
       <with-param name="empr_id" query-param="empr_id" />
@@ -27,7 +27,19 @@
   <config id="WemapDataSource">
     <property name="carbon_datasource_name">WemapDataSource</property>
   </config>
-  <query useConfig="WemapDataSource" id="setTabla">
+  <resource method="GET" path="/tablas/ubicaciones/{valor}">
+    <description>trae las ubicaciones ingresando un valor en core.tablas</description>
+    <call-query href="getUbicaciones">
+      <with-param name="valor" query-param="valor" />
+    </call-query>
+  </resource>
+  <resource method="GET" path="/test/audio/get/{inst_id}">
+    <description />
+    <call-query href="getAudioXId">
+      <with-param name="inst_id" query-param="inst_id" />
+    </call-query>
+  </resource>
+  <query id="setTabla" useConfig="WemapDataSource">
     <sql>INSERT INTO core.tablas
 (tabla, valor, valor2, valor3,descripcion,empr_id, tabl_id_padre)
 select tabla
@@ -60,7 +72,7 @@ returning tabl_id</sql>
     <param name="empr_id" sqlType="STRING" />
     <param name="tabl_id_padre" sqlType="STRING" />
   </query>
-  <query useConfig="WemapDataSource" id="getTabla">
+  <query id="getTabla" useConfig="WemapDataSource">
     <sql>SELECT * FROM core.tablas WHERE tabla = :tabla and eliminado = false</sql>
     <result outputType="json">{
     "tablas":{
@@ -78,7 +90,7 @@ returning tabl_id</sql>
 }</result>
     <param name="tabla" sqlType="STRING" />
   </query>
-  <query useConfig="WemapDataSource" id="getTablaEmpresa">
+  <query id="getTablaEmpresa" useConfig="WemapDataSource">
     <sql>select
 	t.*
 from
@@ -104,7 +116,7 @@ and t.eliminado = false</sql>
     <param name="empr_id" sqlType="STRING" />
     <param name="tabla" sqlType="STRING" />
   </query>
-  <query useConfig="WemapDataSource" id="getUbicaciones">
+  <query id="getUbicaciones" useConfig="WemapDataSource">
     <sql>select (m.*)
 FROM (WITH RECURSIVE menu_tree AS(
 SELECT
@@ -133,7 +145,7 @@ FROM
 		  (upper(mt.camino) like '%'||upper(:valor)||'%')
 		) t
 ) m ORDER BY m.camino</sql>
-    <param type="IN" name="valor" sqlType="STRING" paramType="SCALAR" optional="false" />
+    <param type="IN" name="valor" sqlType="STRING" optional="false" paramType="SCALAR" />
     <result outputType="json">{
     "ubicaciones": {
         "ubicacion": [{
@@ -147,10 +159,17 @@ FROM
     }
 }</result>
   </query>
-  <resource path="/tablas/ubicaciones/{valor}" method="GET">
-    <description>trae las ubicaciones ingresando un valor en core.tablas</description>
-    <call-query href="getUbicaciones">
-      <with-param name="valor" query-param="valor" />
-    </call-query>
-  </resource>
+  <query id="getAudioXId" useConfig="WemapDataSource">
+    <sql>select * from frm.instancias_formularios if2
+where if2.inst_id = cast(:inst_id as integer)</sql>
+    <param type="IN" name="inst_id" sqlType="STRING" optional="false" paramType="SCALAR" />
+    <result outputType="json">{
+    "audios": {
+        "audio":{
+            "question" : "$name",
+            "audio_codificado": "$valor4_base64"
+        }
+    }
+}</result>
+  </query>
 </data>
