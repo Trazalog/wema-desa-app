@@ -1128,62 +1128,30 @@ function actualizarTablaCliente(){
 /* trae modal con los datos de la cuenta  */
 function modalCuenta(empr_id){
 
-/* harcodeo para poder acceder desde navegacion */
-if(empr_id == undefined){
-  var empr_id = '7';
+  /* harcodeo para poder acceder desde navegacion */
+  if(empr_id == undefined){
+    var empr_id = '7';
+  }
+
+  $.get('<?= base_url()?>/modalCuenta/'+ empr_id, function (data){
+    $('#modalGenericoCuenta').modal('show');
+    $("#contenidoModal").html(data);
+    //$("#IdDondeQuieroMiVIsta").html(data);
+  })
 }
 
-$.get('<?= base_url()?>/modalCuenta/'+ empr_id, function (data){
-  $('#modalGenericoCuenta').modal('show');
-  $("#contenidoModal").html(data);
-})
-}
 /* Modal Organigrama */
 $(document).on("click", ".btn-organigrama", function() {
 
+  var  nodos = {};
+  var nodes = [];   
 
-  var nodos = $('#orgb').val();
-  /*console.log("nodos: "+ nodos);*/ 
+  nodos = $('#orgb').val();
+  /*console.log("nodos: "+ nodos);*/
+  /*console.log(nodos.length === 0);*/
 
-  console.log(nodos.length === 0);
+  if(nodos.length === 0){
 
-  if(nodos.length != 0){
-
-    var nodes = JSON.parse(nodos);
-    /*console.log("nodes: "+ nodes);  */
-    
-    $('#modalOrganigrama').modal('show');    
-
-    for (var i = 0; i < nodes.length; i++) {
-        var node = nodes[i];
-        switch (node.title) {
-            case "QA":
-                node.tags = ["QA"];
-                break;
-            case "Marketer":
-            case "Designer":
-            case "Sales Manager":
-                node.tags = ["Marketing"];
-                break;
-        }
-    }
-
-    var chart='';
-    chart = new OrgChart(document.getElementById("tree"), {    
-        mouseScrool: OrgChart.action.ctrlZoom,    
-        enableSearch: false,
-        mode: 'dark',
-        layout: OrgChart.mixed,
-        scaleInitial: OrgChart.match.boundary,
-        nodeBinding: {
-            field_0: "name",
-            field_1: "title",
-            img_0: "img"
-        },
-        nodes: nodes
-    });
-    
-  }else{
     Swal.fire({
       title: 'Deinición Organigrama',
       text: 'El cliente aun no tiene organigrama asociado/definido',
@@ -1196,10 +1164,142 @@ $(document).on("click", ".btn-organigrama", function() {
       if (result.isConfirmed) {
       
       }    
-    })
+    });
+    
+  }else{
+     
+    delete nodes;
+    nodes = JSON.parse(nodos); 
+    console.log("nodes: "+ nodes);  
+    console.log("length: "+ nodes.length);  
+    
+    for (var i = 0; i < nodes.length; i++) {
+        var node = nodes[i];
+        switch (node.title) {
+            case "QA":
+                node.tags = ["QA"];
+                break;
+            case "Marketer":
+            case "Designer":
+            case "Sales Manager":
+                node.tags = ["Marketing"];
+                break;
+        }
+        console.log("node for: "+ JSON.stringify(node));
+    }
+  
+        
+    $('#modalOrganigrama').modal('show');
 
+    OrgChart.SEARCH_PLACEHOLDER = "Busqueda"; // the default value is "Search"
+    var chart=[];
+    chart = new OrgChart(document.getElementById("tree"), {    
+        mouseScrool: OrgChart.action.ctrlZoom,    
+        enableSearch: true,
+        enableDragDrop: true,
+        nodeMouseClick: false,
+        mode: 'dark',
+        layout: OrgChart.mixed,
+        scaleInitial: OrgChart.match.boundary,
+        nodeBinding: {
+            field_0: "name",
+            field_1: "title",
+            img_0: "img"
+        },        
+        nodeMenu: {
+            details: { 
+              text: "Detalles" ,
+              onClick: detalleNodo
+            },
+            edit: { 
+              text: "Editar",
+              onClick: editarNodo
+            },
+            add: { 
+              text: "Agregar",
+              onClick: agregarNodo
+            },
+            remove: { 
+              text: "Eliminar" 
+            }
+        },        
+        align: OrgChart.ORIENTATION,
+        toolbar: {
+            fullScreen: false,
+            zoom: true,
+            fit: true,
+            expandAll: true
+        },
+        nodes: nodes
+    });
+    /*
+    Agrega nodo nuevo en blanco.
+    */ 
+    function agregarNodo(nodeId){
+
+      var node = chart.get(nodeId);      
+      console.log("node: "+ JSON.stringify(node));      
+      var data = { pers_id : "", id: ((nodes.length*1)+1), pid: node.id};
+      chart.addNode(data); //Agrega al tree
+      console.log("data: "+ JSON.stringify(data));
+      console.log("nodes new: "+ JSON.stringify(nodes));
+    }
+    
+    /*
+    Editar un nodo, asigna y edita, esta persona no debe existir en ningun otro nodo.
+    Campos del personal a asignar al nodo.
+    */ 
+    function editarNodo(nodeId){
+      
+      var node = chart.get(nodeId);   
+      console.log("node: "+ JSON.stringify(node));
+    }
+
+    
+    function detalleNodo(nodeId){
+      
+      var node = chart.get(nodeId);
+      console.log("node: "+ JSON.stringify(node));
+    }
+
+
+    /*Visualiza Vista*/
+    function preview() {
+      OrgChart.pdfPrevUI.show(chart, {
+          format: 'A4'
+      });
+    }
+
+    /*Visualiza Vista PDF*/
+    function nodePdfPreview(nodeId) {
+      OrgChart.pdfPrevUI.show(chart, {
+        format: 'A4',
+        nodeId: nodeId
+      });
+    }
+
+    /*Pruebas*/ 
+    function addSharholder(nodeId) {
+      chart.addNode({ id: OrgChart.randomId(), pid: nodeId, tags: ["menu-without-add"] });
+    }
+
+    function addAssistant(nodeId) {
+      var node = chart.getNode(nodeId);
+      var data = { id: OrgChart.randomId(), pid: node.stParent.id, tags: ["assistant"] };
+      chart.addNode(data);
+    }
+
+    function addDepartment(nodeId) {
+      var node = chart.getNode(nodeId);
+      var data = { id: OrgChart.randomId(), pid: node.stParent.id, tags: ["department"] };
+      chart.addNode(data);
+    }
+
+    function addManager(nodeId) {
+      chart.addNode({ id: OrgChart.randomId(), stpid: nodeId });
+    }
   }
- 
+
 });
 </script>
 
