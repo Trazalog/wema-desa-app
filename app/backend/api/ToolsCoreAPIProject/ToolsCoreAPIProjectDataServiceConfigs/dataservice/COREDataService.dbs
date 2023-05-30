@@ -1,5 +1,33 @@
-<data enableBatchRequests="true" name="CoreDataService" transports="http https local">
-  <query id="setTabla" useConfig="WemapDataSource">
+<data transports="http https local" name="CoreDataService" enableBatchRequests="true">
+  <resource path="/tablas" method="POST">
+    <call-query href="setTabla">
+      <with-param name="tabla" query-param="tabla" />
+      <with-param name="valor" query-param="valor" />
+      <with-param name="valor2" query-param="valor2" />
+      <with-param name="valor3" query-param="valor3" />
+      <with-param name="descripcion" query-param="descripcion" />
+      <with-param name="empr_id" query-param="empr_id" />
+      <with-param name="tabl_id_padre" query-param="tabl_id_padre" />
+    </call-query>
+  </resource>
+  <resource path="/tabla/{tabla}" method="GET">
+    <description>Listado de la tabla sin empresa                           
+                                    </description>
+    <call-query href="getTabla">
+      <with-param name="tabla" query-param="tabla" />
+    </call-query>
+  </resource>
+  <resource path="/tabla/{tabla}/empresa/{empr_id}" method="GET">
+    <description>Listado de la tabla por empresa       </description>
+    <call-query href="getTablaEmpresa">
+      <with-param name="empr_id" query-param="empr_id" />
+      <with-param name="tabla" query-param="tabla" />
+    </call-query>
+  </resource>
+  <config id="WemapDataSource">
+    <property name="carbon_datasource_name">WemapDataSource</property>
+  </config>
+  <query useConfig="WemapDataSource" id="setTabla">
     <sql>INSERT INTO core.tablas
 (tabla, valor, valor2, valor3,descripcion,empr_id, tabl_id_padre)
 select tabla
@@ -32,7 +60,7 @@ returning tabl_id</sql>
     <param name="empr_id" sqlType="STRING" />
     <param name="tabl_id_padre" sqlType="STRING" />
   </query>
-  <query id="getTabla" useConfig="WemapDataSource">
+  <query useConfig="WemapDataSource" id="getTabla">
     <sql>SELECT * FROM core.tablas WHERE tabla = :tabla and eliminado = false</sql>
     <result outputType="json">{
     "tablas":{
@@ -50,7 +78,7 @@ returning tabl_id</sql>
 }</result>
     <param name="tabla" sqlType="STRING" />
   </query>
-  <query id="getTablaEmpresa" useConfig="WemapDataSource">
+  <query useConfig="WemapDataSource" id="getTablaEmpresa">
     <sql>select
 	t.*
 from
@@ -76,32 +104,53 @@ and t.eliminado = false</sql>
     <param name="empr_id" sqlType="STRING" />
     <param name="tabla" sqlType="STRING" />
   </query>
-  <resource method="POST" path="/tablas">
-    <call-query href="setTabla">
-      <with-param name="tabla" query-param="tabla" />
+  <query useConfig="WemapDataSource" id="getUbicaciones">
+    <sql>select (m.*)
+FROM (WITH RECURSIVE menu_tree AS(
+SELECT
+	m.tabl_id , m.tabla, m.valor, m.valor2 , m.descripcion , 1 AS nivel, m.descripcion as camino 
+FROM
+	core.tablas M
+WHERE
+	M.tabl_id_padre  IS null
+	AND eliminado = false 
+UNION
+SELECT
+	m.tabl_id , m.tabla, m.valor, m.valor2, m.descripcion , (t.nivel + 1) AS nivel, m.descripcion || 
+	case when m.valor2 is null or m.valor2 = '' then '' else  '(' || m.valor2 || ')' end || '>'  || t.camino as PATH 
+FROM
+	core.tablas M
+INNER JOIN menu_tree t ON
+	m.tabl_id_padre = t.tabl_id
+where
+	 m.eliminado = false
+	)
+SELECT
+	t.*
+FROM
+	(SELECT mt.* FROM menu_tree mt 
+		where
+		  (upper(mt.camino) like '%'||upper(:valor)||'%')
+		) t
+) m ORDER BY m.camino</sql>
+    <param type="IN" name="valor" sqlType="STRING" paramType="SCALAR" optional="false" />
+    <result outputType="json">{
+    "ubicaciones": {
+        "ubicacion": [{
+            "tabl_id" : "$tabl_id",
+            "tabla" : "$tabla",
+            "valor" : "$valor",
+            "valor2" : "$valor2",
+            "descripcion" : "$descripcion",
+            "camino" : "$camino"
+        }]
+    }
+}</result>
+  </query>
+  <resource path="/tablas/ubicaciones/{valor}" method="GET">
+    <description>trae las ubicaciones ingresando un valor en core.tablas</description>
+    <call-query href="getUbicaciones">
       <with-param name="valor" query-param="valor" />
-      <with-param name="valor2" query-param="valor2" />
-      <with-param name="valor3" query-param="valor3" />
-      <with-param name="descripcion" query-param="descripcion" />
-      <with-param name="empr_id" query-param="empr_id" />
-      <with-param name="tabl_id_padre" query-param="tabl_id_padre" />
     </call-query>
   </resource>
-  <resource method="GET" path="/tabla/{tabla}">
-    <description>Listado de la tabla sin empresa                           
-                                    </description>
-    <call-query href="getTabla">
-      <with-param name="tabla" query-param="tabla" />
-    </call-query>
-  </resource>
-  <resource method="GET" path="/tabla/{tabla}/empresa/{empr_id}">
-    <description>Listado de la tabla por empresa       </description>
-    <call-query href="getTablaEmpresa">
-      <with-param name="empr_id" query-param="empr_id" />
-      <with-param name="tabla" query-param="tabla" />
-    </call-query>
-  </resource>
-  <config id="WemapDataSource">
-    <property name="carbon_datasource_name">WemapDataSource</property>
-  </config>
 </data>

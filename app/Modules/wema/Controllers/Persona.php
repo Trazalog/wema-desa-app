@@ -73,7 +73,7 @@ class Persona extends BaseController
             'naci_id' =>  $request->getPost('nacionalidad'),
             'educ_id' =>  $request->getPost('escolaridad'),
             'ubic_id' =>  $request->getPost('nacionalidad'),
-            'clie_id' =>  empresa(),
+            'clie_id' =>  $request->getPost('clie_id'),
             'imagen' => !empty($_FILES['imagen']['name'])  ? base64_encode(file_get_contents($fotoPerfil->getTempName())) : '',
             'nom_imagen' => !empty($_FILES['imagen']['name'])  ? $fotoPerfil->getName() : ''
         );
@@ -114,7 +114,7 @@ class Persona extends BaseController
             'naci_id' =>  $request->getPost('nacionalidad'),
             'educ_id' =>  $request->getPost('escolaridad'),
             'ubic_id' =>  $request->getPost('nacionalidad'),
-            'clie_id' =>  empresa(),
+            'clie_id' =>  $request->getPost('clie_id'),
             'imagen' => !empty($_FILES['imagen']['name'])  ? base64_encode(file_get_contents($fotoPerfil->getTempName())) : '',
             'nom_imagen' => !empty($_FILES['imagen']['name'])  ? $fotoPerfil->getName() : ''
         );
@@ -229,6 +229,19 @@ class Persona extends BaseController
         $data['cliente'] = $this->Clientes->getClientexId($clie_id);
 
         return view('Modules\wema\Views\clientes\modalCliente', $data);
+    }
+
+    /**
+        * Recibe id del cliente
+        * @param  array $clie_id cliente
+        * @return view personas
+    */
+    function getPersonasxIdClientes($clie_id)
+    {
+        /* LISTADO DE CLIENTES */
+        $resp = $this->Clientes->getPersonas($clie_id);
+         
+        echo json_encode($resp);
     }
 
 }

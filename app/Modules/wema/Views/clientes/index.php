@@ -136,6 +136,8 @@
             <div class="modal-body">
             <form id="frm-nuevoCliente">
               <input id="clie_id" name="clie_id" type="text" hidden>
+              <!-- harkodeo $empr_id = 1 -->
+              <input id="empr_id" name="empr_id" type="text"  value="<?= isset($empr_id) ? $empr_id : '1'  ?>" hidden>
               <input id="orgb" name="orgb" type="text" hidden>
               <input id="org" name="org" type="text" hidden>
                         <div class="row" style="margin-top:-7px">
@@ -1013,11 +1015,13 @@ function cargaVistaPrevia(input){
  
 /* Actualiza la tabla sin recargar */
 function actualizarTablaCliente(){
+  empr_id ="<?= isset($empr_id) ? $empr_id : '1'  ?>";
+  debugger;
   $.ajax({
         type: 'POST',
         cache: false,
         dataType: "json",
-        url: "<?= base_url()?>/getClientes",
+        url: "<?= base_url()?>/clientesEmpresa/" + empr_id,
   success:function(data){
 
     tabla = $('#tabla_clientes').DataTable();
