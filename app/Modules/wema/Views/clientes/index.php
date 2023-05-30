@@ -547,6 +547,39 @@
         </div>
       </div>
 
+      <div class="modal fade" id="asignarPersonal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Asigancion Personal</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+            
+                <div class="modal-body">
+                  <div class="form-group">
+                    <label>Minimal</label>
+                    <select class="form-control select2" style="width: 100%;">
+                      <option selected="selected">Alabama</option>
+                      <option>Alaska</option>
+                      <option>California</option>
+                      <option>Delaware</option>
+                      <option>Tennessee</option>
+                      <option>Texas</option>
+                      <option>Washington</option>
+                    </select>
+                  </div>                        
+                </div>
+
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                  <button type="button" class="btn btn-primary" data-dismiss="modal">Agregar</button>
+                </div>                
+            </div>
+        </div>
+      </div>
+
 
 <script>
 
@@ -1199,7 +1232,7 @@ $(document).on("click", ".btn-organigrama", function() {
         enableSearch: true,
         enableDragDrop: true,
         nodeMouseClick: false,
-        mode: 'dark',
+        //mode: 'dark',
         layout: OrgChart.mixed,
         scaleInitial: OrgChart.match.boundary,
         nodeBinding: {
@@ -1244,6 +1277,8 @@ $(document).on("click", ".btn-organigrama", function() {
       chart.addNode(data); //Agrega al tree
       console.log("data: "+ JSON.stringify(data));
       console.log("nodes new: "+ JSON.stringify(nodes));
+
+
     }
     
     /*
@@ -1251,9 +1286,35 @@ $(document).on("click", ".btn-organigrama", function() {
     Campos del personal a asignar al nodo.
     */ 
     function editarNodo(nodeId){
-      
+
       var node = chart.get(nodeId);   
       console.log("node: "+ JSON.stringify(node));
+      
+      $('#asignarPersonal').modal('show');
+
+
+    }
+    /*
+    Recorrer y validaar si ya esta asignado
+    */
+    function recorrerNodos(nodeId){
+
+      console.log("nodes recorrer: "+ JSON.stringify(nodes));
+      for (var i = 0; i < nodes.length; i++) {
+        var node = nodes[i];
+        switch (node.title) {
+            case "QA":
+                node.tags = ["QA"];
+                break;
+            case "Marketer":
+            case "Designer":
+            case "Sales Manager":
+                node.tags = ["Marketing"];
+                break;
+        }
+        console.log("node for: "+ JSON.stringify(node));
+    }
+  
     }
 
     

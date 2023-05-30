@@ -4,6 +4,7 @@ namespace Modules\wema\Controllers;
 use App\Controllers\BaseController;
 use Modules\wema\Models\Clientes; 
 use Modules\wema\Models\Generales; 
+use Modules\wema\Models\Personas; 
 
 
 
@@ -14,6 +15,7 @@ class Cliente extends BaseController
     {
         $this->Clientes = new Clientes();
         $this->Generales = new Generales();
+        $this->Personas = new Personas();
     }
     /**
         * Carga pantalla principal de ABM clientes
@@ -37,8 +39,12 @@ class Cliente extends BaseController
 
         /* LISTADO DE CLIENTES */
         $data['listadoClientes'] = $this->Clientes->getClientes();
-        log_message('debug', "#TRAZA | WEMA-DESA-APP | Cliente | Index | Cliente:  ".json_encode($data['listadoClientes'],true));
-        log_message('debug', "#TRAZA | WEMA-DESA-APP | Cliente | Index | ORGB:  ".json_encode($data['listadoClientes']));
+        //log_message('debug', "#TRAZA | WEMA-DESA-APP | Cliente | Index | Cliente:  ".json_encode($data['listadoClientes'],true));
+        
+        /* LISTADO DE CLIENTES */
+        $data['listadoPersonas'] = $this->Personas->getPersonas();
+        log_message('debug', "#TRAZA | WEMA-DESA-APP | Cliente | Index | Cliente:  ".json_encode($data['listadoPersonas'],true));
+        
 
         return view('Modules\wema\Views\clientes\index', $data);
     }

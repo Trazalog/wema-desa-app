@@ -33,4 +33,6 @@ class Generales extends Model{
             return array();
         }
     }
+
+
 }
