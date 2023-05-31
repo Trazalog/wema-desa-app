@@ -140,6 +140,7 @@
               <input id="empr_id" name="empr_id" type="text"  value="<?= isset($empr_id) ? $empr_id : '1'  ?>" hidden>
               <input id="orgb" name="orgb" type="text" hidden>
               <input id="org" name="org" type="text" hidden>
+               
                         <div class="row" style="margin-top:-7px">
                           <div class="col">
                             <div class="card card-info">
@@ -478,29 +479,29 @@
   </div>
 
       <!-- Modal Agregar imagen -->
-<div class="modal fade" id="modalAgregarLogo">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Agregar</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">×</span>
-                </button>
-            </div>
+      <div class="modal fade" id="modalAgregarLogo">
+          <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                  <div class="modal-header">
+                      <h4 class="modal-title">Agregar</h4>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                      </button>
+                  </div>
 
-            <form id="formAgregarLogo" enctype="multipart/form-data">
-                <div class="modal-body">
-                    <input type="hidden" id="idAgregaLogo" name="idAgregaLogo">
-                    <input id="inputLogo" name="inputImagen" type="file" class="form-control input-md" onclick="cargaVistaPrevia(this)">
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">Agregar</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
+                  <form id="formAgregarLogo" enctype="multipart/form-data">
+                      <div class="modal-body">
+                          <input type="hidden" id="idAgregaLogo" name="idAgregaLogo">
+                          <input id="inputLogo" name="inputImagen" type="file" class="form-control input-md" onclick="cargaVistaPrevia(this)">
+                      </div>
+                      <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                          <button type="button" class="btn btn-primary" data-dismiss="modal">Agregar</button>
+                      </div>
+                  </form>
+              </div>
+          </div>
+      </div>
 
 
       <!-- Modal Organigrama imagen -->
@@ -527,23 +528,37 @@
           </div>
       </div>
 
-      <div class="modal fade" id="modalNoOrganigrama">
+      <div class="modal fade" id="asignaPersonal">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Organigrama</h4>
+                    <h4 class="modal-title">Asignación de Personal</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">×</span>
                     </button>
                 </div>
             
                 <div class="modal-body">
-                        
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label>Personas: </label>
+                      <div class="input-group">
+                        <select name="personaAsignada" id="personaAsignada"  class="form-control select2" style="width: 100%;">
+                          <option value="" selected disabled> - Seleccionar - </option>
+                          <?php 
+                            foreach ($listadoPersonas as $key => $persona) {                            
+                              echo "<option value='$persona->pers_id'>".$persona->nombres." ".$persona->apellidos."</option>";
+                            }
+                          ?>
+                        </select>
+                      </div>
+                    </div>                 
+                  </div>                 
                 </div>
 
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                  <button type="button" class="btn btn-primary" data-dismiss="modal">Agregar</button>
+                  <button type="button" id="asignarPeronal" class="btn btn-primary" data-dismiss="modal">Asignar</button>
                 </div>                
             </div>
         </div>
@@ -554,6 +569,9 @@
 
 /* definicion de datatablet */
   $(function () {
+    //Initialize Select2 Elements
+    $('.select2').select2();
+
     $("#tabla_clientes").DataTable({
       dom: 'lfBtip', //orden de los elementos del datatable
       'initComplete': function (settings, json) {
@@ -1144,10 +1162,13 @@ function modalCuenta(empr_id){
 $(document).on("click", ".btn-organigrama", function() {
 
   var  nodos = {};
-  var nodes = [];   
+  var nodes = selects = options = chart=[];
 
   nodos = $('#orgb').val();
-  /*console.log("nodos: "+ nodos);*/
+  selects = <?php echo json_encode($listadoPersonas); ?>; 
+  var empr_id ="<?= isset($empr_id) ? $empr_id : '1'  ?>"; 
+  //console.log("nodos: "+ nodos);
+  //console.log("Empr_id"+empr_id+" ppa: "+ JSON.stringify(select));
   /*console.log(nodos.length === 0);*/
 
   if(nodos.length === 0){
@@ -1169,9 +1190,17 @@ $(document).on("click", ".btn-organigrama", function() {
   }else{
      
     delete nodes;
+    
     nodes = JSON.parse(nodos); 
-    console.log("nodes: "+ nodes);  
-    console.log("length: "+ nodes.length);  
+    /*console.log("nodes: "+ nodes);  */
+    /*console.log("length: "+ nodes.length);  */
+
+    for (var i = 0; i < selects.length; i++) {
+      var select = selects[i];
+      var option = {"id": select.pers_id, "value" : select.nombres+" "+select.apellidos , "text" : select.nombres.toUpperCase()+" "+select.apellidos.toUpperCase()};
+      options.push(option);
+    }
+    console.log("Options: "+JSON.stringify(options));
     
     for (var i = 0; i < nodes.length; i++) {
         var node = nodes[i];
@@ -1185,35 +1214,81 @@ $(document).on("click", ".btn-organigrama", function() {
                 node.tags = ["Marketing"];
                 break;
         }
-        console.log("node for: "+ JSON.stringify(node));
+        /*console.log("node for: "+ JSON.stringify(node));*/
     }
   
         
     $('#modalOrganigrama').modal('show');
 
+    OrgChart.templates.anaOrange = Object.assign({}, OrgChart.templates.ana);
+    OrgChart.elements.text = function (data, editElement, minWidth, readOnly) {    
+      readOnly = true;
+    };
     OrgChart.SEARCH_PLACEHOLDER = "Busqueda"; // the default value is "Search"
-    var chart=[];
-    chart = new OrgChart(document.getElementById("tree"), {    
-        mouseScrool: OrgChart.action.ctrlZoom,    
-        enableSearch: true,
-        enableDragDrop: true,
+    delete chart;
+    chart = new OrgChart(document.getElementById("tree"), {     
+        enableSearch: true,   
         nodeMouseClick: false,
-        mode: 'dark',
+        mouseScrool: OrgChart.action.none,
         layout: OrgChart.mixed,
+        tags: {
+          orange: {
+            template: 'anaOrange'
+          }
+        },
+        //mode: 'dark',
         scaleInitial: OrgChart.match.boundary,
+        
         nodeBinding: {
             field_0: "name",
             field_1: "title",
             img_0: "img"
-        },        
+        },  
+        editForm: {
+            generateElementsFromFields: false,            
+            addMore: null,
+            addMoreBtn: null,
+            addMoreFieldName: null,
+            nameBinding: 'name',
+            titleBinding: 'title',
+            imgBinding: 'img',
+            cancelBtn: 'Cancelar',
+            saveAndCloseBtn: 'Asignar',
+            buttons:  {
+                edit: {
+                    icon: OrgChart.icon.edit(24,24,'#fff'),
+                    text: 'Editar',
+                    hideIfEditMode: true,
+                    hideIfDetailsMode: false
+                },
+                share: {
+                    icon: OrgChart.icon.share(24,24,'#fff'),
+                    text: 'Compartir'
+                },
+                pdf: {
+                    icon: OrgChart.icon.pdf(24,24,'#fff'),
+                    text: 'PDF'
+                },
+                remove: {
+                    icon: OrgChart.icon.remove(24,24,'#fff'),
+                    text: 'Eliminar',
+                    hideIfDetailsMode: true
+                }
+            },
+            elements: [
+              { type: 'select', options: options, label: 'Nombres', binding: 'name'},
+              { type: 'textbox', label: 'Puesto', binding: 'title'},  
+              { type: 'textbox', label: 'Url Imagen', binding: 'img', btn: 'Upload' },            
+            ]
+        } ,     
         nodeMenu: {
             details: { 
               text: "Detalles" ,
-              onClick: detalleNodo
+              //onClick: detalleNodo
             },
             edit: { 
               text: "Editar",
-              onClick: editarNodo
+              //onClick: editarNodo
             },
             add: { 
               text: "Agregar",
@@ -1232,6 +1307,16 @@ $(document).on("click", ".btn-organigrama", function() {
         },
         nodes: nodes
     });
+
+    chart.editUI.on('element-btn-click', function (sender, args) {
+        OrgChart.fileUploadDialog(function (file) {
+            var formData = new FormData();
+            formData.append('file', file);
+            alert('Imagen ha sido cargada');
+        })
+    });
+    
+
     /*
     Agrega nodo nuevo en blanco.
     */ 
@@ -1239,65 +1324,58 @@ $(document).on("click", ".btn-organigrama", function() {
 
       var node = chart.get(nodeId);      
       console.log("node: "+ JSON.stringify(node));      
-      var data = { pers_id : "", id: ((nodes.length*1)+1), pid: node.id};
+      var data = { pers_id : "", id: ((nodes.length*1)+1), pid: node.id, name: "", title:"", img: ""};
       chart.addNode(data); //Agrega al tree
       console.log("data: "+ JSON.stringify(data));
       console.log("nodes new: "+ JSON.stringify(nodes));
+      if (data.length == 0) {
+          this.style.display = "none";
+      }
     }
     
     /*
     Editar un nodo, asigna y edita, esta persona no debe existir en ningun otro nodo.
     Campos del personal a asignar al nodo.
     */ 
-    function editarNodo(nodeId){
-      
+    /*function editarNodo(nodeId){
+
       var node = chart.get(nodeId);   
-      console.log("node: "+ JSON.stringify(node));
-    }
+      console.log("node: "+ JSON.stringify(node)); 
+      $('#orgg').val(nodes);                 
+      $('#asignaPersonal').modal('show');
+
+    } */
+
+    /*
+    Recorrer y validaar si ya esta asignado
+    */
+    /*function recorrerNodos(nodeId){
+
+      console.log("nodes recorrer: "+ JSON.stringify(nodes));
+      for (var i = 0; i < nodes.length; i++) {
+        var node = nodes[i];
+        switch (node.title) {
+            case "QA":
+                node.tags = ["QA"];
+                break;
+            case "Marketer":
+            case "Designer":
+            case "Sales Manager":
+                node.tags = ["Marketing"];
+                break;
+        }
+        console.log("node for: "+ JSON.stringify(node));
+      }
+
+    }*/
 
     
-    function detalleNodo(nodeId){
+    /*function detalleNodo(nodeId){
       
       var node = chart.get(nodeId);
       console.log("node: "+ JSON.stringify(node));
-    }
-
-
-    /*Visualiza Vista*/
-    function preview() {
-      OrgChart.pdfPrevUI.show(chart, {
-          format: 'A4'
-      });
-    }
-
-    /*Visualiza Vista PDF*/
-    function nodePdfPreview(nodeId) {
-      OrgChart.pdfPrevUI.show(chart, {
-        format: 'A4',
-        nodeId: nodeId
-      });
-    }
-
-    /*Pruebas*/ 
-    function addSharholder(nodeId) {
-      chart.addNode({ id: OrgChart.randomId(), pid: nodeId, tags: ["menu-without-add"] });
-    }
-
-    function addAssistant(nodeId) {
-      var node = chart.getNode(nodeId);
-      var data = { id: OrgChart.randomId(), pid: node.stParent.id, tags: ["assistant"] };
-      chart.addNode(data);
-    }
-
-    function addDepartment(nodeId) {
-      var node = chart.getNode(nodeId);
-      var data = { id: OrgChart.randomId(), pid: node.stParent.id, tags: ["department"] };
-      chart.addNode(data);
-    }
-
-    function addManager(nodeId) {
-      chart.addNode({ id: OrgChart.randomId(), stpid: nodeId });
-    }
+    }*/
+    
   }
 
 });
