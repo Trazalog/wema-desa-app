@@ -1162,15 +1162,13 @@ function modalCuenta(empr_id){
 $(document).on("click", ".btn-organigrama", function() {
 
   var  nodos = {};
-  var nodes = [];   
-  var selects = [];
-  var options = [];
+  var nodes = selects = options = chart=[];
 
   nodos = $('#orgb').val();
   selects = <?php echo json_encode($listadoPersonas); ?>; 
   var empr_id ="<?= isset($empr_id) ? $empr_id : '1'  ?>"; 
-  console.log("nodos: "+ nodos);
-  console.log("Empr_id"+empr_id+" ppa: "+ JSON.stringify(select));
+  //console.log("nodos: "+ nodos);
+  //console.log("Empr_id"+empr_id+" ppa: "+ JSON.stringify(select));
   /*console.log(nodos.length === 0);*/
 
   if(nodos.length === 0){
@@ -1192,6 +1190,7 @@ $(document).on("click", ".btn-organigrama", function() {
   }else{
      
     delete nodes;
+    
     nodes = JSON.parse(nodos); 
     /*console.log("nodes: "+ nodes);  */
     /*console.log("length: "+ nodes.length);  */
@@ -1225,8 +1224,8 @@ $(document).on("click", ".btn-organigrama", function() {
     OrgChart.elements.text = function (data, editElement, minWidth, readOnly) {    
       readOnly = true;
     };
-      OrgChart.SEARCH_PLACEHOLDER = "Busqueda"; // the default value is "Search"
-    var chart=[];
+    OrgChart.SEARCH_PLACEHOLDER = "Busqueda"; // the default value is "Search"
+    delete chart;
     chart = new OrgChart(document.getElementById("tree"), {     
         enableSearch: true,   
         nodeMouseClick: false,
@@ -1252,6 +1251,7 @@ $(document).on("click", ".btn-organigrama", function() {
             addMoreFieldName: null,
             nameBinding: 'name',
             titleBinding: 'title',
+            imgBinding: 'img',
             cancelBtn: 'Cancelar',
             saveAndCloseBtn: 'Asignar',
             buttons:  {
@@ -1277,7 +1277,8 @@ $(document).on("click", ".btn-organigrama", function() {
             },
             elements: [
               { type: 'select', options: options, label: 'Nombres', binding: 'name'},
-              { type: 'textbox', label: 'Title', binding: 'title'},              
+              { type: 'textbox', label: 'Puesto', binding: 'title'},  
+              { type: 'textbox', label: 'Url Imagen', binding: 'img', btn: 'Upload' },            
             ]
         } ,     
         nodeMenu: {
@@ -1285,13 +1286,13 @@ $(document).on("click", ".btn-organigrama", function() {
               text: "Detalles" ,
               //onClick: detalleNodo
             },
-            /*edit: { 
+            edit: { 
               text: "Editar",
               //onClick: editarNodo
-            },*/
+            },
             add: { 
               text: "Agregar",
-              //onClick: agregarNodo
+              onClick: agregarNodo
             },
             remove: { 
               text: "Eliminar" 
@@ -1306,6 +1307,14 @@ $(document).on("click", ".btn-organigrama", function() {
         },
         nodes: nodes
     });
+
+    chart.editUI.on('element-btn-click', function (sender, args) {
+        OrgChart.fileUploadDialog(function (file) {
+            var formData = new FormData();
+            formData.append('file', file);
+            alert('Imagen ha sido cargada');
+        })
+    });
     
 
     /*
@@ -1315,11 +1324,13 @@ $(document).on("click", ".btn-organigrama", function() {
 
       var node = chart.get(nodeId);      
       console.log("node: "+ JSON.stringify(node));      
-      var data = { pers_id : "", id: ((nodes.length*1)+1), pid: node.id};
+      var data = { pers_id : "", id: ((nodes.length*1)+1), pid: node.id, name: "", title:"", img: ""};
       chart.addNode(data); //Agrega al tree
       console.log("data: "+ JSON.stringify(data));
       console.log("nodes new: "+ JSON.stringify(nodes));
-      chart.draw();
+      if (data.length == 0) {
+          this.style.display = "none";
+      }
     }
     
     /*
