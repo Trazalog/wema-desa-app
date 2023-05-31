@@ -1199,7 +1199,7 @@ $(document).on("click", ".btn-organigrama", function() {
       var option = {"id": select.pers_id, "value" : select.nombres+" "+select.apellidos , "text" : select.nombres.toUpperCase()+" "+select.apellidos.toUpperCase()};
       options.push(option);
     }
-    console.log("Options: "+JSON.stringify(options));
+    //console.log("Options: "+JSON.stringify(options));
     
     for (var i = 0; i < nodes.length; i++) {
         var node = nodes[i];
@@ -1320,11 +1320,11 @@ $(document).on("click", ".btn-organigrama", function() {
     function agregarNodo(nodeId){
 
       var node = chart.get(nodeId);      
-      console.log("node: "+ JSON.stringify(node));      
+      //console.log("node: "+ JSON.stringify(node));      
       var data = { pers_id : "", id: ((nodes.length*1)+1), pid: node.id, name: "", title:"", img: ""};
       chart.addNode(data); //Agrega al tree
-      console.log("data: "+ JSON.stringify(data));
-      console.log("nodes new: "+ JSON.stringify(nodes));
+      //console.log("data: "+ JSON.stringify(data));
+      //console.log("nodes new: "+ JSON.stringify(nodes));
       if (data.length == 0) {
           this.style.display = "none";
       }
