@@ -1189,8 +1189,7 @@ $(document).on("click", ".btn-organigrama", function() {
     
   }else{
      
-    delete nodes;
-    
+    delete nodes;    
     nodes = JSON.parse(nodos); 
     /*console.log("nodes: "+ nodes);  */
     /*console.log("length: "+ nodes.length);  */
@@ -1221,9 +1220,7 @@ $(document).on("click", ".btn-organigrama", function() {
     $('#modalOrganigrama').modal('show');
 
     OrgChart.templates.anaOrange = Object.assign({}, OrgChart.templates.ana);
-    OrgChart.elements.text = function (data, editElement, minWidth, readOnly) {    
-      readOnly = true;
-    };
+    
     OrgChart.SEARCH_PLACEHOLDER = "Busqueda"; // the default value is "Search"
     delete chart;
     chart = new OrgChart(document.getElementById("tree"), {     
@@ -1370,11 +1367,7 @@ $(document).on("click", ".btn-organigrama", function() {
     }*/
 
     
-    /*function detalleNodo(nodeId){
-      
-      var node = chart.get(nodeId);
-      console.log("node: "+ JSON.stringify(node));
-    }*/
+   
     
   }
 
