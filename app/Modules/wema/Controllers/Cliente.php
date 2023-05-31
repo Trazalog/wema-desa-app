@@ -46,7 +46,7 @@ class Cliente extends BaseController
         
         /* LISTADO DE CLIENTES */
         $data['listadoPersonas'] = $this->Personas->getPersonas();
-        log_message('debug', "#TRAZA | WEMA-DESA-APP | Cliente | Index | Cliente:  ".json_encode($data['listadoPersonas'],true));
+        log_message('debug', "#TRAZA | WEMA-DESA-APP | Cliente | Index | Personas:  ".json_encode($data['listadoPersonas'],true));
         
 
         return view('Modules\wema\Views\clientes\index', $data)
