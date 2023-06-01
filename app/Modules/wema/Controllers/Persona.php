@@ -26,6 +26,9 @@ class Persona extends BaseController
         /* LISTADO PERSONAS */
         $data['listadoPersonas'] = $this->Personas->getPersonas();
 
+        /* LISTADO PERSONAS */
+        $data['listadoClientes'] = $this->Clientes->getClientes();
+
         /* LISTADO DE GENEROS */
         $data['listadoGeneros'] = $this->Generales->getTabla("generos");
 
