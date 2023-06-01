@@ -434,7 +434,9 @@
                                           <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-search"></i></span>
                                           </div>
-                                          <input type="text" class="form-control requerido" id="CodigoColonia" name="CodigoColonia">
+                                          <select type="text" class="form-control requerido" id="CodigoColonia" name="CodigoColonia" style="width :88%">
+                                            <option value="" disabled selected></option>
+                                          </select>      
                                         </div>
                                       </div>
                                     </div>                                    
@@ -603,14 +605,18 @@
     $('#frm-nuevaCuenta').find('.form-control').prop('disabled', false);
     $('#btn-editar').prop('hidden', true);
     $('#btn-cuenta').prop('hidden', true);
+    $('#btn-clientes').prop('hidden', true);
+
     $('#btn-habilitarCuenta').prop('hidden', true);
     $('#nueva_cuenta #empresa_id').prop('hidden', true);
     $('#imagenCuenta').prop('src', ''); 
     $('#nueva_cuenta #n_cuenta').css("margin-top","20px");
-   
-    
+
     $('#btn-accion-cuenta').show();
     $('#frm-nuevaCuenta')[0].reset();
+  
+    CodOpc = new Option('', '', true, true);
+    $('#nueva_cuenta #CodigoColonia').append(CodOpc).trigger('change'); 
   });
 
 /* abrir modal agregar imagen */
@@ -682,6 +688,7 @@ function guardarCuenta(){
       $('#frm-nuevaCuenta')[0].reset();
       limpiaForm('#nueva_cuenta');
       actualizaTablaCuentas();
+      clonadoSelect2();
     }
   });
 }
@@ -839,6 +846,7 @@ function editarCuenta(){
     },
     complete: function() {
       actualizaTablaCuentas();
+      clonadoSelect2();
     }
     });
 }
@@ -977,6 +985,7 @@ function verCuenta(e){
     var json = $(tr).data('json');
     $('#btn-clientes').attr('href','<?=  site_url('') ?>getClientes/'+json.empr_id);
     $('#nueva_cuenta #empresa_id').val(json.empr_id);
+    $('#nueva_cuenta #empr_id').val(json.empr_id);
     $('#nueva_cuenta #empresa_id').text( "(id: " + json.empr_id + ")");
     $('#nueva_cuenta #nombreCuenta').val(json.nombre);
     $('#nueva_cuenta #rfcCuenta').val(json.id_tributario);
@@ -991,7 +1000,31 @@ function verCuenta(e){
     $('#nueva_cuenta #tipoPersona').val(json.tipe_id);
     $('#nueva_cuenta #nacionalidad').val(json.ubic_id);
     $('#nueva_cuenta #tipoCuenta').val(json.tiem_id);
-    $('#nueva_cuenta #CodigoColonia').val(json.cod_postal);
+    //$('#nueva_cuenta #CodigoColonia').val(json.cod_postal);
+    /* busco el nombre de la colonia con el cod_postal */
+ 
+    $.ajax({
+        url:'<?= base_url()?>/ubicaciones',
+        data: {"patron": json.cod_postal} ,
+        success: function(data){
+  
+          data1 = JSON.parse(data);
+          if(data1.length){
+           
+            text=data1[0].camino;
+            opcion = {'id': json.cod_postal, 'text': text};
+
+            CodOpc = new Option(text, json.cod_postal, true, true);
+
+            $('#nueva_cuenta #CodigoColonia').append(CodOpc).trigger('change'); 
+          }
+           else{
+            $('#nueva_cuenta #CodigoColonia').val(null).trigger('change');
+          } 
+        },
+      });
+    
+    
 
     if(json.tipe_id == 'tipos_personasMoral'){
       activaBotonesCuentasMoral();
@@ -1057,7 +1090,163 @@ function habilitaEditarCuenta(e){
     $('#btn-clientes').prop('hidden', true);
 }
 
+   /* buscador codigo postal/colonia  */
+  $('#CodigoColonia').select2({
+  ajax:{
+    url: "<?= base_url()?>/ubicaciones/",
+    datatype: 'json',
+    delay: 250,
+    data: function (params){
+      return {
+        patron: params.term,
+        page:params.page
+      };
+    },
+    processResults: function (data, params) {
+                params.page = params.page || 1;
+                data1= JSON.parse(data);
+                var results = [];
+                $.each(data1, function(i, obj) {
+                    results.push({
+                        id: obj.valor2,
+                        text: obj.camino,
+                        valor: obj.valor
+                    });
+                });
+                return {
+                    results: results,
+                    pagination: {
+                        more: (params.page * 30) < results.length
+                    }
+                };
+            }
+  },
+  languaje:"es",
+  placeholder:"Buscar...",
+  minimumInputLength: 3,
+  maximumInputLength: 8,
+  dropdownCssClass: "ubicaciones",
+  templateResult: function (ubicacion) {
 
+  if (ubicacion.loading) {
+      return "Buscando...";
+  }
+
+  var $container = $(
+      "<div class='select2-result-repository clearfix'>" +
+      "<div class='select2-result-repository__meta'><small>" +
+          "<small><strong><div class='select2-result-repository__title'></div></strong></small>" +  
+          /* "<div class='select2-result-repository__description'></div>" + */
+      "</div>" +
+      "</div>"
+  );
+ 
+  $container.find(".select2-result-repository__title").text(ubicacion.text);  
+  /* $container.find(".select2-result-repository__description").text(ubicacion.text);
+ */
+  return $container;
+  },
+  templateSelection: function (ubicacion) {
+    return ubicacion.text;
+  },
+  language: {
+            noResults: function() {
+                return '<option>No hay coincidencias</option>';
+            },
+            inputTooShort: function () {
+                return 'Ingrese 3 o mas dígitos para comenzar la búsqueda'; 
+            },
+            inputTooLong: function () {
+                return 'Hasta 8 dígitos permitidos'; 
+            }
+        },
+        escapeMarkup: function(markup) {
+            return markup;
+        }, 
+});
+
+
+/* elimina la duplicacion del select2 en el modal clonandolo y borrando el duplicado */
+function clonadoSelect2(){
+  $(".form-repaet:last").find('#CodigoColonia').select2('destroy');
+  var clone = $(".form-repaet:last").clone();
+  $('.form-wrapper').append(clone);
+  $('#CodigoColonia').select2({
+
+    ajax:{
+    url: "<?= base_url()?>/ubicaciones/",
+    datatype: 'json',
+    delay: 250,
+    data: function (params){
+      return {
+        patron: params.term,
+        page:params.page
+      };
+    },
+    processResults: function (data, params) {
+                params.page = params.page || 1;
+                data1= JSON.parse(data);
+                var results = [];
+                $.each(data1, function(i, obj) {
+                    results.push({
+                        id: obj.valor2,
+                        text: obj.camino,
+                        valor: obj.valor
+                    });
+                });
+                return {
+                    results: results,
+                    pagination: {
+                        more: (params.page * 30) < results.length
+                    }
+                };
+            }
+  },
+  languaje:"es",
+  placeholder:"Buscar...",
+  minimumInputLength: 3,
+  maximumInputLength: 8,
+  dropdownCssClass: "ubicaciones",
+  templateResult: function (ubicacion) {
+
+  if (ubicacion.loading) {
+      return "Buscando...";
+  }
+
+  var $container = $(
+      "<div class='select2-result-repository clearfix'>" +
+      "<div class='select2-result-repository__meta'><small>" +
+          "<small><strong><div class='select2-result-repository__title'></div></strong></small>" +  
+      "</div>" +
+      "</div>"
+  );
+ 
+  $container.find(".select2-result-repository__title").text(ubicacion.text);  
+  return $container;
+  },
+  templateSelection: function (ubicacion) {
+    return ubicacion.text;
+  },
+  language: {
+            noResults: function() {
+                return '<option>No hay coincidencias</option>';
+            },
+            inputTooShort: function () {
+                return 'Ingrese 3 o mas dígitos para comenzar la búsqueda'; 
+            },
+            inputTooLong: function () {
+                return 'Hasta 8 dígitos permitidos'; 
+            }
+        },
+        escapeMarkup: function(markup) {
+            return markup;
+        }, 
+
+  });
+ 
+}
+
+ 
 </script>
 
 

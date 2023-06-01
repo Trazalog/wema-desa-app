@@ -122,7 +122,7 @@
             <form id="frm-nuevaPersona">
               <input id="pers_id" name="pers_id" type="text" hidden>
               <!-- clie_id = 1 es harkodeo -->
-              <input id="clie_id" name="clie_id" type="text" value="<?= (isset($clie_id)) ? $clie_id : '1' ?>" hidden>
+              <input id="clie_id" name="clie_id" type="text" value="<?= (isset($clie_id)) ? $clie_id : cliente() ?>" hidden>
                         <div class="row" style="margin-top:-7px">
                           <div class="col">
                             <div class="card card-info">
@@ -380,7 +380,9 @@
                                           <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-list-ol"></i></span>
                                           </div>
-                                        <input type="text" class="form-control requerido" id="CodigoColonia" name="CodigoColonia" style="width :88%">
+                                        <select type="text" class="form-control requerido" id="CodigoColonia" name="CodigoColonia" style="width :88%">
+                                              <option value="" disabled selected></option>
+                                        </select>
                                       </div>
                                       </div>
                                     </div>
@@ -500,6 +502,9 @@
     $('#persona_id').prop('hidden', true);
     $('#frm-nuevaPersona')[0].reset();
     $("#imagenUsuario").removeAttr("src","");
+    /* formatea campo colonia */
+    CodOpc = new Option('', '', true, true);
+    $('#nueva_persona #CodigoColonia').append(CodOpc).trigger('change');
   }); 
 
 
@@ -543,6 +548,7 @@ function guardarPersona(){
       $('#frm-nuevaPersona')[0].reset();
       limpiaForm('#nueva_persona');
       actualizaTablaPersonas();
+      clonadoSelect2();
     }
   });
 }
@@ -572,13 +578,36 @@ function verPersona(e){
     $('#nueva_persona #numeroInterior').val(json.num_interior);
     $('#nueva_persona #ocupacion').val(json.ocupacion);
     $('#nueva_persona #calle').val(json.calle);
-    $('#nueva_persona #CodigoColonia').val(json.cod_postal);
+   // $('#nueva_persona #CodigoColonia').val(json.cod_postal);
     $('#nueva_persona #escolaridad').val(json.educ_id);
     $('#nueva_persona #estadoCivil').val(json.esci_id);
     $('#nueva_persona #nacionalidad').val(json.naci_id);
     $('#nueva_persona #paisNacimiento').val(json.pana_id);
     $('#nueva_persona #fechaNacimiento').val(json.fec_nacimiento.slice(0,10));
     $('#nueva_persona #persona_id').text( "(id: " + json.pers_id + ")");
+   
+      /* busco el nombre de la colonia con el cod_postal */
+      $.ajax({
+        url:'<?= base_url()?>/ubicaciones',
+        data: {"patron": json.cod_postal} ,
+        success: function(data){
+          data1 = JSON.parse(data);
+          if(data1.length){
+           
+            text=data1[0].camino;
+            opcion = {'id': json.cod_postal, 'text':text};
+
+            CodOpc = new Option(text, json.cod_postal, true, true);
+
+            $('#nueva_persona #CodigoColonia').append(CodOpc).trigger('change');
+          }
+          else{
+            CodOpc = new Option('', '', true, true);
+            $('#nueva_persona #CodigoColonia').append(CodOpc).trigger('change');
+          }
+        },
+      });
+
     if(json.nom_imagen){
       var codificacion = obtenerExtension(json.nom_imagen);
 
@@ -718,6 +747,7 @@ function editarPersona(){
       $('#frm-nuevaPersona')[0].reset();
       limpiaForm('#nueva_persona');
       actualizaTablaPersonas();
+      clonadoSelect2();
     }
     });
 }
@@ -830,7 +860,7 @@ function cargaVistaPrevia(){
  
 /* actualiza tabla personas */
 function actualizaTablaPersonas(){
-  clie_id ="<?= isset($clie_id) ? $clie_id : '1'  ?>";
+  clie_id ="<?= isset($clie_id) ? $clie_id : cliente()  ?>";
   $.ajax({
         type: 'POST',
         cache: false,
@@ -939,11 +969,12 @@ function actualizaTablaPersonas(){
   });
 }
 
+
+/* muestra modal del cliente asociado a las personas */
 function modalCliente(clie_id){
-//debugger;
 /* harcodeo para poder acceder desde navegacion */
   if(clie_id == undefined){
-    var clie_id = '7';
+    var clie_id = "<?= cliente() ?>";
   }
 
   $.get('<?= base_url()?>/modalCliente/' + clie_id, function (data){
@@ -971,7 +1002,7 @@ $('#CodigoColonia').select2({
                 var results = [];
                 $.each(data1, function(i, obj) {
                     results.push({
-                        id: obj.tabl_id,
+                        id: obj.valor2,
                         text: obj.camino,
                         valor: obj.valor
                     });
@@ -997,20 +1028,18 @@ $('#CodigoColonia').select2({
 
   var $container = $(
       "<div class='select2-result-repository clearfix'>" +
-      "<div class='select2-result-repository__meta'>" +
-          "<div class='select2-result-repository__title'></div>" +
-          "<div class='select2-result-repository__description'></div>" +
+      "<div class='select2-result-repository__meta'><small>" +
+          "<small><strong><div class='select2-result-repository__title'></div></strong></small>" +  
       "</div>" +
       "</div>"
   );
-
-  $container.find(".select2-result-repository__title").text(ubicacion.id);
-  $container.find(".select2-result-repository__description").text(ubicacion.text);
+ 
+  $container.find(".select2-result-repository__title").text(ubicacion.text);  
 
   return $container;
   },
   templateSelection: function (ubicacion) {
-    return ubicacion.id || ubicacion.text;
+    return ubicacion.text;
   },
   language: {
             noResults: function() {
@@ -1025,8 +1054,87 @@ $('#CodigoColonia').select2({
         },
         escapeMarkup: function(markup) {
             return markup;
-        },
+        }, 
 });
+
+/* elimina la duplicacion del select2 en el modal clonandolo y borrando el duplicado */
+function clonadoSelect2(){
+  $(".form-repaet:last").find('#CodigoColonia').select2('destroy');
+  var clone = $(".form-repaet:last").clone();
+  $('.form-wrapper').append(clone);
+  $('#CodigoColonia').select2({
+  ajax:{
+    url: "<?= base_url()?>/ubicaciones/",
+    datatype: 'json',
+    delay: 250,
+    data: function (params){
+      return {
+        patron: params.term,
+        page:params.page
+      };
+    },
+    processResults: function (data, params) {
+                params.page = params.page || 1;
+                data1= JSON.parse(data);
+                var results = [];
+                $.each(data1, function(i, obj) {
+                    results.push({
+                        id: obj.valor2,
+                        text: obj.camino,
+                        valor: obj.valor
+                    });
+                });
+                return {
+                    results: results,
+                    pagination: {
+                        more: (params.page * 30) < results.length
+                    }
+                };
+            }
+  },
+  languaje:"es",
+  placeholder:"Buscar...",
+  minimumInputLength: 3,
+  maximumInputLength: 8,
+  dropdownCssClass: "ubicaciones",
+  templateResult: function (ubicacion) {
+
+  if (ubicacion.loading) {
+      return "Buscando...";
+  }
+
+  var $container = $(
+      "<div class='select2-result-repository clearfix'>" +
+      "<div class='select2-result-repository__meta'><small>" +
+          "<small><strong><div class='select2-result-repository__title'></div></strong></small>" +  
+      "</div>" +
+      "</div>"
+  );
+ 
+  $container.find(".select2-result-repository__title").text(ubicacion.text);  
+ 
+  return $container;
+  },
+  templateSelection: function (ubicacion) {
+    return ubicacion.text;
+  },
+  language: {
+            noResults: function() {
+                return '<option>No hay coincidencias</option>';
+            },
+            inputTooShort: function () {
+                return 'Ingrese 3 o mas dígitos para comenzar la búsqueda'; 
+            },
+            inputTooLong: function () {
+                return 'Hasta 8 dígitos permitidos'; 
+            }
+        },
+        escapeMarkup: function(markup) {
+            return markup;
+        }, 
+});
+
+}
 </script>
 
 <?= $this->endSection() ?>

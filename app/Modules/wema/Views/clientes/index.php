@@ -448,7 +448,9 @@
                                           <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-list-ol"></i></span>
                                           </div>
-                                        <input type="text" class="form-control requerido" id="CodigoColonia" name="CodigoColonia">
+                                        <select type="text" class="form-control requerido" id="CodigoColonia" name="CodigoColonia" style="width :88%">
+                                          <option value="" disabled selected></option>
+                                        </select>
                                       </div>
                                       </div>
                                     </div>
@@ -616,6 +618,10 @@
     $('#btn-accion').show();
     $('#frm-nuevoCliente')[0].reset();
 
+    /* formatea campo colonia */
+    CodOpc = new Option('', '', true, true);
+    $('#nuevo_cliente #CodigoColonia').append(CodOpc).trigger('change');
+
   });
   
   /* oculta/muestra inputs de modal agregar cliente */
@@ -713,6 +719,7 @@ function guardarCliente(){
       $('#frm-nuevoCliente')[0].reset();
       limpiaForm('#nuevo_cliente');
       actualizarTablaCliente();
+      clonadoSelect2();
     }
   });
 }
@@ -754,8 +761,31 @@ function verCliente(e){
     $('#nuevo_cliente #calle').val(json.calle);
     $('#nuevo_cliente #numeroExterior').val(json.num_exterior);
     $('#nuevo_cliente #numeroInterior').val(json.num_interior);
-    $('#nuevo_cliente #CodigoColonia').val(json.cod_postal);
+    //$('#nuevo_cliente #CodigoColonia').val(json.cod_postal);
+      
+     /* busco el nombre de la colonia con el cod_postal */
+     $.ajax({
+        url:'<?= base_url()?>/ubicaciones',
+        data: {"patron": json.cod_postal} ,
+        success: function(data){
 
+          data1 = JSON.parse(data);
+          if(data1.length){
+           
+            text=data1[0].camino;
+            opcion = {'id': json.cod_postal, 'text': text};
+
+            CodOpc = new Option(text, json.cod_postal, true, true);
+
+            $('#nuevo_cliente #CodigoColonia').append(CodOpc).trigger('change');
+          }
+          else{
+            CodOpc = new Option('', '', true, true);
+            $('#nuevo_cliente #CodigoColonia').append(CodOpc).trigger('change');
+          }
+        },
+      });
+    
 
     if(json.tipe_id == 'tipos_personasMoral'){
       activaBotonesClientesMoral();
@@ -868,6 +898,7 @@ function editarCliente(){
     complete: function() {
       notificar(notiSuccess);
       actualizarTablaCliente();
+      clonadoSelect2();
     }
     });
 }
@@ -1130,7 +1161,7 @@ function modalCuenta(empr_id){
 
   /* harcodeo para poder acceder desde navegacion */
   if(empr_id == undefined){
-    var empr_id = '7';
+    var empr_id = <?= empresa() ?>;
   }
 
   $.get('<?= base_url()?>/modalCuenta/'+ empr_id, function (data){
@@ -1301,6 +1332,161 @@ $(document).on("click", ".btn-organigrama", function() {
   }
 
 });
+
+/* buscador codigo postal/colonia  */
+$('#CodigoColonia').select2({
+  ajax:{
+    url: "<?= base_url()?>/ubicaciones/",
+    datatype: 'json',
+    delay: 250,
+    data: function (params){
+      return {
+        patron: params.term,
+        page:params.page
+      };
+    },
+    processResults: function (data, params) {
+                params.page = params.page || 1;
+                data1= JSON.parse(data);
+                var results = [];
+                $.each(data1, function(i, obj) {
+                    results.push({
+                        id: obj.valor2,
+                        text: obj.camino,
+                        valor: obj.valor
+                    });
+                });
+                return {
+                    results: results,
+                    pagination: {
+                        more: (params.page * 30) < results.length
+                    }
+                };
+            }
+  },
+  languaje:"es",
+  placeholder:"Buscar...",
+  minimumInputLength: 3,
+  maximumInputLength: 8,
+  dropdownCssClass: "ubicaciones",
+  templateResult: function (ubicacion) {
+
+  if (ubicacion.loading) {
+      return "Buscando...";
+  }
+
+  var $container = $(
+      "<div class='select2-result-repository clearfix'>" +
+      "<div class='select2-result-repository__meta'><small>" +
+          "<small><strong><div class='select2-result-repository__title'></div></strong></small>" +  
+          /* "<div class='select2-result-repository__description'></div>" + */
+      "</div>" +
+      "</div>"
+  );
+ 
+  $container.find(".select2-result-repository__title").text(ubicacion.text);  
+  /* $container.find(".select2-result-repository__description").text(ubicacion.text);
+ */
+  return $container;
+  },
+  templateSelection: function (ubicacion) {
+    return ubicacion.text;
+  },
+  language: {
+            noResults: function() {
+                return '<option>No hay coincidencias</option>';
+            },
+            inputTooShort: function () {
+                return 'Ingrese 3 o mas dígitos para comenzar la búsqueda'; 
+            },
+            inputTooLong: function () {
+                return 'Hasta 8 dígitos permitidos'; 
+            }
+        },
+        escapeMarkup: function(markup) {
+            return markup;
+        }, 
+});
+
+/* elimina la duplicacion del select2 en el modal clonandolo y borrando el duplicado */
+function clonadoSelect2(){
+  $(".form-repaet:last").find('#CodigoColonia').select2('destroy');
+  var clone = $(".form-repaet:last").clone();
+  $('.form-wrapper').append(clone);
+  $('#CodigoColonia').select2({
+      ajax:{
+        url: "<?= base_url()?>/ubicaciones/",
+        datatype: 'json',
+        delay: 250,
+        data: function (params){
+          return {
+            patron: params.term,
+            page:params.page
+          };
+        },
+        processResults: function (data, params) {
+                    params.page = params.page || 1;
+                    data1= JSON.parse(data);
+                    var results = [];
+                    $.each(data1, function(i, obj) {
+                        results.push({
+                            id: obj.valor2,
+                            text: obj.camino,
+                            valor: obj.valor
+                        });
+                    });
+                    return {
+                        results: results,
+                        pagination: {
+                            more: (params.page * 30) < results.length
+                        }
+                    };
+                }
+      },
+      languaje:"es",
+      placeholder:"Buscar...",
+      minimumInputLength: 3,
+      maximumInputLength: 8,
+      dropdownCssClass: "ubicaciones",
+      templateResult: function (ubicacion) {
+      
+      if (ubicacion.loading) {
+          return "Buscando...";
+      }
+    
+      var $container = $(
+          "<div class='select2-result-repository clearfix'>" +
+          "<div class='select2-result-repository__meta'><small>" +
+              "<small><strong><div class='select2-result-repository__title'></div></strong></small>" +  
+              /* "<div class='select2-result-repository__description'></div>" + */
+          "</div>" +
+          "</div>"
+      );
+    
+      $container.find(".select2-result-repository__title").text(ubicacion.text);  
+    
+      return $container;
+      },
+      templateSelection: function (ubicacion) {
+        return ubicacion.text;
+      },
+      language: {
+                noResults: function() {
+                    return '<option>No hay coincidencias</option>';
+                },
+                inputTooShort: function () {
+                    return 'Ingrese 3 o mas dígitos para comenzar la búsqueda'; 
+                },
+                inputTooLong: function () {
+                    return 'Hasta 8 dígitos permitidos'; 
+                }
+            },
+            escapeMarkup: function(markup) {
+                return markup;
+            }, 
+  });
+}
+ 
 </script>
 
 <?= $this->endSection() ?>

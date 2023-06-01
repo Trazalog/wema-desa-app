@@ -117,7 +117,7 @@ WHERE
 UNION
 SELECT
 	m.tabl_id , m.tabla, m.valor, m.valor2, m.descripcion , (t.nivel + 1) AS nivel, m.descripcion || 
-	case when m.valor2 is null or m.valor2 = '' then '' else  '(' || m.valor2 || ')' end || '>'  || t.camino as PATH 
+	case when m.valor2 is null or m.valor2 = '' then '' else  '(' || m.valor2 || ')' end || '-'  || t.camino as PATH 
 FROM
 	core.tablas M
 INNER JOIN menu_tree t ON

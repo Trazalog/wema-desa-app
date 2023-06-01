@@ -209,7 +209,7 @@
                                           <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-birthday-cake"></i></span>
                                           </div>
-                                          <input type="date" class="form-control float-left requerido personaFisica" id="fechaNacimiento" name="fechaNacimiento" value="<?= substr($empresa[0]->fec_nacimiento,0,10)?>">
+                                          <input type="date" class="form-control float-left requerido personaFisica" id="fechaNacimiento" name="fechaNacimiento" value="<?=  !empty($empresa[0]->fec_nacimiento) ? substr($empresa[0]->fec_nacimiento,0,10) : '' ?>">
                                         </div>
                                       </div>
                                     </div>
@@ -326,7 +326,9 @@
                                           <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-search"></i></span>
                                           </div>
-                                          <input type="text" class="form-control requerido" id="CodigoColonia" name="CodigoColonia" value="<?= $empresa[0]->cod_postal ?>">
+                                          <select type="text" class="form-control requerido" id="CodigoColoniaCuenta" name="CodigoColonia" style="width :88%">
+                                            <option value="" disabled selected> </option>
+                                          </select>
                                         </div>
                                       </div>
                                     </div>                                    
@@ -587,7 +589,8 @@ if($('#inputLogoCuenta')[0].files.length !== 0){
 formData.append("empr_id",<?= $empresa[0]->empr_id ?>);
 /* le pego a tipoPersona el #tipoPersonaCuenta para reutilizar el editar de cuentas */
 formData.append("tipoPersona",$('#tipoPersonaCuenta').val());
-
+/* le pego a CodigoColonia el #CodigoColoniaCuenta para reutilizar el editar de cuentas */
+formData.append("CodigoColonia",$('#CodigoColoniaCuenta').val());
 //validacion datos del formulario
 if(!validaForm('#frm-Cuenta')) return;
 
@@ -625,6 +628,110 @@ $(document).on("click", ".agregaLogoCuenta", function() {
   $('#modalAgregarLogoCuenta').modal('show');
   event.preventDefault();
   $("#modalGenericoCuenta").css('overflow-y', 'auto');//habilita el scroll de nuevo
+});
+
+/* busqueda de nombre ubicacion/colonia */
+$( document ).ready(function() {
+  $.ajax({
+        url:'<?= base_url()?>/ubicaciones',
+        data: {"patron": <?= $empresa[0]->cod_postal ?>} ,
+        success: function(data){
+
+          data1 = JSON.parse(data);
+          if(data1.length){
+           
+            text=data1[0].camino;
+            opcion = {'id': <?= $empresa[0]->cod_postal ?>, 'text': text};
+
+            CodOpc = new Option(text, <?= $empresa[0]->cod_postal ?>, true, true);
+
+            $('#CodigoColoniaCuenta').append(CodOpc).trigger('change');
+          }
+          else{
+            CodOpc = new Option('', '', true, true);
+            $('#CodigoColoniaCuenta').append(CodOpc).trigger('change');
+          }
+        },
+      });
+});
+
+
+/* actualiza valor de colonia*/
+$('#CodigoColoniaCuenta').on('select2:select', function (e) {
+    var data = e.params.data;
+    $("#CodigoColoniaCuenta").val(data.id);
+}); 
+
+/* buscador codigo postal/colonia  */
+$('#CodigoColoniaCuenta').select2({
+  ajax:{
+    url: "<?= base_url()?>/ubicaciones/",
+    datatype: 'json',
+    delay: 250,
+    data: function (params){
+      return {
+        patron: params.term,
+        page:params.page
+      };
+    },
+    processResults: function (data, params) {
+                params.page = params.page || 1;
+                data1= JSON.parse(data);
+                var results = [];
+                $.each(data1, function(i, obj) {
+                    results.push({
+                        id: obj.valor2,
+                        text: obj.camino,
+                        valor: obj.valor
+                    });
+                });
+                return {
+                    results: results,
+                    pagination: {
+                        more: (params.page * 30) < results.length
+                    }
+                };
+            }
+  },
+  languaje:"es",
+  placeholder:"Buscar...",
+  minimumInputLength: 3,
+  maximumInputLength: 8,
+  dropdownCssClass: "ubicaciones",
+  templateResult: function (ubicacion) {
+
+  if (ubicacion.loading) {
+      return "Buscando...";
+  }
+
+  var $container = $(
+      "<div class='select2-result-repository clearfix'>" +
+      "<div class='select2-result-repository__meta'><small>" +
+          "<small><strong><div class='select2-result-repository__title'></div></strong></small>" +  
+      "</div>" +
+      "</div>"
+  );
+ 
+  $container.find(".select2-result-repository__title").text(ubicacion.text);  
+  return $container;
+  },
+  templateSelection: function (ubicacion) {
+    return ubicacion.text;
+  },
+  language: {
+            noResults: function() {
+                return '<option>No hay coincidencias</option>';
+            },
+            inputTooShort: function () {
+                return 'Ingrese 3 o mas dígitos para comenzar la búsqueda'; 
+            },
+            inputTooLong: function () {
+                return 'Hasta 8 dígitos permitidos'; 
+            }
+        },
+        escapeMarkup: function(markup) {
+            return markup;
+        }, 
 });
 
 

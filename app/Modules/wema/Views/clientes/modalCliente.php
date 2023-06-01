@@ -3,6 +3,7 @@
 <?= $this->section('content') ?>
 <form id="frm-Cliente">
               <input id="clie_id" name="clie_id" type="text" hidden value="<?= $cliente[0]->clie_id ?>">
+              <input id="empr_id" name="empr_id" type="text" hidden value="<?= $cliente[0]->empr_id ?>">
                         <div class="row" style="margin-top:-7px">
                           <div class="col">
                             <div class="card card-info">
@@ -205,7 +206,7 @@
                                           <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-birthday-cake"></i></span>
                                           </div>
-                                          <input type="date" class="form-control float-left requerido personaFisica" id="fechaNacimiento" name="fechaNacimiento" value="<?= substr($cliente[0]->fec_nacimiento,0,10) ?>">
+                                          <input type="date" class="form-control float-left requerido personaFisica" id="fechaNacimiento" name="fechaNacimiento" value="<?=  !empty($cliente[0]->fec_nacimiento) ? substr($cliente[0]->fec_nacimiento,0,10) : '' ?>">
                                         </div>
                                       </div>
                                     </div>
@@ -320,7 +321,10 @@
                                           <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-list-ol"></i></span>
                                           </div>
-                                        <input type="text" class="form-control requerido" id="CodigoColonia" name="CodigoColonia"  value="<?= $cliente[0]->cod_postal ?>">
+                                          
+                                        <select type="text" class="form-control requerido " id="CodigoColoniaCliente" name="CodigoColoniaCliente" style="width :88%">
+                                          <option value="" disabled selected> </option>
+                                        </select>
                                       </div>
                                       </div>
                                     </div>
@@ -401,6 +405,7 @@ if($('#tipoPersona').val() == 'tipos_personasFisica'){
 if($('#tipoPersona').val() == 'tipos_personasMoral'){
   activaBotonesClientesMoral();
 }
+
 
 });
 
@@ -507,6 +512,10 @@ if(logo.lenght!= 0){
 }
 
 formData.append("clie_id",$('#frm-Cliente #clie_id').val());
+
+/* le pego a CodigoColonia el #CodigoColoniaCliente para reutilizar el editar de cliente */
+formData.append("CodigoColonia",$('#CodigoColoniaCliente').val());
+
 //validacion datos del formulario
 if(!validaForm('#frm-Cliente')) return;
 
@@ -621,6 +630,112 @@ $(document).on("click", ".agregaLogo", function() {
 function cerrarModalImagen(){
   $('#modalAgregarLogo').modal('hide');
 }
+
+
+/* busqueda de nombre ubicacion/colonia */
+$( document ).ready(function() {
+  $.ajax({
+        url:'<?= base_url()?>/ubicaciones',
+        data: {"patron": <?= $cliente[0]->cod_postal ?>} ,
+        success: function(data){
+
+          data1 = JSON.parse(data);
+          if(data1.length){
+           
+            text=data1[0].camino;
+            opcion = {'id': <?= $cliente[0]->cod_postal ?>, 'text': text};
+
+            CodOpc = new Option(text, <?= $cliente[0]->cod_postal ?>, true, true);
+
+            $('#CodigoColoniaCliente').append(CodOpc).trigger('change');
+          }
+          else{
+            CodOpc = new Option('', '', true, true);
+            $('#CodigoColoniaCliente').append(CodOpc).trigger('change');
+          }
+        },
+      });
+});
+
+
+/* actualiza valor de colonia*/
+$('#CodigoColoniaCliente').on('select2:select', function (e) {
+    var data = e.params.data;
+    debugger;
+    $("#CodigoColoniaCliente").val(data.id);
+}); 
+
+/* buscador codigo postal/colonia  */
+$('#CodigoColoniaCliente').select2({
+  ajax:{
+    url: "<?= base_url()?>/ubicaciones/",
+    datatype: 'json',
+    delay: 250,
+    data: function (params){
+      return {
+        patron: params.term,
+        page:params.page
+      };
+    },
+    processResults: function (data, params) {
+                params.page = params.page || 1;
+                data1= JSON.parse(data);
+                var results = [];
+                $.each(data1, function(i, obj) {
+                    results.push({
+                        id: obj.valor2,
+                        text: obj.camino,
+                        valor: obj.valor
+                    });
+                });
+                return {
+                    results: results,
+                    pagination: {
+                        more: (params.page * 30) < results.length
+                    }
+                };
+            }
+  },
+  languaje:"es",
+  placeholder:"Buscar...",
+  minimumInputLength: 3,
+  maximumInputLength: 8,
+  dropdownCssClass: "ubicaciones",
+  templateResult: function (ubicacion) {
+
+  if (ubicacion.loading) {
+      return "Buscando...";
+  }
+
+  var $container = $(
+      "<div class='select2-result-repository clearfix'>" +
+      "<div class='select2-result-repository__meta'><small>" +
+          "<small><strong><div class='select2-result-repository__title'></div></strong></small>" +  
+      "</div>" +
+      "</div>"
+  );
+ 
+  $container.find(".select2-result-repository__title").text(ubicacion.text);  
+  return $container;
+  },
+  templateSelection: function (ubicacion) {
+    return ubicacion.text;
+  },
+  language: {
+            noResults: function() {
+                return '<option>No hay coincidencias</option>';
+            },
+            inputTooShort: function () {
+                return 'Ingrese 3 o mas dígitos para comenzar la búsqueda'; 
+            },
+            inputTooLong: function () {
+                return 'Hasta 8 dígitos permitidos'; 
+            }
+        },
+        escapeMarkup: function(markup) {
+            return markup;
+        }, 
+});
 
 </script>
 

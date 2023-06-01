@@ -16,10 +16,27 @@ if(!function_exists('empresa')){
         // $ci =& get_instance();
         // $empr_id  = $ci->session->userdata('empr_id');
         //HARCODE hasta que haya datos de sesión
-        $empr_id = '3';
+        $empr_id = '1';
         return  $empr_id;
     }
 }
+
+/**
+* Devuelve clie_id desde la variable de usuario
+* @param
+* @return int clie_id
+*/
+if(!function_exists('cliente')){
+
+    function cliente(){
+        // $ci =& get_instance();
+        // $empr_id  = $ci->session->userdata('empr_id');
+        //HARCODE hasta que haya datos de sesión
+        $clie_id = '3';
+        return  $clie_id;
+    }
+}
+
 
 /**
 * Devuelve nick coincidente en DNATO y BPM

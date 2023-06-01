@@ -408,6 +408,7 @@ where c.clie_id = cast(:clie_id as integer)</sql>
             "genero":"$genero",
             "ocupacion":"$ocupacion",
             "paisNacimiento":"$paisNacimiento",
+            "empr_id":"$empr_id"
         }]
     }
 }</result>

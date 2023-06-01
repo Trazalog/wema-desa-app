@@ -302,8 +302,6 @@
 <!-- plugin form multiples tabs JS-->
 <script src="<?= base_url()?>/public/plugins/bs-stepper/js/bs-stepper.min.js"></script>
 
-
-
 <!-- DataTables  & Plugins -->
 <script src="<?= base_url()?>/public/plugins/datatables/jquery.dataTables.min.js"></script>
 <script src="<?= base_url()?>/public/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
