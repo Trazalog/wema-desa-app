@@ -1038,7 +1038,7 @@ $(document).on("click", ".btn-asociarPosicion", function() {
         node.tags = ["Marketing"];
       break;
     }
-    /*console.log("node for: "+ JSON.stringify(node));*/
+    //console.log("node for: "+ JSON.stringify(node));
   }
 
   $('#modalAsignarPersonal').modal('show');
