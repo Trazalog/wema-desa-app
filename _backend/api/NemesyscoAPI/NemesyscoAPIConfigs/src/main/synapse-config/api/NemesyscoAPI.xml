@@ -4,20 +4,21 @@
         <inSequence>
             <property expression="get-property('registry','conf:tools/nemesysconfig.xml')" name="apiconf" scope="default" type="OM" xmlns:ns="http://org.apache.synapse/xsd" xmlns:ns2="http://org.apache.synapse/xsd"/>
             <property expression="$ctx:apiconf//dataservices_url" name="dataservices_url" scope="default" type="STRING" xmlns:ns="http://org.apache.synapse/xsd" xmlns:ns2="http://org.apache.synapse/xsd"/>
-            <property expression="fn:concat($ctx:dataservices_url,'/audios/get')" name="uri.var.get_audios" scope="default" type="STRING"/>
+            <property expression="$ctx:apiconf//docker_url" name="docker_url" scope="default" type="STRING" xmlns:ns="http://org.apache.synapse/xsd" xmlns:ns2="http://org.apache.synapse/xsd"/>
+            <property expression="fn:concat($ctx:dataservices_url,'/services/CoreDataService/test/audio/get/104')" name="uri.var.get_audio" scope="default" type="STRING"/>
             <header name="Accept" scope="transport" value="application/json"/>
             <header name="Accept-Encoding" scope="transport" value="gzip,deflate"/>
             <header action="remove" name="Content-Type" scope="transport"/>
             <property name="FORCE_ERROR_ON_SOAP_FAULT" scope="default" type="STRING" value="true"/>
             <property name="messageType" scope="axis2" type="STRING" value="application/json"/>
             <log level="custom">
-                <property name="Paso 1" value="Obtengo los audios del cuestionario"/>
+                <property name="Paso 1" value="Obtengo audio del cuestionario"/>
                 <property expression="json-eval($)" name="payload"/>
-                <property expression="$ctx:uri.var.get_audios" name="URL getAudios"/>
+                <property expression="$ctx:uri.var.get_audio" name="URL getAudio"/>
             </log>
             <call>
                 <endpoint>
-                    <http method="get" uri-template="{uri.var.get_audios}">
+                    <http method="get" uri-template="{uri.var.get_audio}">
                         <suspendOnFailure>
                             <initialDuration>-1</initialDuration>
                             <progressionFactor>1</progressionFactor>
@@ -31,14 +32,14 @@
             <filter regex="2[0-9][0-9]" source="get-property('axis2', 'HTTP_SC')">
                 <then>
                     <log level="custom">
-                        <property name="Paso 1" value="Listado de audios"/>
+                        <property name="Response Paso 1: " value="Datos del audio"/>
                         <property expression="json-eval($)" name="payload"/>
                     </log>
                 </then>
                 <else>
                     <log level="full"/>
                     <property expression="json-eval($)" name="ERROR_MESSAGE" scope="default" type="STRING"/>
-                    <property name="TOOLS_ERROR" scope="default" type="STRING" value="POST /empresa con problemas"/>
+                    <property name="TOOLS_ERROR" scope="default" type="STRING" value="GET /audio/get con problemas"/>
                     <sequence key="toolsFault"/>
                 </else>
             </filter>
@@ -48,26 +49,18 @@
             <property name="messageType" scope="axis2" type="STRING" value="multipart/form-data"/>
             <property name="FORCE_ERROR_ON_SOAP_FAULT" scope="default" type="STRING" value="true"/>
             <property name="messageType" scope="axis2" type="STRING" value="application/json"/>
-            <property expression="fn:concat($ctx:dataservices_url,'/analysis/analyzeTest')" name="uri.var.post_nemesysco" scope="default" type="STRING"/>
+            <property expression="fn:concat($ctx:docker_url,'/analysis/analyzeTest')" name="uri.var.post_emlo" scope="default" type="STRING"/>
             <log level="custom">
-                <property name="Paso 2" value="Armo JSON para Nemesysco"/>
-                <property expression="$ctx:uri.var.get_audios" name="URL Nemesysco API"/>
+                <property name="Paso 2" value="Armo JSON para Emotion Logic"/>
+                <property expression="$ctx:uri.var.post_emlo" name="URL EMLO API"/>
             </log>
             <script language="js"><![CDATA[var log = mc.getServiceLog();
 var aux = mc.getProperty('listaAudios');]]></script>
             <payloadFactory description="crear empresa" media-type="json">
-                <format>{"data": {"outputType": "json","questions": [{"question": "question1","url": "https://mysite/myaudio1.wav","topics": [{"name": "topic_1","weight": 5},{"name": "topic_2","weight": 10}]},{"question": "question2","url": "https://mysite/myaudio2.wav","topics": [{"name": "topic_2","weight": 5},{"name": "topic_3","weight": 10}]}]}}</format>
+                <format>{"data": {"outputType": "json","dummyResponse": "true","questions": [{"question": "question1","url": "http://ec2-44-203-253-107.compute-1.amazonaws.com/recordedAudio_838633030.wav","topics": [{"name": "topic_1","weight": 5},{"name": "topic_2","weight": 10}]},{"question": "question2","url": "http://ec2-44-203-253-107.compute-1.amazonaws.com/recordedAudio_1901029167.wav","topics": [{"name": "topic_2","weight": 5},{"name": "topic_3","weight": 10}]}]}}</format>
                 <args>
                     <arg evaluator="json" expression="$.empresa.nombre"/>
                     <arg evaluator="json" expression="$.empresa.cuit"/>
-                    <arg evaluator="json" expression="$.empresa.descripcion"/>
-                    <arg evaluator="json" expression="$.empresa.telefono"/>
-                    <arg evaluator="json" expression="$.empresa.email"/>
-                    <arg evaluator="json" expression="$.empresa.pais_id"/>
-                    <arg evaluator="json" expression="$.empresa.prov_id"/>
-                    <arg evaluator="json" expression="$.empresa.loca_id"/>
-                    <arg evaluator="json" expression="$.empresa.imagepath"/>
-                    <arg evaluator="json" expression="$.empresa.image"/>
                 </args>
             </payloadFactory>
             <loopback/>
