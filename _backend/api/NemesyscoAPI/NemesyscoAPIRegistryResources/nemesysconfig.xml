@@ -2,6 +2,6 @@
 <configs>
 	<!-- <dataservices_url>http://10.142.0.13:8280/services</dataservices_url>-->
 	<dataservices_url>http://localhost:8290</dataservices_url>
-	<docker_url>http://ec2-44-203-253-107.compute-1.amazonaws.com:8080/</docker_url>
+	<docker_url>http://ec2-44-203-253-107.compute-1.amazonaws.com:8080</docker_url>
 </configs>
 

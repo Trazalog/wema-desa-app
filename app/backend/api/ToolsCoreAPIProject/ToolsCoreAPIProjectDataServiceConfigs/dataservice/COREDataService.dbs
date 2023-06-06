@@ -1,44 +1,7 @@
-<data enableBatchRequests="true" name="CoreDataService" transports="http https local">
-  <resource method="POST" path="/tablas">
-    <call-query href="setTabla">
-      <with-param name="tabla" query-param="tabla" />
-      <with-param name="valor" query-param="valor" />
-      <with-param name="valor2" query-param="valor2" />
-      <with-param name="valor3" query-param="valor3" />
-      <with-param name="descripcion" query-param="descripcion" />
-      <with-param name="empr_id" query-param="empr_id" />
-      <with-param name="tabl_id_padre" query-param="tabl_id_padre" />
-    </call-query>
-  </resource>
-  <resource method="GET" path="/tabla/{tabla}">
-    <description>Listado de la tabla sin empresa                           
-                                    </description>
-    <call-query href="getTabla">
-      <with-param name="tabla" query-param="tabla" />
-    </call-query>
-  </resource>
-  <resource method="GET" path="/tabla/{tabla}/empresa/{empr_id}">
-    <description>Listado de la tabla por empresa       </description>
-    <call-query href="getTablaEmpresa">
-      <with-param name="empr_id" query-param="empr_id" />
-      <with-param name="tabla" query-param="tabla" />
-    </call-query>
-  </resource>
+<data transports="http https local" name="CoreDataService" enableBatchRequests="true" enableBoxcarring="true" disableLegacyBoxcarringMode="true" serviceStatus="active">
   <config id="WemapDataSource">
     <property name="carbon_datasource_name">WemapDataSource</property>
   </config>
-  <resource method="GET" path="/tablas/ubicaciones/{valor}">
-    <description>trae las ubicaciones ingresando un valor en core.tablas</description>
-    <call-query href="getUbicaciones">
-      <with-param name="valor" query-param="valor" />
-    </call-query>
-  </resource>
-  <resource method="GET" path="/test/audio/get/{inst_id}">
-    <description />
-    <call-query href="getAudioXId">
-      <with-param name="inst_id" query-param="inst_id" />
-    </call-query>
-  </resource>
   <query id="setTabla" useConfig="WemapDataSource">
     <sql>INSERT INTO core.tablas
 (tabla, valor, valor2, valor3,descripcion,empr_id, tabl_id_padre)
@@ -145,7 +108,7 @@ FROM
 		  (upper(mt.camino) like '%'||upper(:valor)||'%')
 		) t
 ) m ORDER BY m.camino</sql>
-    <param type="IN" name="valor" sqlType="STRING" optional="false" paramType="SCALAR" />
+    <param type="IN" name="valor" sqlType="STRING" paramType="SCALAR" optional="false" />
     <result outputType="json">{
     "ubicaciones": {
         "ubicacion": [{
@@ -160,16 +123,50 @@ FROM
 }</result>
   </query>
   <query id="getAudioXId" useConfig="WemapDataSource">
-    <sql>select * from frm.instancias_formularios if2
+    <sql>select name,valor4_base64 as audio from frm.instancias_formularios if2
 where if2.inst_id = cast(:inst_id as integer)</sql>
-    <param type="IN" name="inst_id" sqlType="STRING" optional="false" paramType="SCALAR" />
+    <param type="IN" name="inst_id" sqlType="STRING" paramType="SCALAR" optional="false" />
     <result outputType="json">{
-    "audios": {
         "audio":{
-            "question" : "$name",
-            "audio_codificado": "$valor4_base64"
-        }
+            "question" : "$name"
     }
 }</result>
   </query>
+  <resource path="/tablas" method="POST">
+    <call-query href="setTabla">
+      <with-param name="tabla" query-param="tabla" />
+      <with-param name="valor" query-param="valor" />
+      <with-param name="valor2" query-param="valor2" />
+      <with-param name="valor3" query-param="valor3" />
+      <with-param name="descripcion" query-param="descripcion" />
+      <with-param name="empr_id" query-param="empr_id" />
+      <with-param name="tabl_id_padre" query-param="tabl_id_padre" />
+    </call-query>
+  </resource>
+  <resource path="/tabla/{tabla}" method="GET">
+    <description>Listado de la tabla sin empresa                           
+                                    </description>
+    <call-query href="getTabla">
+      <with-param name="tabla" query-param="tabla" />
+    </call-query>
+  </resource>
+  <resource path="/tabla/{tabla}/empresa/{empr_id}" method="GET">
+    <description>Listado de la tabla por empresa       </description>
+    <call-query href="getTablaEmpresa">
+      <with-param name="empr_id" query-param="empr_id" />
+      <with-param name="tabla" query-param="tabla" />
+    </call-query>
+  </resource>
+  <resource path="/tablas/ubicaciones/{valor}" method="GET">
+    <description>trae las ubicaciones ingresando un valor en core.tablas</description>
+    <call-query href="getUbicaciones">
+      <with-param name="valor" query-param="valor" />
+    </call-query>
+  </resource>
+  <resource path="/test/audio/{inst_id}" method="GET">
+    <description />
+    <call-query href="getAudioXId">
+      <with-param name="inst_id" query-param="inst_id" />
+    </call-query>
+  </resource>
 </data>
