@@ -468,7 +468,7 @@
             </div><!-- fin modal-body -->
             <div class="modal-footer ">
               <div class="col-mt-1 col-12 justify-content-center" style="margin-top:-5px">
-                <button type="button" class="btn btn-secondary float-right" data-dismiss="modal" onclick="limpiaForm('#nuevo_cliente')" >Cancelar</button>
+                <button type="button" class="btn btn-secondary float-right" data-dismiss="modal" onclick="limpiaForm('#nuevo_cliente');clonadoSelect2();" >Cancelar</button>
                 <button type="button" class="btn btn-info float-right" id='btn-accion' style="margin-left: 5px;" onclick="guardarCliente()">Crear</button>
               </div>
             </div>
@@ -603,6 +603,7 @@
 
  /* Abre modal nuevo cliente y habilita/deshabilita botones*/
   $("#nuevo_cliente").on("hide.bs.modal", function() {
+  
     ocultaColumnasForm();
     $('#btn-accion').attr('onclick', 'guardarCliente()');
     $('#btn-accion').html('Crear');
@@ -639,6 +640,13 @@
 
   });
 
+
+  /* Evitar recarga de modal al presionar enter */
+  document.addEventListener('keypress', function(event) {
+  if (event.key === 'Enter') {
+    event.preventDefault();
+  }
+});
 
   /* avtiva botones para cliente fisico */
   function activaBotonesClientesFisicos(){

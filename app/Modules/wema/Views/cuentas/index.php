@@ -454,7 +454,7 @@
             </div><!-- fin modal-body -->
             <div class="modal-footer ">
               <div class="col-mt-1 col-12 justify-content-center" style="margin-top:-5px">
-                <button type="button" class="btn btn-secondary float-right" data-dismiss="modal" onclick="limpiaForm('#nueva_cuenta')" >Cancelar</button>
+                <button type="button" class="btn btn-secondary float-right" data-dismiss="modal" onclick="limpiaForm('#nueva_cuenta'); clonadoSelect2()" >Cancelar</button>
                 <button type="button" class="btn btn-info float-right" id='btn-accion-cuenta' style="margin-left: 5px;" onclick="guardarCuenta()">Crear</button>
               </div>
             </div>
@@ -1071,6 +1071,12 @@ function verCuenta(e){
     $("[name='habilitarCuentaEditar']").bootstrapSwitch('state', true ,true);
 }
 
+/* Evitar recarga de modal al presionar enter */
+document.addEventListener('keypress', function(event) {
+  if (event.key === 'Enter') {
+    event.preventDefault();
+  }
+});
 
 function listadoClienteCuenta(e){
   

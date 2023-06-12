@@ -400,7 +400,7 @@
             </div><!-- fin modal-body -->
             <div class="modal-footer ">
               <div class="col-mt-1 col-12 justify-content-center" style="margin-top:-5px">
-                <button type="button" class="btn btn-secondary float-right" data-dismiss="modal" onclick="limpiaForm('#nueva_persona')" >Cancelar</button>
+                <button type="button" class="btn btn-secondary float-right" data-dismiss="modal" onclick="limpiaForm('#nueva_persona'); clonadoSelect2()" >Cancelar</button>
                 <button type="button" class="btn btn-info float-right" id='btn-accion' style="margin-left: 5px;" onclick="guardarPersona()">Crear</button>
               </div>
             </div>
@@ -508,7 +508,12 @@
   }); 
 
 
-
+/* Evitar recarga de modal al presionar enter */
+document.addEventListener('keypress', function(event) {
+  if (event.key === 'Enter') {
+    event.preventDefault();
+  }
+});
 
 /* Guarda modal de persona */
 function guardarPersona(){
