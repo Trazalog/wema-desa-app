@@ -1,10 +1,10 @@
-<data transports="http https local" name="PersonaDataService" enableBatchRequests="true">
-  <resource path="/persona" method="GET">
+<data enableBatchRequests="true" name="PersonaDataService" transports="http https local">
+  <resource method="GET" path="/persona">
     <description>Listado personas de core.personas                           
                                     </description>
     <call-query href="getPersonas" />
   </resource>
-  <resource path="/persona" method="POST">
+  <resource method="POST" path="/persona">
     <description>Guarda persona en tabla core.personas                     </description>
     <call-query href="setPersona">
       <with-param name="apellidos" query-param="apellidos" />
@@ -31,7 +31,7 @@
       <with-param name="nom_imagen" query-param="nom_imagen" />
     </call-query>
   </resource>
-  <resource path="/persona" method="PUT">
+  <resource method="PUT" path="/persona">
     <description>Updatea datos de persona en core.personas por pers_id                       
                                     
                                     
@@ -62,7 +62,7 @@
       <with-param name="nom_imagen" query-param="nom_imagen" />
     </call-query>
   </resource>
-  <resource path="/persona" method="DELETE">
+  <resource method="DELETE" path="/persona">
     <description>Borrado logico de persona por pers_id en core.personas                               
                                     
                                     </description>
@@ -70,14 +70,14 @@
       <with-param name="pers_id" query-param="pers_id" />
     </call-query>
   </resource>
-  <resource path="/habilitarpersona" method="PUT">
+  <resource method="PUT" path="/habilitarpersona">
     <description>actualiza eliminado en true para poder habilitar una persona                    
                                     </description>
     <call-query href="habilitarPersona">
       <with-param name="pers_id" query-param="pers_id" />
     </call-query>
   </resource>
-  <resource path="/persona/id/{pers_id}" method="GET">
+  <resource method="GET" path="/persona/id/{pers_id}">
     <description>Obtiene datos de persona por pers_id                     
                                     </description>
     <call-query href="getPersonaxId">
@@ -87,7 +87,7 @@
   <config id="WemapDataSource">
     <property name="carbon_datasource_name">WemapDataSource</property>
   </config>
-  <resource path="/persona/cuestionario/vincular" method="POST">
+  <resource method="POST" path="/persona/cuestionario/vincular">
     <description>Vincula info_id con pers_id en eva.encuestas_personas</description>
     <call-query href="vincularCuestionario">
       <with-param name="pers_id" query-param="pers_id" />
@@ -338,19 +338,20 @@ where p.pers_id = cast(:pers_id as integer)</sql>
 }</result>
   </query>
   <query id="getEncuestas" useConfig="WemapDataSource">
-    <sql>select if2."label" ,if2."name",if2.valor4_base64 
+    <sql>select if2."label" ,if2."name",if2.valor4_base64, if2.info_id
 from frm.instancias_formularios if2 
 join eva.encuestas_personas ep on if2.info_id = ep.info_id
 join core.personas p on p.pers_id = ep.pers_id
 where ep.pers_id = cast(:pers_id as integer)</sql>
-    <param type="IN" name="pers_id" sqlType="STRING" optional="false" paramType="SCALAR" />
+    <param type="IN" name="pers_id" sqlType="STRING" paramType="SCALAR" optional="false" />
     <result outputType="json">{
     "encuestas":{
        "encuesta":[
           {
             "pregunta":"$label",
             "name":"$name",
-            "audioCodificado":"$valor4_base64"
+            "audioCodificado":"$valor4_base64",
+            "info_id" : "$info_id"
            }
        ]
     }
@@ -359,7 +360,7 @@ where ep.pers_id = cast(:pers_id as integer)</sql>
   <query id="vincularCuestionario" useConfig="WemapDataSource">
     <sql>INSERT INTO eva.encuestas_personas(pers_id, info_id)
 VALUES(cast(:pers_id as integer),cast(:info_id as integer))</sql>
-    <param type="IN" name="pers_id" sqlType="STRING" optional="false" paramType="SCALAR" />
-    <param type="IN" name="info_id" sqlType="STRING" optional="false" paramType="SCALAR" />
+    <param type="IN" name="pers_id" sqlType="STRING" paramType="SCALAR" optional="false" />
+    <param type="IN" name="info_id" sqlType="STRING" paramType="SCALAR" optional="false" />
   </query>
 </data>

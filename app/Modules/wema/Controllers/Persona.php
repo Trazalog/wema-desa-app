@@ -5,6 +5,7 @@ use App\Controllers\BaseController;
 use Modules\wema\Models\Personas; 
 use Modules\wema\Models\Generales; 
 use Modules\wema\Models\Clientes; 
+use Modules\traz_comp_formularios\Models\Forms; 
 
 
 class Persona extends BaseController
@@ -231,5 +232,39 @@ class Persona extends BaseController
          
         echo json_encode($resp);
     }
+    /**
+        * Obtiene audio codificado, lo decodifica y lo guarda en al raiz del proyecto para posteriormente
+        * enviar esa URL a la API para ser evaluado por API de EMLO
+        * @param $info_id Id del cuestionario a evaluar
+        * @return array respuesta del procedimiento
+	*/
+    public function evaluarCuestionario($info_id){
+        log_message('debug','#TRAZA | WEMA-DESA-APP | Controller | Persona | evaluarCuestionario($info_id)');
+        $this->Forms = new Forms();
+        //Obtengo los audios
+        $audios = $this->Forms->getAudios($info_id);
+        //Decodifico los audios y los guardo en filesystem
+        $carpetaTemporal = './audioTemp/evaluate_'.rand(1, 10000);
+        //Creo la carpeta ?????
+        $folder = mkdir($carpetaTemporal, 0777, TRUE);
+        if(!$folder){
+            log_message("debug", "#KOKE ALGO PASO Y NOSE CREO");
+        } else{
+            log_message("debug", "#KOKE SI SE CREO");
+        }
+        foreach ($audios as $key => $audio) {
+            if(!empty($audio->valor4_base64)){
+                $audioDecodificado = pg_unescape_bytea($audio->valor4_base64);
+                file_put_contents($carpetaTemporal.'/'.$audio->name.'.wav',$audioDecodificado);
+            }
+        }
 
+
+        // if(!empty($info_id)){
+        //     $resp = $this->Personas->vincularCuestionario($pers_id,$info_id);
+        // } else{
+            $resp = array("status"=> "true", "msg" => "Finalizo la evaluacion del cuestionario.");
+        // }
+        echo json_encode($resp);        
+    }
 }

@@ -53,7 +53,7 @@
                   echo  '<td class="centrar">
                           <div class="btn-group">
                             <a href="'. site_url('persona/initCuestionario/id/'.$persona->pers_id) .'"><i class="fa fa-comments" style="cursor: pointer;margin: 3px;" title="Entrevistar"></i></a>';
-                  echo (!empty($persona->encuestas->encuesta)) ? '<a href="'. site_url('/evaluarCuestionario/info_id/'.$persona->pers_id) .'"><i class="fa fa-user-check" style="cursor: pointer;margin: 3px;" title="Evaluar Entrevista"></i></a>' : '';
+                  echo (!empty($persona->encuestas->encuesta)) ? '<a href="'. site_url('/evaluarCuestionario/info_id/'.$persona->encuestas->encuesta[0]->info_id) .'"><i class="fa fa-user-check" style="cursor: pointer;margin: 3px;" title="Evaluar Entrevista"></i></a>' : '';
                   echo    '</div>
                         </td>
                         <td>'.$persona->curp.'</td>

@@ -25,7 +25,7 @@ class Personas extends Model{
         $url = REST_PERSONA.'/persona';
         $aux = $this->REST->callAPI("GET",$url);
         $data = json_decode($aux['data']);
-        log_message('debug','#TRAZA | WEMA-DESA-APP | Model | Personas | getPersonas()'.$aux['data']);
+        // log_message('debug','#TRAZA | WEMA-DESA-APP | Model | Personas | getPersonas()'.$aux['data']);
 
         if(!empty($data->personas->persona)){
             return $data->personas->persona;
