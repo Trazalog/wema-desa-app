@@ -30,7 +30,7 @@ class Clientes extends Model{
             return $data->clientes->cliente;
         }
         else return array(); 
-    }
+    }    
 
      /**
         * Alta de un cliente en core.clientes
@@ -56,6 +56,15 @@ class Clientes extends Model{
 
         $url =  REST_CLIENTE.'/clientes';
         $aux = $this->REST->callAPI("PUT",$url, $data);
+
+        return $aux;
+    }
+
+    public function editarOrganigrama($data){
+        log_message('debug','#TRAZA | WEMA-DESA-APP | Model | Clientes | editarOrganigrama()');
+
+        $url = REST_CLIENTE.'/organigrama';
+        $aux = $this->REST->callAPI("PUT", $url, $data);
 
         return $aux;
     }

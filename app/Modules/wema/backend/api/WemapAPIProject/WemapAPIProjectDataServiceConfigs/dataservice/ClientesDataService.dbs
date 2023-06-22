@@ -1,16 +1,13 @@
-<data enableBatchRequests="true" name="ClientesDataService" serviceNamespace="ClientesDataService" transports="http https local">
+<data transports="http https local" serviceNamespace="ClientesDataService" name="ClientesDataService" enableBatchRequests="true">
   <config id="WemaDataSource">
     <property name="carbon_datasource_name">WemapDataSource</property>
   </config>
-  <resource method="GET" path="/clientes">
-    <description>obtiene los datos de los clientes                                    
-                                    </description>
+  <resource path="/clientes" method="GET">
+    <description>obtiene los datos de los clientes </description>
     <call-query href="getClientes" />
   </resource>
-  <resource method="POST" path="/clientes">
-    <description>permite guardar un nuevo cliente en la base de datos                           
-                                    
-                                    </description>
+  <resource path="/clientes" method="POST">
+    <description>permite guardar un nuevo cliente en la base de datos</description>
     <call-query href="setClientes">
       <with-param name="nombre" query-param="nombre" />
       <with-param name="id_tributario" query-param="id_tributario" />
@@ -39,9 +36,8 @@
       <with-param name="nom_imagen" query-param="nom_imagen" />
     </call-query>
   </resource>
-  <resource method="PUT" path="/clientes">
-    <description>actualiza datos del cliente en core.clientes                           
-                                    </description>
+  <resource path="/clientes" method="PUT">
+    <description>actualiza datos del cliente en core.clientes </description>
     <call-query href="updateClientes">
       <with-param name="nombre" query-param="nombre" />
       <with-param name="id_tributario" query-param="id_tributario" />
@@ -71,27 +67,27 @@
       <with-param name="clie_id" query-param="clie_id" />
     </call-query>
   </resource>
-  <resource method="DELETE" path="/clientes">
+  <resource path="/clientes" method="DELETE">
     <description>permite eliminado logico de un cliente en tabla core.clientes                            
                                     </description>
     <call-query href="deleteClientes">
       <with-param name="clie_id" query-param="clie_id" />
     </call-query>
   </resource>
-  <resource method="PUT" path="/habilitarcliente">
+  <resource path="/habilitarcliente" method="PUT">
     <description>permite habilitar el cliente luego de hacer el borrado logico en la tabla core.clientes                         
                                     </description>
     <call-query href="habilitarClientes">
       <with-param name="clie_id" query-param="clie_id" />
     </call-query>
   </resource>
-  <resource method="GET" path="/clientes/personas/{clie_id}">
+  <resource path="/clientes/personas/{clie_id}" method="GET">
     <description>filtra las personas que pertenecen a un cliente desde la tabla core.personas</description>
     <call-query href="clientesGetPersona">
       <with-param name="clie_id" query-param="clie_id" />
     </call-query>
   </resource>
-  <resource method="GET" path="/clientes/getCliente/{clie_id}">
+  <resource path="/clientes/getCliente/{clie_id}" method="GET">
     <description>permite obtener los datos de un cliente por id desde la tabla core.cliente</description>
     <call-query href="getClientexId">
       <with-param name="clie_id" query-param="clie_id" />
@@ -329,7 +325,7 @@ left join core.tablas t5 on t5.tabl_id = p.ubic_id
 left join core.clientes c on p.clie_id = c.clie_id
 left join core.empresas e on  e.empr_id = c.empr_id 
 where p.clie_id = cast(:clie_id as integer)</sql>
-    <param type="IN" name="clie_id" sqlType="STRING" optional="false" paramType="SCALAR" />
+    <param type="IN" name="clie_id" sqlType="STRING" paramType="SCALAR" optional="false" />
     <result outputType="json">{
     "personas": {
         "persona": [{
@@ -375,7 +371,7 @@ left join core.tablas tn on c.naci_id  = tn.tabl_id
 left join core.tablas tg on c.gene_id  = tg.tabl_id
 left join core.tablas tpan on c.pana_id  = tpan.tabl_id
 where c.clie_id = cast(:clie_id as integer)</sql>
-    <param type="IN" name="clie_id" sqlType="STRING" optional="false" paramType="SCALAR" />
+    <param type="IN" name="clie_id" sqlType="STRING" paramType="SCALAR" optional="false" />
     <result outputType="json">{
     "clientes": {
         "cliente": [{
@@ -412,4 +408,16 @@ where c.clie_id = cast(:clie_id as integer)</sql>
     }
 }</result>
   </query>
+  <query id="updateOrganigrama" useConfig="WemaDataSource">
+    <sql>update core.clientes set orgb = cast(:orgb as jsonb) where clie_id = cast(:clie_id as integer)</sql>
+    <param name="orgb" sqlType="STRING" paramType="SCALAR" />
+    <param name="clie_id" sqlType="STRING" paramType="SCALAR" />
+  </query>
+  <resource path="/organigrama" method="PUT">
+    <description>Actualiza el organigrama de un cliente</description>
+    <call-query href="updateOrganigrama">
+      <with-param name="orgb" query-param="orgb" />
+      <with-param name="clie_id" query-param="clie_id" />
+    </call-query>
+  </resource>
 </data>
