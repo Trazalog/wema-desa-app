@@ -6,6 +6,10 @@
 .hidden{
 	display: none;
 }
+/*Row eliminada en tabla*/
+.filaEliminada{
+	background-color: #fd5b5b52 !important;
+}
 /*Fin estilos clases generales*/
 
 /* Estilo de breadcrumb*/

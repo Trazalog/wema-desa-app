@@ -339,4 +339,16 @@ class Forms extends Model{
         log_message('info',"#TRAZA | #TRAZ_COMP_FORMULARIOS | Model | Forms | actualizar() >> info_id actualizado: ". $info_id);
         return array('info_id' => $info_id, "status" => true, "msg" => "Record guardado correctamente.");
     }
+    public function getAudios($info_id){
+        log_message('info',"#TRAZA | #TRAZ_COMP_FORMULARIOS | Model | Forms | getAudios($info_id) ");
+
+        $query = $this->db->query("select name, label, A.inst_id, A.valor4_base64
+            from frm.instancias_formularios as A
+            join frm.formularios as C on C.form_id = A.form_id
+            where A.info_id = cast($info_id as integer) and A.eliminado = false
+            order by A.orden"
+        );
+        $items = $query->getResultObject();
+        return $items;
+    }
 }
