@@ -117,4 +117,17 @@ class Personas extends Model{
 
         return $resp;
     }
+    /**
+        * Llama a la API de EMLO para evaluar el audio y guardar su respuesta en frm.instancias formularios
+        * @param $pers_id datos persona; $info_id instancia generada
+        * @return array respuesta del servicio
+	*/
+    public function evaluarCuestionario($data){
+        log_message('info','#TRAZA | WEMA-DESA-APP | Model | Personas | evaluarCuestionario()');
+
+        $url = API_EMLO;
+        $resp = $this->REST->callAPI("POST",$url , $data);
+
+        return $resp;
+    }
 }

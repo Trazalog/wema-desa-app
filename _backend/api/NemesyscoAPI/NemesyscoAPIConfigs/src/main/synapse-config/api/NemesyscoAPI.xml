@@ -1,33 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <api context="/nemesysco/connect" name="NemesyscoAPI" xmlns="http://ws.apache.org/ns/synapse">
-    <resource methods="GET" url-mapping="/audios/get">
+    <resource methods="POST" url-mapping="/audios/get">
         <inSequence>
             <property expression="get-property('registry','conf:tools/nemesysconfig.xml')" name="apiconf" scope="default" type="OM" xmlns:ns="http://org.apache.synapse/xsd" xmlns:ns2="http://org.apache.synapse/xsd"/>
             <property expression="$ctx:apiconf//dataservices_url" name="dataservices_url" scope="default" type="STRING" xmlns:ns="http://org.apache.synapse/xsd" xmlns:ns2="http://org.apache.synapse/xsd"/>
             <property expression="$ctx:apiconf//docker_url" name="docker_url" scope="default" type="STRING" xmlns:ns="http://org.apache.synapse/xsd" xmlns:ns2="http://org.apache.synapse/xsd"/>
-            <property expression="fn:concat($ctx:dataservices_url,'/services/CoreDataService/test/audio/106')" name="uri.var.get_audio" scope="default" type="STRING"/>
-            <header name="Accept" scope="transport" value="application/json"/>
+            <property expression="$ctx:apiconf//dummy_url" name="dummy_url" scope="default" type="STRING" xmlns:ns="http://org.apache.synapse/xsd" xmlns:ns2="http://org.apache.synapse/xsd"/>
+            <log level="custom">
+                <property name="Paso 1" value="Recibo data del audio a evaluar"/>
+                <property expression="json-eval($.nombre)" name="audio obtenido"/>
+                <property expression="json-eval($.ubicacion)" name="audio carpeta"/>
+                <property expression="json-eval($.inst_id)" name="inst_id"/>
+            </log>
+            <header name="Content-Type" scope="transport" value="multipart/form-data"/>
             <header name="Accept-Encoding" scope="transport" value="gzip,deflate"/>
             <property name="FORCE_ERROR_ON_SOAP_FAULT" scope="default" type="STRING" value="true"/>
+            <property expression="fn:concat($ctx:dummy_url,'/analysis/analyzeTest')" name="uri.var.post_emlo" scope="default" type="STRING"/>
             <log level="custom">
-                <property name="Paso 1" value="Obtengo audio del cuestionario"/>
-                <property expression="$ctx:uri.var.get_audio" name="URL getAudio"/>
+                <property name="Paso 2" value="Armo JSON para Emotion Logic"/>
+                <property expression="$ctx:uri.var.post_emlo" name="URL EMLO API"/>
             </log>
+            <payloadFactory description="crear empresa" media-type="json">
+                <format>{"data": {"outputType": "json","dummyResponse": "true","questions": [{"question": "$1","url": "http://ec2-44-203-253-107.compute-1.amazonaws.com/recordedAudio_838633030.wav","topics": [{"name": "topic_1","weight": 5},{"name": "topic_2","weight": 10}]}]}}</format>
+                <args>
+                    <arg evaluator="json" expression="$.nombre"/>
+                    <arg evaluator="json" expression="$.ubicacion"/>
+                </args>
+            </payloadFactory>
             <call>
                 <endpoint>
-                    <http method="get" statistics="enable" trace="enable" uri-template="{uri.var.get_audio}">
-                        <timeout>
-                            <duration>30000</duration>
-                            <responseAction>fault</responseAction>
-                        </timeout>
+                    <http method="post" uri-template="{uri.var.post_emlo}">
                         <suspendOnFailure>
-                            <errorCodes>-1</errorCodes>
-                            <initialDuration>0</initialDuration>
-                            <progressionFactor>1.0</progressionFactor>
-                            <maximumDuration>0</maximumDuration>
+                            <initialDuration>-1</initialDuration>
+                            <progressionFactor>1</progressionFactor>
                         </suspendOnFailure>
                         <markForSuspension>
-                            <errorCodes>-1</errorCodes>
                             <retriesBeforeSuspension>0</retriesBeforeSuspension>
                         </markForSuspension>
                     </http>
@@ -35,37 +42,18 @@
             </call>
             <filter regex="2[0-9][0-9]" source="get-property('axis2', 'HTTP_SC')">
                 <then>
+                    <log level="full"/>
                     <log level="custom">
-                        <property name="Response Paso 1: " value="Datos del audio"/>
+                        <property expression="json-eval($)" name="inst_id"/>
                     </log>
                 </then>
                 <else>
-                    <log level="full"/>
-                    <property expression="json-eval($)" name="ERROR_MESSAGE" scope="default" type="STRING"/>
-                    <property name="TOOLS_ERROR" scope="default" type="STRING" value="GET /audio/get con problemas"/>
-                    <sequence key="toolsFault"/>
+                    <property name="FORCE_ERROR_ON_SOAP_FAULT" scope="default" type="STRING" value="true"/>
+                    <log category="DEBUG" level="custom">
+                        <property name="Cosero por el else" value="json-eval($)"/>
+                    </log>
                 </else>
             </filter>
-            <header name="Content-Type" scope="transport" value="multipart/form-data"/>
-            <header name="Accept-Encoding" scope="transport" value="gzip,deflate"/>
-            <property name="FORCE_ERROR_ON_SOAP_FAULT" scope="default" type="STRING" value="true"/>
-            <property expression="json-eval($.audio)" name="dataQuestion" scope="default" type="STRING"/>
-            <property expression="fn:concat($ctx:docker_url,'/analysis/analyzeTest')" name="uri.var.post_emlo" scope="default" type="STRING"/>
-            <log level="custom">
-                <property name="Paso 2" value="Armo JSON para Emotion Logic"/>
-                <property expression="$ctx:uri.var.post_emlo" name="URL EMLO API"/>
-                <property expression="json-eval($.audio.question)" name="PREGUNTITA"/>
-            </log>
-            <script language="js"><![CDATA[var log = mc.getServiceLog();
-var aux = mc.getProperty('dataQuestion');
-log.info(aux);]]></script>
-            <payloadFactory description="crear empresa" media-type="json">
-                <format>{"data": {"outputType": "json","dummyResponse": "true","questions": [{"question": "$1","url": "http://ec2-44-203-253-107.compute-1.amazonaws.com/recordedAudio_838633030.wav","topics": [{"name": "topic_1","weight": 5},{"name": "topic_2","weight": 10}]},{"question": "question2","url": "http://ec2-44-203-253-107.compute-1.amazonaws.com/recordedAudio_1901029167.wav","topics": [{"name": "topic_2","weight": 5},{"name": "topic_3","weight": 10}]}]}}</format>
-                <args>
-                    <arg evaluator="json" expression="$.question"/>
-                    <arg evaluator="json" expression="$.empresa.cuit"/>
-                </args>
-            </payloadFactory>
             <loopback/>
         </inSequence>
         <outSequence>

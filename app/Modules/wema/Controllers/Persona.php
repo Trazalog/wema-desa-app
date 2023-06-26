@@ -234,37 +234,70 @@ class Persona extends BaseController
     }
     /**
         * Obtiene audio codificado, lo decodifica y lo guarda en al raiz del proyecto para posteriormente
-        * enviar esa URL a la API para ser evaluado por API de EMLO
+        * enviar esa URL a la API de EMLO para ser evaluado
         * @param $info_id Id del cuestionario a evaluar
         * @return array respuesta del procedimiento
 	*/
     public function evaluarCuestionario($info_id){
         log_message('debug','#TRAZA | WEMA-DESA-APP | Controller | Persona | evaluarCuestionario($info_id)');
         $this->Forms = new Forms();
-        //Obtengo los audios
+        $resp = array('status'=> "true");
+
+        //1° Obtengo los audios
         $audios = $this->Forms->getAudios($info_id);
-        //Decodifico los audios y los guardo en filesystem
+        //2° Creo la carpeta para guardar los audios
         $carpetaTemporal = './audioTemp/evaluate_'.rand(1, 10000);
-        //Creo la carpeta ?????
         $folder = mkdir($carpetaTemporal, 0777, TRUE);
+        //3° Decodifico los audios y los guardo en la ruta temporal
         if(!$folder){
-            log_message("debug", "#KOKE ALGO PASO Y NOSE CREO");
+            $resp['carpetaTemporal'] = "Error al crear la carpeta, revisar permisos en el servidor";
+            log_message('debug','#TRAZA | WEMA-DESA-APP | Controller | Persona | evaluarCuestionario($info_id) -> NO SE CREO LA CARPETA - REVISAR PERMISOS');
         } else{
-            log_message("debug", "#KOKE SI SE CREO");
+            $resp['carpetaTemporal']['crear']  = "Se creo la carpeta correctamente.";
+            foreach ($audios as $key => $audio) {
+                if(!empty($audio->valor4_base64)){
+                    $audioDecodificado = pg_unescape_bytea($audio->valor4_base64);
+                    if(!file_put_contents($carpetaTemporal.'/'.$audio->name.'.wav',base64_decode($audioDecodificado))){
+                        $resp['audios'][$audio->name]['status'] = false;
+                        $resp['audios'][$audio->name]['msg'] = 'Fallo al crear el audio en el sistema.';
+                    }else{
+                        $aux = explode("/",$carpetaTemporal);
+                        $data['ubicacion'] = array_pop($aux);
+                        $data['nombre'] = $audio->name;
+                        $data['inst_id'] = $audio->inst_id;
+                        $this->Personas->evaluarCuestionario($data);
+
+                        $resp['audios'][$audio->name]['status'] = true;
+                        $resp['audios'][$audio->name]['msg'] = 'Audio decodificado y creado correctamente.';
+                    }
+                }
+            }
         }
-        foreach ($audios as $key => $audio) {
-            if(!empty($audio->valor4_base64)){
-                $audioDecodificado = pg_unescape_bytea($audio->valor4_base64);
-                file_put_contents($carpetaTemporal.'/'.$audio->name.'.wav',$audioDecodificado);
+        //4° Llamo a la API para evaluar los audios y guardo las respuestas
+        #script..
+
+        //5° Limpio la carpeta generada y elimino la carpeta luego de vaciarla
+        if (!is_dir($carpetaTemporal)) {
+            log_message('debug','#TRAZA | WEMA-DESA-APP | Controller | Persona | evaluarCuestionario($info_id) -> NO EXISTE LA CARPETA, ERROR AL CREAR');
+            $resp['status'] = false;
+            $resp['carpetaTemporal']['validar'] = 'Error en la validacion de la carpeta, no se creo en el destino especificado -> '.$carpetaTemporal;
+        }else{
+            //Limpio contenido 
+            $files = glob($carpetaTemporal . '/*');//Obtengo el contenido de la carpeta
+            foreach ($files as $file) {
+                if (is_file($file)) {
+                    unlink($file);
+                }
+            }
+            // Elimino la carpeta
+            if(rmdir($carpetaTemporal)){
+                $resp['carpetaTemporal']['eliminar'] = 'Se elimino la carpeta temporal correctamente.';
+            }else{
+                $resp['status'] = false;
+                $resp['carpetaTemporal']['eliminar'] = 'Error en la eliminacion de la carpeta temporal.';
             }
         }
 
-
-        // if(!empty($info_id)){
-        //     $resp = $this->Personas->vincularCuestionario($pers_id,$info_id);
-        // } else{
-            $resp = array("status"=> "true", "msg" => "Finalizo la evaluacion del cuestionario.");
-        // }
         echo json_encode($resp);        
     }
 }

@@ -163,7 +163,7 @@ where if2.inst_id = cast(:inst_id as integer)</sql>
       <with-param name="valor" query-param="valor" />
     </call-query>
   </resource>
-  <resource path="/test/audio/{inst_id}" method="GET">
+  <resource path="/response/audio/{inst_id}" method="GET">
     <description />
     <call-query href="getAudioXId">
       <with-param name="inst_id" query-param="inst_id" />

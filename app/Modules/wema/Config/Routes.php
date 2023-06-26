@@ -46,5 +46,7 @@ $routes->post('/clientesEmpresa/(:num)', '\Modules\wema\Controllers\Cliente::get
 /* RUTAS GENERALES (COREDataService)*/
 $routes->get('/ubicaciones', '\Modules\wema\Controllers\General::getUbicaciones');
 
-
-//$routes->get('/getClientexId/(:num)', '\Modules\wema\Controllers\Cliente::getClientexId/$1');
+/* RUTAS RESULTADOS */
+$routes->get('/resultado', '\Modules\wema\Controllers\Resultado::index');
+$routes->get('/resultado/clientes/(:num)', '\Modules\wema\Controllers\Resultado::clientes/$1');
+$routes->get('/resultado/personas/(:num)', '\Modules\wema\Controllers\Resultado::personas/$1');
