@@ -1,10 +1,10 @@
-<data enableBatchRequests="true" name="PersonaDataService" transports="http https local">
-  <resource method="GET" path="/persona">
+<data transports="http https local" name="PersonaDataService" enableBatchRequests="true">
+  <resource path="/persona" method="GET">
     <description>Listado personas de core.personas                           
                                     </description>
     <call-query href="getPersonas" />
   </resource>
-  <resource method="POST" path="/persona">
+  <resource path="/persona" method="POST">
     <description>Guarda persona en tabla core.personas                     </description>
     <call-query href="setPersona">
       <with-param name="apellidos" query-param="apellidos" />
@@ -31,7 +31,7 @@
       <with-param name="nom_imagen" query-param="nom_imagen" />
     </call-query>
   </resource>
-  <resource method="PUT" path="/persona">
+  <resource path="/persona" method="PUT">
     <description>Updatea datos de persona en core.personas por pers_id                       
                                     
                                     
@@ -62,7 +62,7 @@
       <with-param name="nom_imagen" query-param="nom_imagen" />
     </call-query>
   </resource>
-  <resource method="DELETE" path="/persona">
+  <resource path="/persona" method="DELETE">
     <description>Borrado logico de persona por pers_id en core.personas                               
                                     
                                     </description>
@@ -70,14 +70,14 @@
       <with-param name="pers_id" query-param="pers_id" />
     </call-query>
   </resource>
-  <resource method="PUT" path="/habilitarpersona">
+  <resource path="/habilitarpersona" method="PUT">
     <description>actualiza eliminado en true para poder habilitar una persona                    
                                     </description>
     <call-query href="habilitarPersona">
       <with-param name="pers_id" query-param="pers_id" />
     </call-query>
   </resource>
-  <resource method="GET" path="/persona/id/{pers_id}">
+  <resource path="/persona/id/{pers_id}" method="GET">
     <description>Obtiene datos de persona por pers_id                     
                                     </description>
     <call-query href="getPersonaxId">
@@ -127,7 +127,9 @@ left join core.tablas t5 on t5.tabl_id = p.ubic_id</sql>
             "educacion":"$educacion",
             "estado":"$estado",
             "imagen":"$imagen",
-            "nom_imagen":"$nom_imagen"
+            "nom_imagen":"$nom_imagen",
+            "area":"$area",
+            "posicion":"$posicion",
         }]
     }
 }</result>
