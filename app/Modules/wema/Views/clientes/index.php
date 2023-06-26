@@ -1229,10 +1229,22 @@ $(document).on("click", ".btn-organigrama", function() {
           }   
         }
       }      
-    }
+    }    
+
     op_default= {id: -1, disabled: 'true', value : "Seleccione..." , text : "Seleccione..."};
     options.unshift(op_default);
     console.log("Options: "+options.length+"Options Pricipal: "+JSON.stringify(options));
+
+    for (var i = 0; i < nodes.length; i++) {
+        var node = nodes[i];
+        switch (node.title) {
+            case "Administrador":
+                console.log("Administrador");
+                node.tags = ["yellow"];
+                break;
+        }
+    }
+    
 
     if(options.length === 0){
       Swal.fire({
@@ -1252,60 +1264,66 @@ $(document).on("click", ".btn-organigrama", function() {
       
       $('#modalOrganigrama').modal('show');
 
-      OrgChart.templates.anaOrange = Object.assign({}, OrgChart.templates.ana, OrgChart.templates.ula);  
+      OrgChart.templates.ana.plus = '<circle cx="15" cy="15" r="15" fill="#ffffff" stroke="#aeaeae" stroke-width="1"></circle>'
+      + '<text text-anchor="middle" style="font-size: 18px;cursor:pointer;" fill="#757575" x="15" y="22">{collapsed-children-count}</text>';
 
-      OrgChart.SEARCH_PLACEHOLDER = "Busqueda"; // the default value is "Search"
-      OrgChart.templates.anaOrange.editFormHeaderColor = '#FFCA28';
+      OrgChart.templates.itTemplate = Object.assign({}, OrgChart.templates.ana);
+      OrgChart.templates.itTemplate.nodeMenuButton = "";
+      OrgChart.templates.itTemplate.nodeCircleMenuButton = {
+          radius: 18,
+          x: 250,
+          y: 60,
+          color: '#fff',
+          stroke: '#aeaeae'
+      };
 
-      chart = new OrgChart(document.getElementById("tree"), {     
-        enableSearch: true,  
-        enableDragDrop: true, 
-        nodeMouseClick:  false,
-        mouseScrool: OrgChart.action.ctrlZoom,
-        layout: OrgChart.mixed,  
-        /*tags: {
-          orange: {
-            template: 'anaOrange'
-          }
-        },*/
-        //mode: 'dark',
-        scaleInitial: OrgChart.match.boundary,
-        
-        nodeBinding: {
-            field_0: "name",
-            field_1: "title",
-            img_0: "img"
-        },  
-        editForm: {
+      OrgChart.templates.invisibleGroup.padding = [20, 0, 0, 0];
+
+      chart = new OrgChart(document.getElementById("tree"), {
+          mouseScrool: OrgChart.action.ctrlZoom,
+          template: "ana",
+          enableDragDrop: true,
+          /*menu: {
+              pdfPreview: {
+                  text: "Export to PDF",
+                  icon: OrgChart.icon.pdf(24, 24, '#7A7A7A'),
+                  onClick: preview
+              },
+              csv: { text: "Save as CSV" }
+          },*/
+          nodeBinding: {
+                  field_0: "name",
+                  field_1: "title",
+                  img_0: "img"
+          },  
+          editForm: {
             generateElementsFromFields: true,            
             addMore: null,
             addMoreBtn: null,
             addMoreFieldName: null,
-            //nameBinding: 'name',
             titleBinding: 'name',
-            //imgBinding: 'img',
             cancelBtn: 'Cancelar',
             saveAndCloseBtn: 'Asignar',
             buttons:  {
-                edit: {
-                    icon: OrgChart.icon.edit(24,24,'#fff'),
-                    text: 'Editar',
-                    hideIfEditMode: true,
-                    hideIfDetailsMode: false
-                },
-                share: {
-                    icon: OrgChart.icon.share(24,24,'#fff'),
-                    text: 'Compartir'
-                },
-                pdf: {
-                    icon: OrgChart.icon.pdf(24,24,'#fff'),
-                    text: 'PDF'
-                },
-                remove: {
-                    icon: OrgChart.icon.remove(24,24,'#fff'),
-                    text: 'Eliminar',
-                    hideIfDetailsMode: true
-                }
+              edit: {
+                icon: OrgChart.icon.edit(24,24,'#fff'),
+                text: 'Editar',
+                hideIfEditMode: true,
+                hideIfDetailsMode: false
+              },
+              share: {
+                icon: OrgChart.icon.share(24,24,'#fff'),
+                text: 'Compartir'
+              },
+              pdf: {
+                icon: OrgChart.icon.pdf(24,24,'#fff'),
+                text: 'PDF'
+              },
+              remove: {
+                icon: OrgChart.icon.remove(24,24,'#fff'),
+                text: 'Eliminar',
+                hideIfDetailsMode: true
+              }
             },
             elements: [
               { type: 'select', options: options, label: 'Nombres', binding: 'name'},
@@ -1313,8 +1331,8 @@ $(document).on("click", ".btn-organigrama", function() {
               { type: 'textbox', label: 'Id', binding: 'pers_id', readOnly: true},  
               { type: 'textbox', label: 'Url Imagen', binding: 'img', btn: 'Upload' },            
             ]
-        } ,     
-        nodeMenu: {
+          },
+          nodeMenu: {
             details: { 
               text: "Detalles" ,
               //onClick: detalleNodo
@@ -1330,30 +1348,148 @@ $(document).on("click", ".btn-organigrama", function() {
             remove: { 
               text: "Eliminar" 
             }
-        },        
-        align: OrgChart.ORIENTATION,
-        toolbar: {
-            fullScreen: false,
-            zoom: true,
-            fit: true,
-            expandAll: true
-        },
-        nodes: nodes
+          },        
+          align: OrgChart.ORIENTATION,
+          toolbar: {
+              fullScreen: true,
+              zoom: true,
+              fit: true,
+              expandAll: true
+          },
+          nodeBinding: {
+              field_0: "name",
+              field_1: "title",
+              img_0: "img"
+          },
+          tags: {
+              "top-management": {
+                  template: "invisibleGroup",
+                  subTreeConfig: {
+                      orientation: OrgChart.orientation.bottom,
+                      collapse: {
+                          level: 1
+                      }
+                  }
+              },
+              "it-team": {
+                  subTreeConfig: {
+                      layout: OrgChart.mixed,
+                      collapse: {
+                          level: 1
+                      }
+                  },
+              },
+              "hr-team": {
+                  subTreeConfig: {
+                      layout: OrgChart.treeRightOffset,
+                      collapse: {
+                          level: 1
+                      }
+                  },
+              },
+              "sales-team": {
+                  subTreeConfig: {
+                      layout: OrgChart.treeLeftOffset,
+                      collapse: {
+                          level: 1
+                      }
+                  },
+              },
+              "ceo-menu": {
+                  nodeMenu: {
+                      //addSharholder: { text: "Add new sharholder", icon: OrgChart.icon.add(24, 24, "#7A7A7A"), onClick: addSharholder },
+                      addDepartment: { text: "Nueva Area", icon: OrgChart.icon.add(24, 24, "#7A7A7A"), onClick: addArea },
+                      //addAssistant: { text: "Add new assitsant", icon: OrgChart.icon.add(24, 24, "#7A7A7A"), onClick: addAssistant },
+                      edit: { text: "Editar" },
+                      details: { text: "Detalles" },
+                  }
+              },
+              "area": {
+                  template: "group",
+                  nodeMenu: {
+                      addManager: { text: "Nuevo Manager", icon: OrgChart.icon.add(24, 24, "#7A7A7A"), onClick: addManager },
+                      remove: { text: "Eliminar Area" },
+                      edit: { text: "Editar Area" },
+                      //nodePdfPreview: { text: "Export department to PDF", icon: OrgChart.icon.pdf(24, 24, "#7A7A7A"), onClick: nodePdfPreview }
+                  }
+              }
+          },
+          clinks: [
+              { from: 11, to: 18 }
+          ],
+          nodes:nodes
       });
 
-      chart.on('field', function (sender, args) {
-        if(!args.node.min){
-          if(args.name == 'name'){
-            /*console.info("---Field---");
-            console.info(args);*/
-          }
+      /*
+      Agrega nodo nuevo en blanco.
+      */ 
+      function agregarNodo(nodeId){
+
+        var node = chart.get(nodeId);      
+        //console.log("node: "+ JSON.stringify(node));      
+        var data = { pers_id : "", id: ((nodes.length*1)+1), pid: node.id, name: "", title:"", email:"", img: ""};
+        chart.addNode(data); //Agrega al tree
+        console.log("data: "+ JSON.stringify(data));
+        console.log("nodes new: "+ JSON.stringify(nodes));
+        if (data.length == 0) {
+            this.style.display = "none";
         }
+      } 
 
-        
+    
+
+      chart.nodeCircleMenuUI.on('drop', function (sender, args) {
+          chart.addClink(args.from, args.to).draw(OrgChart.action.update);
       });
+
+      chart.on("added", function (sender, id) {
+          sender.editUI.show(id);
+      });
+
+      chart.on('drop', function (sender, draggedNodeId, droppedNodeId) {
+          var draggedNode = sender.getNode(draggedNodeId);
+          var droppedNode = sender.getNode(droppedNodeId);
+
+          if (droppedNode.tags.indexOf("area") != -1 && draggedNode.tags.indexOf("area") == -1) {
+              var draggedNodeData = sender.get(draggedNode.id);
+              draggedNodeData.pid = null;
+              draggedNodeData.stpid = droppedNode.id;
+              sender.updateNode(draggedNodeData);
+              return false;
+          }
+      });
+
+
+      chart.on('exportstart', function (sender, args) {
+          args.styles = document.getElementById('myStyles').outerHTML;
+      });
+
+      function preview() {
+          OrgChart.pdfPrevUI.show(chart, {
+              format: 'A4'
+          });
+      }
+
+      function nodePdfPreview(nodeId) {
+          OrgChart.pdfPrevUI.show(chart, {
+              format: 'A4',
+              nodeId: nodeId
+          });
+      }
+
+      function addArea(nodeId) {
+          var node = chart.getNode(nodeId);
+          var data = { id: OrgChart.randomId(), pid: node.stParent.id, tags: ["area"] };
+          chart.addNode(data);
+      }
+
+      function addManager(nodeId) {
+          chart.addNode({ id: OrgChart.randomId(), stpid: nodeId });
+      }
 
       function editarNodo(nodeId){
 
+        console.log("---Editar nodo---");
         var node = chart.get(nodeId);
         console.log("node: "+ JSON.stringify(node)); 
         console.log("Options Editar: "+JSON.stringify(options));        
@@ -1364,15 +1500,14 @@ $(document).on("click", ".btn-organigrama", function() {
         }else{
 
         }
-        
+
         if(node.id){ //Si el nodo esta asignado debe mostrar quien esta asignado actualmente
           
 
         }else{ //Sino, mostrar sin ese personal
 
         }       
-
-        console.log("---Editar nodo---");
+    
         chart.draw();
         console.log(chart);
         console.log(chart.config.nodes);
@@ -1381,31 +1516,13 @@ $(document).on("click", ".btn-organigrama", function() {
         $('#modalOrganigrama #treeOrg').val(JSON.stringify(chart.config.nodes));
         console.log(nodes);
 
-      }
-     
-      $('#treeOrg').val('');//Limpiamos para que reciba el nodes actualizados
-      $('#modalOrganigrama #treeOrg').val(JSON.stringify(nodes));
+      }      
+
+        $('#treeOrg').val('');//Limpiamos para que reciba el nodes actualizados
+        $('#modalOrganigrama #treeOrg').val(JSON.stringify(nodes));
+      
     }
-    
-    /*for (var i = 0; i < nodes.length; i++) {
-        var node = nodes[i];
-        switch (node.title) {
-            case "QA":
-                node.tags = ["QA"];
-                break;
-            case "Marketer":
-            case "Designer":
-            case "Sales Manager":
-                node.tags = ["Marketing"];
-                break;
-        }
-    }*/
-    /*console.log("Nodes: "+JSON.stringify(nodes));*/        
- 
   }
-
-  
-
 });
 
 function AgregarOrganigrama() {
