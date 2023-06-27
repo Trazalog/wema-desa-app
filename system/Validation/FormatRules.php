@@ -260,7 +260,7 @@ class FormatRules
                 break;
 
             default:
-                $which = null;
+                $which = FILTER_DEFAULT;
                 break;
         }
 

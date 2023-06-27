@@ -15,6 +15,8 @@ if(!isset($routes)) {
  $routes->get('/persona/cargarListadoEntrevistados', '\Modules\wema\Controllers\Persona::cargarListadoEntrevistados');
  $routes->get('/persona/initCuestionario/id/(:num)', '\Modules\wema\Controllers\Persona::initCuestionario/$1');
  $routes->get('/persona/entrevista', '\Modules\wema\Controllers\Persona::cargarEntrevista');
+ $routes->get('/vincularCuestionario/(:num)/(:num)', '\Modules\wema\Controllers\Persona::vincularCuestionario/$1/$2');
+ $routes->get('/evaluarCuestionario/info_id/(:num)', '\Modules\wema\Controllers\Persona::evaluarCuestionario/$1');
  $routes->get('/modalCliente/(:num)', '\Modules\wema\Controllers\Persona::modalCliente/$1');
  $routes->post('/personasCliente/(:num)', '\Modules\wema\Controllers\Persona::getPersonasxIdClientes/$1');
 
@@ -45,5 +47,7 @@ $routes->post('/clientesEmpresa/(:num)', '\Modules\wema\Controllers\Cliente::get
 /* RUTAS GENERALES (COREDataService)*/
 $routes->get('/ubicaciones', '\Modules\wema\Controllers\General::getUbicaciones');
 
-
-//$routes->get('/getClientexId/(:num)', '\Modules\wema\Controllers\Cliente::getClientexId/$1');
+/* RUTAS RESULTADOS */
+$routes->get('/resultado', '\Modules\wema\Controllers\Resultado::index');
+$routes->get('/resultado/clientes/(:num)', '\Modules\wema\Controllers\Resultado::clientes/$1');
+$routes->get('/resultado/personas/(:num)', '\Modules\wema\Controllers\Resultado::personas/$1');

@@ -18,7 +18,7 @@
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
-                        <input id="pers_id" name="pers_id" type="text" disabled hidden>
+                        <input id="pers_id" name="pers_id" type="hidden" value="<?= $persona->pers_id ?>">
                         <div id="formEntrevista" class="quiz-new" data-form="3"></div>
                         <div id="waveform"></div>
                         <!-- /.bs-tepper -->
@@ -125,6 +125,7 @@ $(document).ready(function () {
             utterance = new SpeechSynthesisUtterance($("#pregunta-"+indice).find("h3").text());
             utterance.voice = voices[7];
             synth.speak(utterance);
+            vincularCuestionarioPersona();
         };
         notificar({'icon' : 'info','title':'Entrevista', text: 'Cuando se encuentre listo presione el botón para dar inicio a la entrevista',"confirmButtonText":"Iniciar",'btnConfirmar' : true,"always": iniciarCuestionario});
     });
@@ -273,6 +274,15 @@ function checkearTiempo(){
     if (duracion >= 7000) {
         clearInterval(checkear); // Clear the interval after validation
     }
+}
+// Vinculo a la persona con la instancia de cuestionario
+function vincularCuestionarioPersona(){
+    aux = $("#formEntrevista").find('form').attr('id').split('-');
+    pers_id = $("#pers_id").val();
+    info_id = aux.pop();
+    $.get('<?= base_url()?>/vincularCuestionario/'+ pers_id +'/'+ info_id, function (data){
+        console.log("Cuestionario vinculado");
+    });
 }
 </script>
 <?= $this->endSection() ?>

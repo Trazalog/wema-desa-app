@@ -5,6 +5,7 @@ use App\Controllers\BaseController;
 use Modules\wema\Models\Personas; 
 use Modules\wema\Models\Generales; 
 use Modules\wema\Models\Clientes; 
+use Modules\traz_comp_formularios\Models\Forms; 
 
 
 class Persona extends BaseController
@@ -184,35 +185,23 @@ class Persona extends BaseController
         log_message('debug','#TRAZA | WEMA-DESA-APP | Controller | Persona | initCuestionario()');
 
         if(!empty($pers_id)) $data['persona'] = $this->Personas->getPersonaPorId($pers_id);
-
-        $data['cuestionario'] = new \stdClass;
-        $data['cuestionario']->preguntas = array();
-        $data['cuestionario']->preguntas[0] = new \stdClass();
-        $data['cuestionario']->preguntas[0]->titulo = "Economía";
-        $data['cuestionario']->preguntas[0]->pregunta = "¿Como se siente si escucha la frase lorem ipsum?";
-        $data['cuestionario']->preguntas[0]->descripcion = "Desarrollo de la pregunta N° 1";
-        $data['cuestionario']->preguntas[0]->nota = "Aclaración opcional sobre pregunta N° 1";
-        $data['cuestionario']->preguntas[0]->video = "https://share.synthesia.io/embeds/videos/7afef1d6-1f8b-45ee-961e-e22a6aa94f6f";
-        $data['cuestionario']->preguntas[1] = new \stdClass();
-        $data['cuestionario']->preguntas[1]->titulo = "Gestíon";
-        $data['cuestionario']->preguntas[1]->pregunta = "¿Esta usted asociado a alguna actividad ilícita en la empresa?";
-        $data['cuestionario']->preguntas[1]->descripcion = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean ut purus in justo aliquet ornare. Curabitur pulvinar nunc et erat convallis consectetur. Duis facilisis sollicitudin lorem, ac tempor nibh vehicula eu. Integer at nunc quis ex rutrum sagittis. Vestibulum augue enim, laoreet scelerisque vestibulum ut, convallis vel ligula. Donec odio arcu, ullamcorper nec eleifend nec, faucibus accumsan libero. Integer tincidunt vestibulum eleifend. Phasellus vel euismod arcu. Nulla cursus urna pellentesque, venenatis nisl nec, vulputate elit.Integer nisi massa, fringilla ornare hendrerit quis, laoreet ut sem. Suspendisse euismod semper ex, non volutpat mauris faucibus eu. Fusce commodo quam in tincidunt condimentum. Maecenas suscipit erat sit amet nisl feugiat interdum. Vestibulum nulla eros, porta nec scelerisque sed, malesuada ac diam. Sed quis tristique ligula. Nulla vehicula mi massa, pellentesque lobortis lorem cursus eu.";
-        $data['cuestionario']->preguntas[1]->nota = "Aclaración opcional sobre pregunta N° 2";
-        $data['cuestionario']->preguntas[1]->video = "https://share.synthesia.io/embeds/videos/7afef1d6-1f8b-45ee-961e-e22a6aa94f6f";
-        $data['cuestionario']->preguntas[2] = new \stdClass();
-        $data['cuestionario']->preguntas[2]->titulo = "Diseño";
-        $data['cuestionario']->preguntas[2]->pregunta = "¿Usted vio algo inusual en el comportamiento de su compañero?";
-        $data['cuestionario']->preguntas[2]->descripcion = "Desarrollo de la pregunta N° 3";
-        $data['cuestionario']->preguntas[2]->nota = "Aclaración opcional sobre pregunta N° 3";
-        $data['cuestionario']->preguntas[2]->video = "https://share.synthesia.io/embeds/videos/7afef1d6-1f8b-45ee-961e-e22a6aa94f6f";
-        $data['cuestionario']->preguntas[3] = new \stdClass();
-        $data['cuestionario']->preguntas[3]->titulo = "Cultura";
-        $data['cuestionario']->preguntas[3]->pregunta = "¿Presenció alguna actividad ilícita en su jornada laboral?";
-        $data['cuestionario']->preguntas[3]->descripcion = "Desarrollo de la pregunta N° 4";
-        $data['cuestionario']->preguntas[3]->nota = "Aclaración opcional sobre pregunta N° 4";
-        $data['cuestionario']->preguntas[3]->video = "https://share.synthesia.io/embeds/videos/7afef1d6-1f8b-45ee-961e-e22a6aa94f6f";
         
         return view('Modules\wema\Views\persona\entrevistas\cuestionario',$data);    
+    }
+    /**
+        * Vincula el info_id de la instancia generada con la persona entrevistada
+        * @param $pers_id id de entrevistada; $info_id id del cuestionario
+        * @return array respuesta del servicio
+	*/
+    public function vincularCuestionario($pers_id,$info_id){
+        log_message('debug','#TRAZA | WEMA-DESA-APP | Controller | Persona | vincularCuestionario()');
+
+        if(!empty($pers_id) && !empty($info_id)){
+            $resp = $this->Personas->vincularCuestionario($pers_id,$info_id);
+        } else{
+            $resp = array("status"=> "false", "msg" => "No se vinculo el cuestionario.");
+        }
+        echo json_encode($resp);        
     }
 
 
@@ -246,5 +235,72 @@ class Persona extends BaseController
          
         echo json_encode($resp);
     }
+    /**
+        * Obtiene audio codificado, lo decodifica y lo guarda en al raiz del proyecto para posteriormente
+        * enviar esa URL a la API de EMLO para ser evaluado
+        * @param $info_id Id del cuestionario a evaluar
+        * @return array respuesta del procedimiento
+	*/
+    public function evaluarCuestionario($info_id){
+        log_message('debug','#TRAZA | WEMA-DESA-APP | Controller | Persona | evaluarCuestionario($info_id)');
+        $this->Forms = new Forms();
+        $resp = array('status'=> "true");
 
+        //1° Obtengo los audios
+        $audios = $this->Forms->getAudios($info_id);
+        //2° Creo la carpeta para guardar los audios
+        $carpetaTemporal = './audioTemp/evaluate_'.rand(1, 10000);
+        $folder = mkdir($carpetaTemporal, 0777, TRUE);
+        //3° Decodifico los audios y los guardo en la ruta temporal
+        if(!$folder){
+            $resp['carpetaTemporal'] = "Error al crear la carpeta, revisar permisos en el servidor";
+            log_message('debug','#TRAZA | WEMA-DESA-APP | Controller | Persona | evaluarCuestionario($info_id) -> NO SE CREO LA CARPETA - REVISAR PERMISOS');
+        } else{
+            $resp['carpetaTemporal']['crear']  = "Se creo la carpeta correctamente.";
+            foreach ($audios as $key => $audio) {
+                if(!empty($audio->valor4_base64)){
+                    $audioDecodificado = pg_unescape_bytea($audio->valor4_base64);
+                    if(!file_put_contents($carpetaTemporal.'/'.$audio->name.'.wav',base64_decode($audioDecodificado))){
+                        $resp['audios'][$audio->name]['status'] = false;
+                        $resp['audios'][$audio->name]['msg'] = 'Fallo al crear el audio en el sistema.';
+                    }else{
+                        $aux = explode("/",$carpetaTemporal);
+                        $data['ubicacion'] = array_pop($aux);
+                        $data['nombre'] = $audio->name;
+                        $data['inst_id'] = $audio->inst_id;
+                        $this->Personas->evaluarCuestionario($data);
+
+                        $resp['audios'][$audio->name]['status'] = true;
+                        $resp['audios'][$audio->name]['msg'] = 'Audio decodificado y creado correctamente.';
+                    }
+                }
+            }
+        }
+        //4° Llamo a la API para evaluar los audios y guardo las respuestas
+        #script..
+
+        //5° Limpio la carpeta generada y elimino la carpeta luego de vaciarla
+        if (!is_dir($carpetaTemporal)) {
+            log_message('debug','#TRAZA | WEMA-DESA-APP | Controller | Persona | evaluarCuestionario($info_id) -> NO EXISTE LA CARPETA, ERROR AL CREAR');
+            $resp['status'] = false;
+            $resp['carpetaTemporal']['validar'] = 'Error en la validacion de la carpeta, no se creo en el destino especificado -> '.$carpetaTemporal;
+        }else{
+            //Limpio contenido 
+            $files = glob($carpetaTemporal . '/*');//Obtengo el contenido de la carpeta
+            foreach ($files as $file) {
+                if (is_file($file)) {
+                    unlink($file);
+                }
+            }
+            // Elimino la carpeta
+            if(rmdir($carpetaTemporal)){
+                $resp['carpetaTemporal']['eliminar'] = 'Se elimino la carpeta temporal correctamente.';
+            }else{
+                $resp['status'] = false;
+                $resp['carpetaTemporal']['eliminar'] = 'Error en la eliminacion de la carpeta temporal.';
+            }
+        }
+
+        echo json_encode($resp);        
+    }
 }

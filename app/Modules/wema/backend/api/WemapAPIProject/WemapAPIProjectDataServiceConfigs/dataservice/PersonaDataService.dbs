@@ -87,8 +87,15 @@
   <config id="WemapDataSource">
     <property name="carbon_datasource_name">WemapDataSource</property>
   </config>
+  <resource method="POST" path="/persona/cuestionario/vincular">
+    <description>Vincula info_id con pers_id en eva.encuestas_personas</description>
+    <call-query href="vincularCuestionario">
+      <with-param name="pers_id" query-param="pers_id" />
+      <with-param name="info_id" query-param="info_id" />
+    </call-query>
+  </resource>
   <query id="getPersonas" useConfig="WemapDataSource">
-    <sql>select p.*,p.eliminado as estado, t.descripcion as genero, t1.descripcion as pais, 
+    <sql>select *,p.eliminado as estado, t.descripcion as genero, t1.descripcion as pais, 
 t2.descripcion as estado_civil, t3.descripcion as nacimiento,
 t4.descripcion as educacion, t5.descripcion as ubicacion 
 from core.personas p
@@ -128,6 +135,7 @@ left join core.tablas t5 on t5.tabl_id = p.ubic_id</sql>
             "estado":"$estado",
             "imagen":"$imagen",
             "nom_imagen":"$nom_imagen",
+            "@getEncuestas":"$pers_id->pers_id"
             "area":"$area",
             "posicion":"$posicion",
         }]
@@ -298,38 +306,64 @@ left join core.tablas t3 on t3.tabl_id = p.naci_id
 left join core.tablas t4 on t4.tabl_id = p.educ_id
 left join core.tablas t5 on t5.tabl_id = p.ubic_id
 where p.pers_id = cast(:pers_id as integer)</sql>
+    <param name="pers_id" sqlType="STRING" />
     <result outputType="json">{
-    "personas": {
-        "persona": [{
-            "pers_id" : "$pers_id",
-            "apellidos": "$apellidos",
-            "nombres": "$nombres",
-            "curp": "$curp",
-            "fec_nacimiento": "$fec_nacimiento",
-            "ocupacion": "$ocupacion",
-            "telefono": "$telefono",
-            "email": "$email",
-            "gene_id":"$gene_id",
-            "pana_id":"$pana_id",
-            "esci_id":"$esci_id",
-            "naci_id":"$naci_id",
-            "educ_id":"$educ_id",
-            "ubic_id":"$ubic_id",
-            "num_exterior":"$num_exterior",
-            "cod_postal":"$cod_postal",
-            "calle":"$calle",
-            "num_interior":"$num_interior",
-            "genero":"$genero",
-            "pais":"$pais",
-            "estado_civil":"$estado_civil",
-            "nacimiento":"$nacimiento",
-            "educacion":"$educacion",
-            "estado":"$estado",
-            "imagen":"$imagen",
-            "nom_imagen":"$nom_imagen"
-        }]
+  "personas": {
+      "persona": {
+          "pers_id" : "$pers_id",
+          "apellidos": "$apellidos",
+          "nombres": "$nombres",
+          "curp": "$curp",
+          "fec_nacimiento": "$fec_nacimiento",
+          "ocupacion": "$ocupacion",
+          "telefono": "$telefono",
+          "email": "$email",
+          "gene_id":"$gene_id",
+          "pana_id":"$pana_id",
+          "esci_id":"$esci_id",
+          "naci_id":"$naci_id",
+          "educ_id":"$educ_id",
+          "ubic_id":"$ubic_id",
+          "num_exterior":"$num_exterior",
+          "cod_postal":"$cod_postal",
+          "calle":"$calle",
+          "num_interior":"$num_interior",
+          "genero":"$genero",
+          "pais":"$pais",
+          "estado_civil":"$estado_civil",
+          "nacimiento":"$nacimiento",
+          "educacion":"$educacion",
+          "estado":"$estado",
+          "imagen":"$imagen",
+          "nom_imagen":"$nom_imagen"
+      }
+  }
+}</result>
+  </query>
+  <query id="getEncuestas" useConfig="WemapDataSource">
+    <sql>select if2."label" ,if2."name",if2.valor4_base64, if2.info_id
+from frm.instancias_formularios if2 
+join eva.encuestas_personas ep on if2.info_id = ep.info_id
+join core.personas p on p.pers_id = ep.pers_id
+where ep.pers_id = cast(:pers_id as integer)</sql>
+    <param type="IN" name="pers_id" sqlType="STRING" paramType="SCALAR" optional="false" />
+    <result outputType="json">{
+    "encuestas":{
+       "encuesta":[
+          {
+            "pregunta":"$label",
+            "name":"$name",
+            "audioCodificado":"$valor4_base64",
+            "info_id" : "$info_id"
+           }
+       ]
     }
 }</result>
-    <param name="pers_id" sqlType="STRING" />
+  </query>
+  <query id="vincularCuestionario" useConfig="WemapDataSource">
+    <sql>INSERT INTO eva.encuestas_personas(pers_id, info_id)
+VALUES(cast(:pers_id as integer),cast(:info_id as integer))</sql>
+    <param type="IN" name="pers_id" sqlType="STRING" paramType="SCALAR" optional="false" />
+    <param type="IN" name="info_id" sqlType="STRING" paramType="SCALAR" optional="false" />
   </query>
 </data>
