@@ -35,6 +35,7 @@ $routes->get('/getClientes/(:num)', '\Modules\wema\Controllers\Cuenta::getClient
 /* RUTAS CLIENTE */
 $routes->get('/cliente', '\Modules\wema\Controllers\Cliente::index');
 $routes->post('/guardarCliente', '\Modules\wema\Controllers\Cliente::guardarCliente');
+$routes->post('/editarOrganigrama', '\Modules\wema\Controllers\Cliente::editarOrganigrama');
 $routes->post('/getClientes', '\Modules\wema\Controllers\Cliente::getClientes');
 $routes->post('/editarCliente', '\Modules\wema\Controllers\Cliente::editarCliente');
 $routes->get('/eliminarCliente/(:num)', '\Modules\wema\Controllers\Cliente::eliminarCliente/$1');

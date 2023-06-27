@@ -12,8 +12,7 @@ use Modules\wema\Models\Cuentas;
 class Cliente extends BaseController
 {
 
-    public function __construct()
-    {
+    public function __construct(){
         $this->Clientes = new Clientes();
         $this->Generales = new Generales();
         $this->Cuentas = new Cuentas();
@@ -25,8 +24,7 @@ class Cliente extends BaseController
         * @param  
         * @return view index.php
 	*/
-    public function index()
-    {
+    public function index(){
 
         /* LISTADO DE GENEROS */
         $data['listadoGeneros'] = $this->Generales->getTabla("generos");
@@ -145,6 +143,23 @@ class Cliente extends BaseController
 
     }
 
+    function editarOrganigrama(){
+        $request = \Config\Services::request();
+
+        $data['put_organigrama'] = array(
+            
+            'clie_id' => $request->getPost('treeCliente'),
+            'orgb' => $request->getPost('treeOrg')
+        );
+
+        log_message('debug', "#TRAZA | WEMA-DESA-APP | Cliente | Editar | Organigrama:  ".json_encode($data));
+
+        $resp = $this->Clientes->editarOrganigrama($data);
+        
+        echo json_encode($resp);
+
+    }
+
     /**
         * 
         * @param  array datos clientes
@@ -257,11 +272,10 @@ class Cliente extends BaseController
         * @param  array $empr_id empresa
         * @return view clientes
     */
-    function getClientesXIdEmpresa($empr_id)
-    {
+    function getClientesXIdEmpresa($empr_id){
         /* LISTADO DE CLIENTES */
         $resp = $this->Cuentas->getClientes($empr_id);
          
         echo json_encode($resp);
-    }
+    }    
 }

@@ -13,3 +13,7 @@ html, body {
     width: 100%;
     height: 100%;
 }
+
+.node.Administrador rect {
+    fill: #F57C00 !important;
+}
