@@ -70,6 +70,7 @@
                                     echo  '<td>
                                             <div class="btn-group"> 
                                                 <i class="fa fa-search" style="cursor: pointer;margin: 3px;" title="Ver Detalles" onclick="verPersona(this)"></i>
+                                                <img style="cursor: pointer; margin-left: 3px" src="'.base_url("icons/lookup-icon.png").'" width="20" onclick="verModalResultados()" title="Ver Resultado">
                                             </div>
                                             </td>
                                             <td class="centrar"><img src="'. $src .'" class="'.$class.'" style="'.$style.'"/></td>
@@ -1025,6 +1026,9 @@ $('#CodigoColonia').select2({
             return markup;
         },
 });
+function verModalResultados(){
+  $('#modalResultados').modal('show');
+}
 </script>
 
 <?= $this->endSection() ?>

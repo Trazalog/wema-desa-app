@@ -86,6 +86,8 @@ class Resultado extends BaseController
 
         $data['clie_id'] = $clie_id;
         
-        return view('Modules\wema\Views\resultados\personas',$data).view('Modules\wema\Views\clientes\modalGenericoCliente');
+        return view('Modules\wema\Views\resultados\personas',$data)
+        .view('Modules\wema\Views\clientes\modalGenericoCliente')
+        .view('Modules\wema\Views\resultados\modales\modalResultados');
     }
 }

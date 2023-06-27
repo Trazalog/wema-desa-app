@@ -1,4 +1,4 @@
-<data enableBatchRequests="true" name="PersonaDataService" transports="http https local">
+<data enableBatchRequests="true" name="PersonaDataService" serviceNamespace="PersonaDataService" transports="http https local">
   <resource method="GET" path="/persona">
     <description>Listado personas de core.personas                           
                                     </description>
