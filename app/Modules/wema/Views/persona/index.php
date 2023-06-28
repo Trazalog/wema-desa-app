@@ -447,12 +447,24 @@
 
                   
                   <div class="modal-body">
+                  <form id="frm-organigrama">
+                    <div class="form-group">
+                      <div class="input-group">
+                        <input type="text" class="form-control requerido" id="treeCliente" name="treeCliente" hidden>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <div class="input-group">                        
+                        <input type="text" class="form-control requerido" id="treeOrg" name="treeOrg" hidden>
+                      </div>
+                    </div>
+                    </form>
                     <div id="tree"></div>
                   </div>
                   
                   <div class="modal-footer">
                       <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                      <button type="button" class="btn btn-primary" data-dismiss="modal">Agregar</button>
+                      <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="AgregarOrganigrama();">Agregar</button>
                   </div>                  
               </div>
           </div>
@@ -678,9 +690,6 @@ function verPersona(e){
   } 
 }
 });
-
-
-
     
 /*boton que habilita editar los datos de una persona en el modal */
 function habilitaEditarPersona(){
@@ -694,9 +703,6 @@ function habilitaEditarPersona(){
   $('#btn-asociarPosicion').prop('hidden', true);
 
 }
-
-
-
 
 /* Guarda los datos editados de la persona */
 function editarPersona(){
@@ -745,9 +751,6 @@ function editarPersona(){
     });
 }
 
-
-
-
 /* inicializacion botones on/off  de tabla*/
 $("[name='habilitarPersona']").bootstrapSwitch({
   /* habilitar/deshabilitar personas */
@@ -795,16 +798,12 @@ $("[name='habilitarPersona']").bootstrapSwitch({
   }
 });
 
-
-
 /* abrir modal agregar imagen */
 $(document).on("click", ".agregaImagen", function() {
   $('#modalAgregarImagen').modal('show');
   event.preventDefault();
   $("#nueva_persona").css('overflow-y', 'auto');//habilita el scroll de nuevo
 });
-
-
 
 /* funcion para deshabilitar una persona */
 function deshabilitaPersona(pers_id){
@@ -818,9 +817,6 @@ function deshabilitaPersona(pers_id){
   })
 }
 
-
-
-
 /* funcion para habilitar una persona */
 function habilitaPersona(pers_id){
   $.get('<?= base_url()?>/habilitarPersona/' + pers_id, function (data){
@@ -831,8 +827,6 @@ function habilitaPersona(pers_id){
           );
   })
 }
-
-
 
 function cargaVistaPrevia(){
   var input = $('#inputImagen').prop('files');
@@ -849,8 +843,6 @@ function cargaVistaPrevia(){
   }
 }
 
-
- 
 /* actualiza tabla personas */
 function actualizaTablaPersonas(){
   clie_id ="<?= isset($clie_id) ? $clie_id : '1'  ?>";
@@ -983,6 +975,8 @@ $(document).on("click", ".btn-asociarPosicion", function() {
   delete nodos;
 
   var clie_id =$('#clie_id').val();
+  console.log("Empresa"+clie_id);
+  $('#modalAsignarPersonal #treeCliente').val(clie_id);
   nodos = $('#orgb').val();
   clientes = <?php echo json_encode($listadoClientes); ?>;
   selects = <?php echo json_encode($listadoPersonas); ?>; 
@@ -1021,43 +1015,25 @@ $(document).on("click", ".btn-asociarPosicion", function() {
   delete nodes;   
   nodes = JSON.parse(nodos); 
   console.log("nodes: "+ nodes);
+      
+  var pers_id = $('#nueva_persona #pers_id').val();
+  var value = ($('#nueva_persona #nombres').val()).toUpperCase()+" "+($('#nueva_persona #apellidos').val()).toUpperCase()+ " - [ID: "+$('#nueva_persona #pers_id').val()+"]";    
+  var option = { id: pers_id, value : value, text : value};
+  options.push(option);
+  op_default= {id: -1, disabled: 'true', value : "Seleccione..." , text : "Seleccione..."};
+  options.unshift(op_default);
 
-  for(var i = 0; i < selects.length; i++){ //Valida que el usuario no este asignado
-      var select = selects[i];
-      sw = false;
-      if(select.clie_id == clie_id){ //Verificamos que sea de la misma empresa
-        for(var j = 0; j < nodes.length; j++){
-          var node = nodes[j];
-          if(node.pers_id){
-            if(node.pers_id == select.pers_id){
-              sw = true;
-              break;
-            }else{
-              sw = false;
-            }                 
-          }
-          if(!sw){
-            var option = {id: select.pers_id, value : select.nombres+" "+select.apellidos+" - [ID:"+select.pers_id+"]", text : select.nombres.toUpperCase()+" "+select.apellidos.toUpperCase()+" - [ID:"+select.pers_id+"]"};
-            options.push(option);
-            break;
-          }   
-        }
-      }      
-    }    
+  console.log("Options: "+options.length+"Options Pricipal: "+JSON.stringify(options));
 
-    op_default= {id: -1, disabled: 'true', value : "Seleccione..." , text : "Seleccione..."};
-    options.unshift(op_default);
-    console.log("Options: "+options.length+"Options Pricipal: "+JSON.stringify(options));
-
-    for (var i = 0; i < nodes.length; i++) {
-        var node = nodes[i];
-        switch (node.title) {
-            case "Administrador":
-                console.log("Administrador");
-                node.tags = ["yellow"];
-                break;
-        }
+  for (var i = 0; i < nodes.length; i++) {
+    var node = nodes[i];
+    switch (node.title) {
+      case "Administrador":
+          console.log("Administrador");
+          node.tags = ["yellow"];
+      break;
     }
+  }
 
   $('#modalAsignarPersonal').modal('show');
 
@@ -1310,17 +1286,63 @@ $(document).on("click", ".btn-asociarPosicion", function() {
         console.log(chart);
         console.log(chart.config.nodes);
 
-        $('#modalOrganigrama #treeOrg').val('');
-        $('#modalOrganigrama #treeOrg').val(JSON.stringify(chart.config.nodes));
+        $('#modalAsignarPersonal #treeOrg').val('');
+        $('#modalAsignarPersonal #treeOrg').val(JSON.stringify(chart.config.nodes));
         console.log(nodes);
 
       }      
 
         $('#treeOrg').val('');//Limpiamos para que reciba el nodes actualizados
-        $('#modalOrganigrama #treeOrg').val(JSON.stringify(nodes));
+        $('#modalAsignarPersonal #treeOrg').val(JSON.stringify(nodes));
 
   }
 });
+
+function AgregarOrganigrama() {
+  console.log("AgregarOrganigrama");
+
+  $('#treeOrg').val(JSON.stringify(chart.config.nodes));
+  var nodes= $('#treeOrg').val();
+  var clie_id = $('#clie_id').val();
+  $('#modalAsignarPersonal #treeCliente').val(clie_id);
+  console.log("---Agregar nodo---");
+  console.info(clie_id);  
+  console.info(chart.config.nodes);
+
+  var formData = new FormData($('#frm-organigrama')[0]);
+  console.info(formData);
+
+  $.ajax({
+    type:'POST',
+    dataType: 'JSON',
+    processData: false,
+    contentType: false,
+    data:formData, 
+    url: '<?= base_url()?>/editarOrganigrama',
+    success: function(resp) {
+      if(resp.status){
+        console.log(resp.status);
+        notificar(notiSuccess);
+        $('#orgb').val(JSON.stringify(chart.config.nodes));
+        $('#modalOrganigrama').modal('hide');
+        $('#frm-organigrama')[0].reset();
+        limpiaForm('#modalOrganigrama');
+        
+      }else{
+        notificar(notiError);
+      }
+    },
+    error: function(result){
+      notificar(notiError);
+    },
+    complete: function(result){
+      notificar(notiSuccess);
+      /*$('#modalOrganigrama').modal('hide');
+      $('#frm-organigrama')[0].reset();
+      limpiaForm('#modalOrganigrama'); */     
+    }
+  });
+} 
 
 
 /* buscador codigo postal/colonia  */

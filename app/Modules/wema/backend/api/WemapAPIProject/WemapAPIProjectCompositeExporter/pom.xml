@@ -17,9 +17,9 @@
     <com.example.dataservice_._PersonaDataService>capp/DataServicesServer</com.example.dataservice_._PersonaDataService>
     <com.example.datasource_._WemapDatasource>capp/DataServicesServer</com.example.datasource_._WemapDatasource>
     <com.example.metadata_._NemesyscoAPI_metadata>capp/EnterpriseServiceBus</com.example.metadata_._NemesyscoAPI_metadata>
-    <com.example.dataservice_._COREDataService>capp/DataServicesServer</com.example.dataservice_._COREDataService>
     <com.example.metadata_._NemesyscoAPI_swagger>capp/EnterpriseServiceBus</com.example.metadata_._NemesyscoAPI_swagger>
     <com.example.api_._NemesyscoAPI>capp/EnterpriseServiceBus</com.example.api_._NemesyscoAPI>
+    <com.example.dataservice_._COREDataService>capp/DataServicesServer</com.example.dataservice_._COREDataService>
     <com.example.dataservice_._EmpresasDataService>capp/DataServicesServer</com.example.dataservice_._EmpresasDataService>
     <com.example.dataservice_._ClientesDataService>capp/DataServicesServer</com.example.dataservice_._ClientesDataService>
     <artifact.types>jaggery/app=zip,synapse/priority-executor=xml,synapse/inbound-endpoint=xml,service/rule=aar,synapse/message-store=xml,event/stream=json,service/meta=xml,datasource/datasource=xml,synapse/proxy-service=xml,bpel/workflow=zip,synapse/sequence=xml,synapse/endpointTemplate=xml,carbon/application=car,wso2/gadget=dar,synapse/api=xml,synapse/event-source=xml,synapse/message-processors=xml,event/receiver=xml,lib/dataservice/validator=jar,synapse/template=xml,synapse/endpoint=xml,lib/carbon/ui=jar,lib/synapse/mediator=jar,synapse/metadata=yaml,event/publisher=xml,synapse/local-entry=xml,synapse/task=xml,webapp/jaxws=war,registry/resource=zip,synapse/configuration=xml,service/axis2=aar,synapse/lib=zip,synapse/sequenceTemplate=xml,event/execution-plan=siddhiql,service/dataservice=dbs,web/application=war,lib/library/bundle=jar</artifact.types>
@@ -51,10 +51,10 @@
       <type>yaml</type>
     </dependency>
     <dependency>
-      <groupId>com.example.api</groupId>
-      <artifactId>NemesyscoAPI</artifactId>
+      <groupId>com.example.dataservice</groupId>
+      <artifactId>COREDataService</artifactId>
       <version>1.0.0</version>
-      <type>xml</type>
+      <type>dbs</type>
     </dependency>
     <dependency>
       <groupId>com.example.dataservice</groupId>
@@ -67,12 +67,6 @@
       <artifactId>ClientesDataService</artifactId>
       <version>1.0.0</version>
       <type>dbs</type>
-    </dependency>
-    <dependency>
-      <groupId>com.example.resource</groupId>
-      <artifactId>nemesysconfig</artifactId>
-      <version>1.0.0</version>
-      <type>zip</type>
     </dependency>
   </dependencies>
   <repositories>

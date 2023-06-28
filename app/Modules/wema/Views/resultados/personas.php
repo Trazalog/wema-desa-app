@@ -28,72 +28,155 @@
       </div><!-- /.container-fluid -->
     </section>
     <section class="content">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-12">
-                    <div class="card card-light card-tabs">
-                        <div class="card-header p-0 pt-1">
-                            <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
-                                <li class="nav-item">
-                                <a class="nav-link active" id="custom-tabs-one-home-tab" data-toggle="pill" href="#custom-tabs-one-home" role="tab" aria-controls="custom-tabs-one-home" aria-selected="true">Lista de Personas</a>
-                                </li>
-                                <li class="nav-item">
-                                <a class="nav-link" id="custom-tabs-one-profile-tab" data-toggle="pill" href="#custom-tabs-one-profile" role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false">Organigrama</a>
-                                </li>
-                                <li class="nav-item">
-                                <a class="nav-link" id="custom-tabs-one-messages-tab" data-toggle="pill" href="#custom-tabs-one-messages" role="tab" aria-controls="custom-tabs-one-messages" aria-selected="false">Áreas</a>
-                                </li>
-                            </ul>
+      <div class="container-fluid">
+      <div class="row">
+          <div class="col-12">
+            <div class="card card-light card-tabs">
+              <div class="card-header p-0 pt-1">
+                <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
+                  <li class="nav-item">
+                    <a class="nav-link active" id="custom-tabs-one-home-tab" data-toggle="pill" href="#custom-tabs-one-home" role="tab" aria-controls="custom-tabs-one-home" aria-selected="true">Lista de Personas</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" id="custom-tabs-one-profile-tab" data-toggle="pill" href="#custom-tabs-one-profile" role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false">Organigrama</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" id="custom-tabs-one-messages-tab" data-toggle="pill" href="#custom-tabs-one-messages" role="tab" aria-controls="custom-tabs-one-messages" aria-selected="false">Áreas</a>
+                  </li>
+                </ul>
+              </div>
+              <div class="card-body">
+                <div class="tab-content" id="custom-tabs-one-tabContent">
+                  <div class="tab-pane fade show active" id="custom-tabs-one-home" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
+                    <table id="tabla_personas" class="table table-bordered table-striped">
+                      <thead>
+                        <tr>
+                          <th>Acciones</th>
+                          <th>Imagen</th>
+                          <th>CURP</th>
+                          <th>Apellidos</th>
+                          <th>Nombres</th>
+                          <th>Área</th>
+                          <th>Puesto</th>
+                          <th>Resultado</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <?php 
+                          foreach ($listadoPersonas as $key => $persona) {
+                            /* imagen de perfil */
+                            if($persona->imagen) {
+                              $src = imagePerfil($persona->imagen, $persona->nom_imagen); $class = "img-circle elevation-2"; $style = "height: 3rem; width: 3.9rem";
+                            }else{ 
+                              $src = ""; $class = ""; $style = "";
+                            }
+                            (strcmp($persona->estado, 'true') == 0) ? $check= 'filaEliminada' : $check = '';
+                              echo '<tr class="centrar '.$check.'" data-json=\''.json_encode($persona).'\'>';
+                              echo  '<td>
+                                      <div class="btn-group"> 
+                                        <i class="fa fa-search" style="cursor: pointer;margin: 3px;" title="Ver Detalles" onclick="verPersona(this)"></i>
+                                      </div>
+                                    </td>
+                                    <td class="centrar"><img src="'. $src .'" class="'.$class.'" style="'.$style.'"/></td>
+                                    <td>'.$persona->curp.'</td>
+                                    <td>'.$persona->apellidos.'</td>
+                                    <td>'.$persona->nombres.'</td>
+                                    <td>'.(!empty($persona->area) ? $persona->area : '').'</td>
+                                    <td>'.(!empty($persona->puesto) ? $persona->puesto : '').'</td>
+                                    <td>'.(!empty($persona->resultado) ? $persona->resultado : '').'</td>
+                                  </tr>';
+                            }?>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="tab-pane fade" id="custom-tabs-one-profile" role="tabpanel" aria-labelledby="custom-tabs-one-profile-tab">
+                    <div class="modal-body">
+                      <div id="tree"></div>
+                    </div>   
+                  </div>
+                  <div class="tab-pane fade" id="custom-tabs-one-messages" role="tabpanel" aria-labelledby="custom-tabs-one-messages-tab">
+                    <!-- Main content -->
+                    <section class="content">
+                      <div class="container-fluid">
+                        <div class="row">
+                          <div class="col-md-6">
+                            
+                            <!-- BAR CHART -->
+                            <div class="card card-light">
+                              <div class="card-header">
+                                <h3 class="card-title">Administración</h3>
+                              </div>
+                              <div class="card-body">
+                                <div class="chart">
+                                  <canvas id="barChart1" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                                </div>
+                              </div>
+                              <!-- /.card-body -->
+                            </div>
+                            <!-- /.card -->
+
+                            <!-- BAR CHART -->
+                            <div class="card card-light">
+                              <div class="card-header">
+                                <h3 class="card-title">Producción</h3>
+                              </div>
+                              <div class="card-body">
+                                <div class="chart">
+                                  <canvas id="barChart2" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                                </div>
+                              </div>
+                              <!-- /.card-body -->
+                            </div>
+                            <!-- /.card -->
+
+                          </div>
+                          <!-- /.col (LEFT) -->
+                          <div class="col-md-6">
+
+                            <!-- BAR CHART -->
+                            <div class="card card-light">
+                              <div class="card-header">
+                                <h3 class="card-title">RRHH</h3>
+                              </div>
+                              <div class="card-body">
+                                <div class="chart">
+                                  <canvas id="barChart3" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                                </div>
+                              </div>
+                              <!-- /.card-body -->
+                            </div>
+                            <!-- /.card -->
+
+                            <!-- BAR CHART -->
+                            <div class="card card-light">
+                              <div class="card-header">
+                                <h3 class="card-title">Finanzas</h3>                                
+                              </div>
+                              <div class="card-body">
+                                <div class="chart">
+                                  <canvas id="barChart4" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                                </div>
+                              </div>
+                              <!-- /.card-body -->
+                            </div>
+                            <!-- /.card -->
+
+                          </div>
+                          <!-- /.col (RIGHT) -->
                         </div>
-                        <!-- /.card-header -->
-                        <div class="card-body">
-                            <table id="tabla_personas" class="table table-bordered table-striped">
-                                <thead>
-                                <tr>
-                                    <th>Acciones</th>
-                                    <th>Imagen</th>
-                                    <th>CURP</th>
-                                    <th>Apellidos</th>
-                                    <th>Nombres</th>
-                                    <th>Área</th>
-                                    <th>Puesto</th>
-                                    <th>Resultado</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                    <?php foreach ($listadoPersonas as $key => $persona) {
-                                    /* imagen de perfil */
-                                    if($persona->imagen) {$src = imagePerfil($persona->imagen, $persona->nom_imagen); $class = "img-circle elevation-2"; $style = "height: 3rem; width: 3.9rem";}
-                                    else{ $src = ""; $class = ""; $style = "";}
-                                    (strcmp($persona->estado, 'true') == 0) ? $check= 'filaEliminada' : $check = '';
-                                    echo '<tr class="centrar '.$check.'" data-json=\''.json_encode($persona).'\'>';
-                                    echo  '<td>
-                                            <div class="btn-group"> 
-                                                <i class="fa fa-search" style="cursor: pointer;margin: 3px;" title="Ver Detalles" onclick="verPersona(this)"></i>
-                                            </div>
-                                            </td>
-                                            <td class="centrar"><img src="'. $src .'" class="'.$class.'" style="'.$style.'"/></td>
-                                            <td>'.$persona->curp.'</td>
-                                            <td>'.$persona->apellidos.'</td>
-                                            <td>'.$persona->nombres.'</td>
-                                            <td>'.(!empty($persona->area) ? $persona->area : '').'</td>
-                                            <td>'.(!empty($persona->puesto) ? $persona->puesto : '').'</td>
-                                            <td>'.(!empty($persona->resultado) ? $persona->resultado : '').'</td>
-                                    </tr>
-                                    ';
-                                    }?>
-                                </tbody>
-                            </table>
-                        </div>
-                        <!-- /.card-body -->
-                    </div>
-                    <!-- /.card -->
+                        <!-- /.row -->
+                      </div><!-- /.container-fluid -->
+                    </section>
+                    <!-- /.content -->                  
+                  </div>
                 </div>
-                <!-- /.col -->
+              </div>
+              <!-- /.card -->
             </div>
-            <!-- /.row -->
-        </div>
-        <!-- /.container-fluid -->
+          </div>
+        </div>  
+      </div>
+      <!-- /.container-fluid -->
     </section>
     <!-- /.content -->
 
@@ -442,8 +525,6 @@
     </div>
 </div>
 
-
-
 <script>
 
 /* definicion de datatablet */
@@ -480,7 +561,551 @@
                       className: 'btn btn-default btn-sm'
                     }
                   ],
-    })
+    });
+
+    //---------------
+    //- ORGANIGRAMA -
+    //---------------
+    var  nodos = {};
+    var nodes = selects = clientes = options = chart=[];
+    delete nodos;
+
+    var clie_id = <?php echo $clie_id; ?>;
+    nodos = <?php echo $Cliente[0]->orgb ?>
+    //clientes = <?php //echo json_encode($listadoClientes); ?>;
+    selects = <?php echo json_encode($listadoPersonas); ?>; 
+    console.log(clie_id);
+    console.log("Organigrama: "+JSON.stringify(nodos));
+
+    if(nodos.length === 0){
+
+      Swal.fire({
+        title: 'Deinición Organigrama',
+        text: 'El cliente aun no tiene organigrama asociado/definido',
+        icon: 'warning',
+        showCancelButton: false,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Aceptar'
+      }).then((result) => {
+        if (result.isConfirmed) {
+        
+        }    
+      });
+
+  }else{
+  
+    delete nodes;   
+    nodes = JSON.parse(JSON.stringify(nodos)); 
+    console.log("nodes: "+ nodes);
+
+    for(var i = 0; i < selects.length; i++){ //Valida que el usuario no este asignado
+        var select = selects[i];
+        sw = false;
+        if(select.clie_id == clie_id){ //Verificamos que sea de la misma empresa
+          for(var j = 0; j < nodes.length; j++){
+            var node = nodes[j];
+            if(node.pers_id){
+              if(node.pers_id == select.pers_id){
+                sw = true;
+                break;
+              }else{
+                sw = false;
+              }                 
+            }
+            if(!sw){
+              var option = {id: select.pers_id, value : select.nombres+" "+select.apellidos+" - [ID:"+select.pers_id+"]", text : select.nombres.toUpperCase()+" "+select.apellidos.toUpperCase()+" - [ID:"+select.pers_id+"]"};
+              options.push(option);
+              break;
+            }   
+          }
+        }      
+      }    
+
+      op_default= {id: -1, disabled: 'true', value : "Seleccione..." , text : "Seleccione..."};
+      options.unshift(op_default);
+      console.log("Options: "+options.length+"Options Pricipal: "+JSON.stringify(options));
+
+      for (var i = 0; i < nodes.length; i++) {
+          var node = nodes[i];
+          switch (node.title) {
+              case "Administrador":
+                  console.log("Administrador");
+                  node.tags = ["yellow"];
+                  break;
+          }
+      }
+
+      if(options.length === 0){
+        Swal.fire({
+          title: 'Clientes Empresa',
+          text: 'Esta empresa no tiene ningún empleado asociado',
+          icon: 'warning',
+          showCancelButton: false,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Aceptar'
+        }).then((result) => {
+          if (result.isConfirmed) {
+        
+          }    
+        });
+      }else{
+
+        OrgChart.templates.ana.plus = '<circle cx="15" cy="15" r="15" fill="#ffffff" stroke="#aeaeae" stroke-width="1"></circle>'
+        + '<text text-anchor="middle" style="font-size: 18px;cursor:pointer;" fill="#757575" x="15" y="22">{collapsed-children-count}</text>';
+
+        OrgChart.templates.itTemplate = Object.assign({}, OrgChart.templates.ana);
+        OrgChart.templates.itTemplate.nodeMenuButton = "";
+        OrgChart.templates.itTemplate.nodeCircleMenuButton = {
+            radius: 18,
+            x: 250,
+            y: 60,
+            color: '#fff',
+            stroke: '#aeaeae'
+        };
+
+        OrgChart.templates.invisibleGroup.padding = [20, 0, 0, 0];
+
+        chart = new OrgChart(document.getElementById("tree"), {
+            mouseScrool: OrgChart.action.ctrlZoom,
+            template: "ana",
+            enableDragDrop: true,
+            nodeMouseClick: false,
+            /*menu: {
+                pdfPreview: {
+                    text: "Export to PDF",
+                    icon: OrgChart.icon.pdf(24, 24, '#7A7A7A'),
+                    onClick: preview
+                },
+                csv: { text: "Save as CSV" }
+            },*/
+            nodeBinding: {
+                    field_0: "name",
+                    field_1: "title",
+                    img_0: "img"
+            },  
+            editForm: {
+              generateElementsFromFields: true,            
+              addMore: null,
+              addMoreBtn: null,
+              addMoreFieldName: null,
+              titleBinding: 'name',
+              cancelBtn: 'Cancelar',
+              saveAndCloseBtn: 'Asignar',
+              buttons:  {
+                edit: {
+                  icon: OrgChart.icon.edit(24,24,'#fff'),
+                  text: 'Editar',
+                  hideIfEditMode: true,
+                  hideIfDetailsMode: false
+                },
+                share: {
+                  icon: OrgChart.icon.share(24,24,'#fff'),
+                  text: 'Compartir'
+                },
+                pdf: {
+                  icon: OrgChart.icon.pdf(24,24,'#fff'),
+                  text: 'PDF'
+                },
+                remove: {
+                  icon: OrgChart.icon.remove(24,24,'#fff'),
+                  text: 'Eliminar',
+                  hideIfDetailsMode: true
+                }
+              },
+              elements: [
+                { type: 'select', options: options, label: 'Nombres', binding: 'name'},
+                { type: 'textbox', label: 'Puesto', binding: 'title'},  
+                { type: 'textbox', label: 'Id', binding: 'pers_id', readOnly: true},  
+                { type: 'textbox', label: 'Url Imagen', binding: 'img', btn: 'Upload' },            
+              ]
+            },
+            nodeMenu: {
+              /*details: { 
+                text: "Detalles" ,
+                //onClick: detalleNodo
+              },*/
+              edit: { 
+                text: "Editar",
+                onClick: editarNodo
+              }
+              /*add: { 
+                text: "Agregar",
+                //onClick: agregarNodo
+              },*/
+              /*remove: { 
+                text: "Eliminar" 
+              }*/
+            },        
+            align: OrgChart.ORIENTATION,
+            toolbar: {
+                fullScreen: true,
+                zoom: true,
+                fit: true,
+                expandAll: true
+            },
+            nodeBinding: {
+                field_0: "name",
+                field_1: "title",
+                img_0: "img"
+            },
+            tags: {
+                "top-management": {
+                    template: "invisibleGroup",
+                    subTreeConfig: {
+                        orientation: OrgChart.orientation.bottom,
+                        collapse: {
+                            level: 1
+                        }
+                    }
+                },
+                "it-team": {
+                    subTreeConfig: {
+                        layout: OrgChart.mixed,
+                        collapse: {
+                            level: 1
+                        }
+                    },
+                },
+                "hr-team": {
+                    subTreeConfig: {
+                        layout: OrgChart.treeRightOffset,
+                        collapse: {
+                            level: 1
+                        }
+                    },
+                },
+                "sales-team": {
+                    subTreeConfig: {
+                        layout: OrgChart.treeLeftOffset,
+                        collapse: {
+                            level: 1
+                        }
+                    },
+                },
+                "ceo-menu": {
+                    nodeMenu: {
+                        //addSharholder: { text: "Add new sharholder", icon: OrgChart.icon.add(24, 24, "#7A7A7A"), onClick: addSharholder },
+                        //addDepartment: { text: "Nueva Area", icon: OrgChart.icon.add(24, 24, "#7A7A7A"), onClick: addArea },
+                        //addAssistant: { text: "Add new assitsant", icon: OrgChart.icon.add(24, 24, "#7A7A7A"), onClick: addAssistant },
+                        edit: { text: "Editar" },
+                        //details: { text: "Detalles" },
+                    }
+                },
+                "area": {
+                    template: "group",
+                    nodeMenu: {
+                        //addManager: { text: "Nuevo Manager", icon: OrgChart.icon.add(24, 24, "#7A7A7A"), onClick: addManager },
+                        //remove: { text: "Eliminar Area" },
+                        //edit: { text: "Editar Area" },
+                        //nodePdfPreview: { text: "Export department to PDF", icon: OrgChart.icon.pdf(24, 24, "#7A7A7A"), onClick: nodePdfPreview }
+                    }
+                }
+            },
+            clinks: [
+                { from: 11, to: 18 }
+            ],
+            nodes:nodes
+        });
+
+        /*
+        Agrega nodo nuevo en blanco.
+        */ 
+        function agregarNodo(nodeId){
+
+          var node = chart.get(nodeId);      
+          //console.log("node: "+ JSON.stringify(node));      
+          var data = { pers_id : "", id: ((nodes.length*1)+1), pid: node.id, name: "", title:"", email:"", img: ""};
+          chart.addNode(data); //Agrega al tree
+          console.log("data: "+ JSON.stringify(data));
+          console.log("nodes new: "+ JSON.stringify(nodes));
+          if (data.length == 0) {
+              this.style.display = "none";
+          }
+          } 
+
+
+
+          chart.nodeCircleMenuUI.on('drop', function (sender, args) {
+            chart.addClink(args.from, args.to).draw(OrgChart.action.update);
+          });
+
+          chart.on("added", function (sender, id) {
+            sender.editUI.show(id);
+          });
+
+          chart.on('drop', function (sender, draggedNodeId, droppedNodeId) {
+            var draggedNode = sender.getNode(draggedNodeId);
+            var droppedNode = sender.getNode(droppedNodeId);
+
+            if (droppedNode.tags.indexOf("area") != -1 && draggedNode.tags.indexOf("area") == -1) {
+                var draggedNodeData = sender.get(draggedNode.id);
+                draggedNodeData.pid = null;
+                draggedNodeData.stpid = droppedNode.id;
+                sender.updateNode(draggedNodeData);
+                return false;
+            }
+          });
+
+
+          chart.on('exportstart', function (sender, args) {
+            args.styles = document.getElementById('myStyles').outerHTML;
+          });
+
+          function preview() {
+            OrgChart.pdfPrevUI.show(chart, {
+                format: 'A4'
+            });
+          }
+
+          function nodePdfPreview(nodeId) {
+            OrgChart.pdfPrevUI.show(chart, {
+                format: 'A4',
+                nodeId: nodeId
+            });
+          }
+
+          function addArea(nodeId) {
+            var node = chart.getNode(nodeId);
+            var data = { id: OrgChart.randomId(), pid: node.stParent.id, tags: ["area"] };
+            chart.addNode(data);
+          }
+
+          function addManager(nodeId) {
+            chart.addNode({ id: OrgChart.randomId(), stpid: nodeId });
+          }
+
+          function editarNodo(nodeId){
+
+          console.log("---Editar nodo---");
+          var node = chart.get(nodeId);
+          console.log("node: "+ JSON.stringify(node)); 
+          console.log("Options Editar: "+JSON.stringify(options));        
+          chart.editUI.show(nodeId);
+
+          if(node.id === -1){ //Verificar que no selecciones este valor
+            
+          }else{
+
+          }
+
+          if(node.id){ //Si el nodo esta asignado debe mostrar quien esta asignado actualmente
+            
+
+          }else{ //Sino, mostrar sin ese personal
+
+          }       
+
+          chart.draw();
+          console.log(chart);
+          console.log(chart.config.nodes);
+
+          $('#modalOrganigrama #treeOrg').val('');
+          $('#modalOrganigrama #treeOrg').val(JSON.stringify(chart.config.nodes));
+          console.log(nodes);
+
+          }      
+
+          $('#treeOrg').val('');//Limpiamos para que reciba el nodes actualizados
+          $('#modalOrganigrama #treeOrg').val(JSON.stringify(nodes));
+      
+      }  
+    }
+
+
+    //-------------
+    //- BAR CHART -
+    //-------------
+    var areaChartData1 = {
+      labels  : ['Porcentajes (%)'],
+      datasets: [
+        {
+          label               : 'Desempeño',
+          backgroundColor     : 'rgba(60,141,188,0.9)',
+          borderColor         : 'rgba(60,141,188,0.8)',
+          pointRadius          : false,
+          pointColor          : '#3b8bba',
+          pointStrokeColor    : 'rgba(60,141,188,1)',
+          pointHighlightFill  : '#fff',
+          pointHighlightStroke: 'rgba(60,141,188,1)',
+          data                : [34]
+        },
+        {
+          label               : 'Areas de Oportunidad',
+          backgroundColor     : 'rgba(210, 214, 222, 1)',
+          borderColor         : 'rgba(210, 214, 222, 1)',
+          pointRadius         : false,
+          pointColor          : 'rgba(210, 214, 222, 1)',
+          pointStrokeColor    : '#c1c7d1',
+          pointHighlightFill  : '#fff',
+          pointHighlightStroke: 'rgba(220,220,220,1)',
+          data                : [65]
+        },
+      ]
+    }
+
+    var barChartCanvas = $('#barChart1').get(0).getContext('2d')
+    var barChartData = $.extend(true, {}, areaChartData1)
+    var temp0 = areaChartData1.datasets[0]
+    var temp1 = areaChartData1.datasets[1]
+    barChartData.datasets[0] = temp1
+    barChartData.datasets[1] = temp0
+
+    var barChartOptions = {
+      responsive              : true,
+      maintainAspectRatio     : false,
+      datasetFill             : false
+    }
+
+    new Chart(barChartCanvas, {
+      type: 'bar',
+      data: barChartData,
+      options: barChartOptions
+    });
+
+    var areaChartData2 = {
+      labels  : ['Porcentajes (%)'],
+      datasets: [
+        {
+          label               : 'Desempeño',
+          backgroundColor     : 'rgba(60,141,188,0.9)',
+          borderColor         : 'rgba(60,141,188,0.8)',
+          pointRadius          : false,
+          pointColor          : '#3b8bba',
+          pointStrokeColor    : 'rgba(60,141,188,1)',
+          pointHighlightFill  : '#fff',
+          pointHighlightStroke: 'rgba(60,141,188,1)',
+          data                : [76]
+        },
+        {
+          label               : 'Areas de Oportunidad',
+          backgroundColor     : 'rgba(210, 214, 222, 1)',
+          borderColor         : 'rgba(210, 214, 222, 1)',
+          pointRadius         : false,
+          pointColor          : 'rgba(210, 214, 222, 1)',
+          pointStrokeColor    : '#c1c7d1',
+          pointHighlightFill  : '#fff',
+          pointHighlightStroke: 'rgba(220,220,220,1)',
+          data                : [29]
+        },
+      ]
+    }
+
+    var barChartCanvas = $('#barChart2').get(0).getContext('2d')
+    var barChartData = $.extend(true, {}, areaChartData2)
+    var temp0 = areaChartData2.datasets[0]
+    var temp1 = areaChartData2.datasets[1]
+    barChartData.datasets[0] = temp1
+    barChartData.datasets[1] = temp0
+
+    var barChartOptions = {
+      responsive              : true,
+      maintainAspectRatio     : false,
+      datasetFill             : false
+    }
+
+    new Chart(barChartCanvas, {
+      type: 'bar',
+      data: barChartData,
+      options: barChartOptions
+    });
+
+    var areaChartData3 = {
+      labels  : ['Porcentajes (%)'],
+      datasets: [
+        {
+          label               : 'Desempeño',
+          backgroundColor     : 'rgba(60,141,188,0.9)',
+          borderColor         : 'rgba(60,141,188,0.8)',
+          pointRadius          : false,
+          pointColor          : '#3b8bba',
+          pointStrokeColor    : 'rgba(60,141,188,1)',
+          pointHighlightFill  : '#fff',
+          pointHighlightStroke: 'rgba(60,141,188,1)',
+          data                : [55]
+        },
+        {
+          label               : 'Areas de Oportunidad',
+          backgroundColor     : 'rgba(210, 214, 222, 1)',
+          borderColor         : 'rgba(210, 214, 222, 1)',
+          pointRadius         : false,
+          pointColor          : 'rgba(210, 214, 222, 1)',
+          pointStrokeColor    : '#c1c7d1',
+          pointHighlightFill  : '#fff',
+          pointHighlightStroke: 'rgba(220,220,220,1)',
+          data                : [66]
+        },
+      ]
+    }
+
+    var barChartCanvas = $('#barChart3').get(0).getContext('2d')
+    var barChartData = $.extend(true, {}, areaChartData3)
+    var temp0 = areaChartData3.datasets[0]
+    var temp1 = areaChartData3.datasets[1]
+    barChartData.datasets[0] = temp1
+    barChartData.datasets[1] = temp0
+
+    var barChartOptions = {
+      responsive              : true,
+      maintainAspectRatio     : false,
+      datasetFill             : false
+    }
+
+    new Chart(barChartCanvas, {
+      type: 'bar',
+      data: barChartData,
+      options: barChartOptions
+    });
+
+    var areaChartData4 = {
+      labels  : ['Porcentajes (%)'],
+      datasets: [
+        {
+          label               : 'Desempeño',
+          backgroundColor     : 'rgba(60,141,188,0.9)',
+          borderColor         : 'rgba(60,141,188,0.8)',
+          pointRadius          : false,
+          pointColor          : '#3b8bba',
+          pointStrokeColor    : 'rgba(60,141,188,1)',
+          pointHighlightFill  : '#fff',
+          pointHighlightStroke: 'rgba(60,141,188,1)',
+          data                : [71]
+        },
+        {
+          label               : 'Areas de Oportunidad',
+          backgroundColor     : 'rgba(210, 214, 222, 1)',
+          borderColor         : 'rgba(210, 214, 222, 1)',
+          pointRadius         : false,
+          pointColor          : 'rgba(210, 214, 222, 1)',
+          pointStrokeColor    : '#c1c7d1',
+          pointHighlightFill  : '#fff',
+          pointHighlightStroke: 'rgba(220,220,220,1)',
+          data                : [54]
+        },
+      ]
+    }
+
+    var barChartCanvas = $('#barChart4').get(0).getContext('2d')
+    var barChartData = $.extend(true, {}, areaChartData4)
+    var temp0 = areaChartData4.datasets[0]
+    var temp1 = areaChartData4.datasets[1]
+    barChartData.datasets[0] = temp1
+    barChartData.datasets[1] = temp0
+
+    var barChartOptions = {
+      responsive              : true,
+      maintainAspectRatio     : false,
+      datasetFill             : false
+    }
+
+    new Chart(barChartCanvas, {
+      type: 'bar',
+      data: barChartData,
+      options: barChartOptions
+    });
+
+
   });
 
 
@@ -654,9 +1279,7 @@ function verPersona(e){
 }
 });
 
-
-
-    
+   
 /*boton que habilita editar los datos de una persona en el modal */
 function habilitaEditarPersona(){
   $('#btn-habilitarPersona').prop('hidden', false);
@@ -669,9 +1292,6 @@ function habilitaEditarPersona(){
   $('#btn-asociarPosicion').prop('hidden', true);
 
 }
-
-
-
 
 /* Guarda los datos editados de la persona */
 function editarPersona(){
@@ -720,9 +1340,6 @@ function editarPersona(){
     });
 }
 
-
-
-
 /* inicializacion botones on/off  de tabla*/
 $("[name='habilitarPersona']").bootstrapSwitch({
   /* habilitar/deshabilitar personas */
@@ -770,16 +1387,12 @@ $("[name='habilitarPersona']").bootstrapSwitch({
   }
 });
 
-
-
 /* abrir modal agregar imagen */
 $(document).on("click", ".agregaImagen", function() {
   $('#modalAgregarImagen').modal('show');
   event.preventDefault();
   $("#nueva_persona").css('overflow-y', 'auto');//habilita el scroll de nuevo
 });
-
-
 
 /* funcion para deshabilitar una persona */
 function deshabilitaPersona(pers_id){
@@ -793,9 +1406,6 @@ function deshabilitaPersona(pers_id){
   })
 }
 
-
-
-
 /* funcion para habilitar una persona */
 function habilitaPersona(pers_id){
   $.get('<?= base_url()?>/habilitarPersona/' + pers_id, function (data){
@@ -806,8 +1416,6 @@ function habilitaPersona(pers_id){
           );
   })
 }
-
-
 
 function cargaVistaPrevia(){
   var input = $('#inputImagen').prop('files');
