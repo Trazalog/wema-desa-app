@@ -713,11 +713,11 @@
                     icon: OrgChart.icon.pdf(24,24,'#fff'),
                     text: 'PDF'
                   },
-                  remove: {
+                  /*remove: {
                     icon: OrgChart.icon.remove(24,24,'#fff'),
                     text: 'Eliminar',
                     hideIfDetailsMode: true
-                  }
+                  }*/
                 },
                 elements: [
                   { type: 'select', options: options, label: 'Nombres', binding: 'name'},
