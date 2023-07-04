@@ -16,7 +16,6 @@ class Cliente extends BaseController
         $this->Clientes = new Clientes();
         $this->Generales = new Generales();
         $this->Cuentas = new Cuentas();
-
         $this->Personas = new Personas();
     }
     /**
