@@ -58,6 +58,12 @@
     </dependency>
     <dependency>
       <groupId>com.example.dataservice</groupId>
+      <artifactId>COREDataService</artifactId>
+      <version>1.0.0</version>
+      <type>dbs</type>
+    </dependency>
+    <dependency>
+      <groupId>com.example.dataservice</groupId>
       <artifactId>EmpresasDataService</artifactId>
       <version>1.0.0</version>
       <type>dbs</type>

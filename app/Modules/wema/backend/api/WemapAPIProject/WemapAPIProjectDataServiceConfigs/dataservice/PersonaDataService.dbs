@@ -84,21 +84,16 @@
       <with-param name="pers_id" query-param="pers_id" />
     </call-query>
   </resource>
-  <config id="WemapDataSource">
-    <property name="carbon_datasource_name">WemapDataSource</property>
-  </config>
-  <resource method="POST" path="/persona/cuestionario/vincular">
+  <resource path="/persona/cuestionario/vincular" method="POST">
     <description>Vincula info_id con pers_id en eva.encuestas_personas</description>
     <call-query href="vincularCuestionario">
       <with-param name="pers_id" query-param="pers_id" />
       <with-param name="info_id" query-param="info_id" />
     </call-query>
   </resource>
-  <resource method="PUT" path="/editarareaposicion">
-    <description>Edita eñ area y la posicion de una persona</description>
-    <call-query href="updateAreaPosicion">
-      <with-param name="area" query-param="area" />
-      <with-param name="posicion" query-param="posicion" />
+  <resource path="/persona/evaluaciones/{pers_id}" method="GET">
+    <description />
+    <call-query href="getEvaluacionesPersonas">
       <with-param name="pers_id" query-param="pers_id" />
     </call-query>
   </resource>
@@ -373,15 +368,5 @@ where ep.pers_id = cast(:pers_id as integer)</sql>
 VALUES(cast(:pers_id as integer),cast(:info_id as integer))</sql>
     <param type="IN" name="pers_id" sqlType="STRING" optional="false" paramType="SCALAR" />
     <param type="IN" name="info_id" sqlType="STRING" optional="false" paramType="SCALAR" />
-  </query>
-  <query id="updateAreaPosicion" useConfig="WemapDataSource">
-    <sql>update core.personas p
-set
-area = cast(:area as varchar),
-posicion = cast(:posicion as varchar)
-where pers_id = cast(:pers_id as integer)</sql>
-    <param name="area" sqlType="STRING" paramType="SCALAR" />
-    <param name="posicion" sqlType="STRING" paramType="SCALAR" />
-    <param name="pers_id" sqlType="STRING" paramType="SCALAR" />
   </query>
 </data>

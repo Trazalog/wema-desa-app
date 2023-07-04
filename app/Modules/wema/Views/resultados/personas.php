@@ -527,7 +527,6 @@
 </div>
 
 <script>
-
 /* definicion de datatablet */
   $(function () {
     $("#tabla_personas").DataTable({
@@ -1547,6 +1546,132 @@ $('#CodigoColonia').select2({
             return markup;
         },
 });
+function verModalResultados(tag){
+  datos = $(tag).closest('tr').data('json');
+
+  //Clear campos
+  $("hardSkillResult").val('');
+  $("hardSkillFecha").val('');
+
+  //Completo campos
+  if(datos){
+    $('#persIdModalResultado').prop('hidden', false);
+    $('#persIdModalResultado').text( "(id: " + datos.pers_id + ")");
+    $("#modalResultados [name='hardSkillResult']").val(datos.hard_skill);
+    $("#modalResultados [name='hardSkillFecha']").val(datos.soft_skill);
+    $("#modalResultados [name='nombres']").val(datos.nombres);
+    $("#modalResultados [name='apellidos']").val(datos.apellidos);
+    $("#modalResultados [name='evaluador']").val(datos.evaluador);
+    $("#modalResultados [name='puesto']").val(datos.posicion);
+    //Obtengo las evaluaciones realizadas
+    $.ajax({
+        type: 'GET',
+        dataType: "JSON",
+        processData: false,
+        contentType: false,
+        url: "<?= base_url()?>/resultado/evaluaciones/persona/" + datos.pers_id,
+        success:function(data){
+          console.log(data);
+          tabla = $('#tablaResultadosModal').DataTable();
+          tabla.clear().draw();
+
+          $.each(data, function (i, value) {
+            fila="<tr data-json= '"+ JSON.stringify(value) +"'>" +
+                '<td>'+
+                  '<div class="btn-group"> '+
+                    '<i class="fa fa-search" style="cursor: pointer;margin: 3px;" title="Ver Detalles" onclick="verDetalleEvaluacion(this)"></i>'+
+                  '</div>'+
+                '</td>'+
+                '<td>'+ value.fec_alta +'</td>'+
+                '<td>'+'</td>'+
+                '<td>'+'</td>'+
+                '<td>'+ value.area +'</td>'+
+                '<td>'+ value.posicion +'</td>'+
+                '</tr>';
+                tabla.row.add($(fila)).draw();
+          });
+        },
+        error: (data) =>{
+          notificar(notiError);
+        }
+    });
+    //Creo el link para ver imagen en nueva pestaña
+    if(datos.nom_imagen){
+      var codificacion = obtenerExtension(datos.nom_imagen);
+
+      /* decodificacion imagen base64 */
+      var decodedData = window.atob(datos.imagen);
+
+      /*Accion ojo de imagen */
+      document.getElementById('verImagenModalResultado').onclick = function (){
+        event.preventDefault();
+        var newTab = window.open();
+        newTab.document.body.innerHTML = '<img src="'+ codificacion + decodedData +'" >';
+        newTab.document.close();
+      }
+    
+      $('#imagenUsuarioModalResultado').attr('src', codificacion + decodedData);
+    }else{
+      $('#imagenUsuarioModalResultado').attr('src', '');
+    }
+  }
+  //Genero el Bar Chart
+  generarBarChart(datos.pers_id);
+
+  //Muestro modal
+  $('#modalResultados').modal('show');
+}
+function generarBarChart(pers_id){
+  var areaChartData = {
+    labels  : [],
+    datasets: [
+      {
+        label               : 'Áreas de oportunidad',
+        // backgroundColor     : 'rgba(60,141,188,0.9)',
+        backgroundColor     : 'Green',
+        borderColor         : 'rgba(60,141,188,0.8)',
+        pointRadius          : false,
+        pointColor          : '#3b8bba',
+        pointStrokeColor    : 'rgba(60,141,188,1)',
+        pointHighlightFill  : '#fff',
+        pointHighlightStroke: 'rgba(60,141,188,1)',
+        data                : [28, 48]
+      },
+      {
+        label               : 'Desempeño',
+        backgroundColor     : 'rgba(210, 214, 222, 1)',
+        borderColor         : 'rgba(210, 214, 222, 1)',
+        pointRadius         : false,
+        pointColor          : 'rgba(210, 214, 222, 1)',
+        pointStrokeColor    : '#c1c7d1',
+        pointHighlightFill  : '#fff',
+        pointHighlightStroke: 'rgba(220,220,220,1)',
+        data                : [65, 59]
+      },
+    ]
+  }
+  //-------------
+  //- BAR CHART -
+  //-------------
+  var barChartCanvas = $('#barChart').get(0).getContext('2d')
+  var barChartData = $.extend(true, {}, areaChartData)
+  var temp0 = areaChartData.datasets[0]
+  var temp1 = areaChartData.datasets[1]
+  barChartData.datasets[0] = temp1
+  barChartData.datasets[1] = temp0
+
+  var barChartOptions = {
+    responsive              : true,
+    maintainAspectRatio     : false,
+    datasetFill             : false
+  }
+
+  new Chart(barChartCanvas, {
+    type: 'bar',
+    data: barChartData,
+    options: barChartOptions
+  })
+}
 </script>
 
 <?= $this->endSection() ?>
