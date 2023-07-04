@@ -123,6 +123,7 @@
               <input id="pers_id" name="pers_id" type="text" hidden>
               <!-- clie_id = 1 es harkodeo -->
               <input id="clie_id" name="clie_id" type="text"  hidden>
+              <input id="orgb" name="orgb" type="text" hidden>
                         <div class="row" style="margin-top:-7px">
                           <div class="col">
                             <div class="card card-info">
@@ -473,7 +474,7 @@
 <script>
 
 /* definicion de datatablet */
-  $(function () {
+$(function () {
     $("#tabla_personas").DataTable({
       dom: 'lfBtip', //orden de los elementos del datatable
       'initComplete': function (settings, json) {
@@ -522,7 +523,7 @@
 
 
  /* Abre modal nueva persona y habilita/deshabilita botones*/
-  $("#nueva_persona").on("hide.bs.modal", function() {
+$("#nueva_persona").on("hide.bs.modal", function() {
     $('#btn-accion').attr('onclick', 'guardarPersona()');
     $('#btn-accion').html('Crear');
     $('#mdl-title').html('Nueva Persona');
@@ -534,10 +535,7 @@
     $('#persona_id').prop('hidden', true);
     $('#frm-nuevaPersona')[0].reset();
     $("#imagenUsuario").removeAttr("src","");
-  }); 
-
-
-
+}); 
 
 /* Guarda modal de persona */
 function guardarPersona(){
@@ -955,8 +953,7 @@ function actualizaTablaPersonas(){
 }
 
 function modalCliente(clie_id){
-//debugger;
-/* harcodeo para poder acceder desde navegacion */
+//debugger;/* harcodeo para poder acceder desde navegacion */
   if(clie_id == undefined){
     var clie_id = '7';
   }
@@ -977,21 +974,22 @@ $(document).on("click", ".btn-asociarPosicion", function() {
   var clie_id =$('#clie_id').val();
   console.log("Empresa"+clie_id);
   $('#modalAsignarPersonal #treeCliente').val(clie_id);
-  nodos = $('#orgb').val();
+  
   clientes = <?php echo json_encode($listadoClientes); ?>;
   selects = <?php echo json_encode($listadoPersonas); ?>; 
   //console.log(clie_id);
   //console.log(JSON.stringify(clientes));
-
-  for (var i = 0; i < clientes.length; i++) {
-    var cliente = clientes[i];
-    //console.log(cliente.clie_id+" - "+clie_id);
-    
-    if((clie_id*1) == (cliente.clie_id*1)){
-      nodos = cliente.orgb;
-      break;
-    }  
-  }
+  nodos = $('#orgb').val();
+  if(!nodos){
+    for (var i = 0; i < clientes.length; i++) {
+      var cliente = clientes[i];    
+      if((clie_id*1) == (cliente.clie_id*1)){
+        nodos = cliente.orgb;
+        break;
+      }  
+    }
+  }   
+  
   //console.log("Organigrama: "+JSON.stringify(nodos));
 
   if(nodos.length === 0){
@@ -1017,8 +1015,9 @@ $(document).on("click", ".btn-asociarPosicion", function() {
   console.log("nodes: "+ nodes);
       
   var pers_id = $('#nueva_persona #pers_id').val();
-  var value = ($('#nueva_persona #nombres').val()).toUpperCase()+" "+($('#nueva_persona #apellidos').val()).toUpperCase()+ " - [ID: "+$('#nueva_persona #pers_id').val()+"]";    
-  var option = { id: pers_id, value : value, text : value};
+  var text = ($('#nueva_persona #nombres').val()).toUpperCase()+" "+($('#nueva_persona #apellidos').val()).toUpperCase()+ " - [ID: "+$('#nueva_persona #pers_id').val()+"]";    
+  var value = ($('#nueva_persona #nombres').val())+" "+($('#nueva_persona #apellidos').val())+ " - [ID: "+$('#nueva_persona #pers_id').val()+"]";    
+  var option = { id: pers_id, value : value, text : text};
   options.push(option);
   op_default= {id: -1, disabled: 'true', value : "Seleccione..." , text : "Seleccione..."};
   options.unshift(op_default);
@@ -1052,6 +1051,9 @@ $(document).on("click", ".btn-asociarPosicion", function() {
 
       OrgChart.templates.invisibleGroup.padding = [20, 0, 0, 0];
 
+      OrgChart.SEARCH_PLACEHOLDER = "Busqueda"; // the default value is "Search"
+
+
       chart = new OrgChart(document.getElementById("tree"), {
           mouseScrool: OrgChart.action.ctrlZoom,
           template: "ana",
@@ -1068,6 +1070,7 @@ $(document).on("click", ".btn-asociarPosicion", function() {
           nodeBinding: {
                   field_0: "name",
                   field_1: "title",
+                  field_2: "title2",
                   img_0: "img"
           },  
           editForm: {
@@ -1102,7 +1105,7 @@ $(document).on("click", ".btn-asociarPosicion", function() {
             elements: [
               { type: 'select', options: options, label: 'Nombres', binding: 'name'},
               { type: 'textbox', label: 'Puesto', binding: 'title'},  
-              { type: 'textbox', label: 'Id', binding: 'pers_id', readOnly: true},  
+              { type: 'textbox', label: 'Area', binding: 'title2'},  
               { type: 'textbox', label: 'Url Imagen', binding: 'img', btn: 'Upload' },            
             ]
           },
@@ -1270,25 +1273,29 @@ $(document).on("click", ".btn-asociarPosicion", function() {
         chart.editUI.show(nodeId);
 
         if(node.id === -1){ //Verificar que no selecciones este valor
+          Swal.fire({
+          title: 'Dato Selección',
+          text: 'No puede seleccionar este dato',
+          icon: 'warning',
+          showCancelButton: false,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Aceptar'
+        }).then((result) => {
+          if (result.isConfirmed) {
+          
+          }    
+        });
           
         }else{
+          chart.draw();
+          console.log(chart);
+          console.log(chart.config.nodes);
 
-        }
-
-        if(node.id){ //Si el nodo esta asignado debe mostrar quien esta asignado actualmente
-          
-
-        }else{ //Sino, mostrar sin ese personal
-
-        }       
-    
-        chart.draw();
-        console.log(chart);
-        console.log(chart.config.nodes);
-
-        $('#modalAsignarPersonal #treeOrg').val('');
-        $('#modalAsignarPersonal #treeOrg').val(JSON.stringify(chart.config.nodes));
-        console.log(nodes);
+          $('#modalAsignarPersonal #treeOrg').val('');
+          $('#modalAsignarPersonal #treeOrg').val(JSON.stringify(chart.config.nodes));
+          console.log(nodes);
+        }             
 
       }      
 
@@ -1299,18 +1306,18 @@ $(document).on("click", ".btn-asociarPosicion", function() {
 });
 
 function AgregarOrganigrama() {
-  console.log("AgregarOrganigrama");
+  //console.log("AgregarOrganigrama");
 
   $('#treeOrg').val(JSON.stringify(chart.config.nodes));
   var nodes= $('#treeOrg').val();
   var clie_id = $('#clie_id').val();
   $('#modalAsignarPersonal #treeCliente').val(clie_id);
   console.log("---Agregar nodo---");
-  console.info(clie_id);  
-  console.info(chart.config.nodes);
+  //console.info(clie_id);  
+  //console.info(chart.config.nodes);
 
   var formData = new FormData($('#frm-organigrama')[0]);
-  console.info(formData);
+  //console.info(formData);
 
   $.ajax({
     type:'POST',
@@ -1321,12 +1328,14 @@ function AgregarOrganigrama() {
     url: '<?= base_url()?>/editarOrganigrama',
     success: function(resp) {
       if(resp.status){
-        console.log(resp.status);
-        notificar(notiSuccess);
-        $('#orgb').val(JSON.stringify(chart.config.nodes));
+        //console.log(resp.status);
+        //notificar(notiSuccess);        
         $('#modalOrganigrama').modal('hide');
         $('#frm-organigrama')[0].reset();
         limpiaForm('#modalOrganigrama');
+        $('#orgb').val(JSON.stringify(chart.config.nodes));
+        //Actualizar Area Posicion
+        editarAreaPosicion(chart.config.nodes);
         
       }else{
         notificar(notiError);
@@ -1336,13 +1345,62 @@ function AgregarOrganigrama() {
       notificar(notiError);
     },
     complete: function(result){
-      notificar(notiSuccess);
+      //notificar(notiSuccess);
       /*$('#modalOrganigrama').modal('hide');
       $('#frm-organigrama')[0].reset();
       limpiaForm('#modalOrganigrama'); */     
     }
   });
 } 
+
+function editarAreaPosicion(nodes){
+
+  console.log("---Editar Area Posicion--");
+  var pers_id = $('#pers_id').val();
+  //var nodes= JSON.stringify( $('#orgb').val();
+  //console.info(JSON.stringify(nodes)+" "+nodes.length);
+  //console.info(pers_id);
+  for(var i=0; i< nodes.length; i++){
+    var node = nodes[i]; 
+    //console.info(node);
+    if(node.name){
+      var value = node.name.split("-");
+      //console.info(value);
+      if(value[1] == " [ID: "+pers_id+"]"){
+        //console.info(value[1]);
+        var puesto = node.title;
+        var area = node.title2;
+        break;
+      }
+    }
+  }
+  console.info(puesto+" "+area);
+
+  $.ajax({
+    type:'POST',
+    dataType: 'JSON',
+    //processData: false,
+    //contentType: false,
+    data:{puesto: puesto, area: area, pers_id: pers_id}, 
+    url: '<?= base_url()?>/editarAreaPosicion',
+    success: function(resp) {
+      if(resp.status){
+        console.log(resp.status);
+        notificar(notiSuccess);       
+      }else{
+        notificar(notiError);
+      }
+    },
+    error: function(result){
+      notificar(notiError);
+    },
+    complete: function(result){
+      notificar(notiSuccess);
+          
+    }
+  });
+
+}
 
 
 /* buscador codigo postal/colonia  */

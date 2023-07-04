@@ -1,5 +1,6 @@
 <?php
  
+namespace App\Controllers;
 namespace Modules\wema\Controllers; 
 use App\Controllers\BaseController;
 use Modules\wema\Models\Personas; 
@@ -125,6 +126,31 @@ class Persona extends BaseController
 
         $resp = $this->Personas->editarPersona($data);
 
+        echo json_encode($resp);
+    }
+
+    /**
+     * Recibe id Persona a editar area y posicion
+     * @param  $pers_id
+     * @param  $area
+     * @param  $posicion
+     * @return array response servicio
+     * 
+    */
+    function editarAreaPosicion(){
+        $request = \Config\Services::request();
+
+        $data['put_editarareaposicion'] = array(
+            'pers_id' => $request->getPost('pers_id'),
+            'area'    => $request->getPost('area'),
+            'posicion' => $request->getPost('puesto')
+        );
+
+        log_message('debug', "#TRAZA | WEMA-DESA-APP | Persona | Editar | AreaPosicion:  ".json_encode($data));
+
+
+        $resp = $this->Personas->editarAreaPosicion($data);
+        
         echo json_encode($resp);
     }
     /**

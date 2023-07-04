@@ -1276,6 +1276,8 @@ $(document).on("click", ".btn-organigrama", function() {
           stroke: '#aeaeae'
       };
 
+      OrgChart.SEARCH_PLACEHOLDER = "Busqueda"; // the default value is "Search"
+
       OrgChart.templates.invisibleGroup.padding = [20, 0, 0, 0];
 
       chart = new OrgChart(document.getElementById("tree"), {
