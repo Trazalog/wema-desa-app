@@ -1145,6 +1145,7 @@ function verPersona(e){
 
 
 
+
 /* inicializacion botones on/off */
  $("[name='habilitarPersonaEditar']").bootstrapSwitch({
 /* habilitar/deshabilitar personas desde modal editar persona*/
