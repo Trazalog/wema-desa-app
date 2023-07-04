@@ -329,7 +329,7 @@ left join core.tablas t5 on t5.tabl_id = p.ubic_id
 left join core.clientes c on p.clie_id = c.clie_id
 left join core.empresas e on  e.empr_id = c.empr_id 
 where p.clie_id = cast(:clie_id as integer)</sql>
-    <param type="IN" name="clie_id" sqlType="STRING" optional="false" paramType="SCALAR" />
+    <param type="IN" name="clie_id" sqlType="STRING" paramType="SCALAR" optional="false" />
     <result outputType="json">{
     "personas": {
         "persona": [{
@@ -375,7 +375,7 @@ left join core.tablas tn on c.naci_id  = tn.tabl_id
 left join core.tablas tg on c.gene_id  = tg.tabl_id
 left join core.tablas tpan on c.pana_id  = tpan.tabl_id
 where c.clie_id = cast(:clie_id as integer)</sql>
-    <param type="IN" name="clie_id" sqlType="STRING" optional="false" paramType="SCALAR" />
+    <param type="IN" name="clie_id" sqlType="STRING" paramType="SCALAR" optional="false" />
     <result outputType="json">{
     "clientes": {
         "cliente": [{
@@ -407,7 +407,7 @@ where c.clie_id = cast(:clie_id as integer)</sql>
             "nacionalidad":"$nacionalidad",
             "genero":"$genero",
             "ocupacion":"$ocupacion",
-            "paisNacimiento":"$paisNacimiento",
+            "paisNacimiento":"$paisNacimiento"
         }]
     }
 }</result>

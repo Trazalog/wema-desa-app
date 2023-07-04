@@ -90,4 +90,19 @@ class Resultado extends BaseController
         .view('Modules\wema\Views\clientes\modalGenericoCliente')
         .view('Modules\wema\Views\resultados\modales\modalResultados');
     }
+    /**
+        * Devuelve el listado de las encuetas para un pers_id
+        * @param  integer $pers_id
+        * @return array evaluaciones
+    */
+    public function getEvaluacionesPersona($pers_id = null){
+        log_message('info','#TRAZA | WEMA-DESA-APP | Resultado | getEvaluacionesPersona($pers_id) -> '.$pers_id);
+        
+        if(!empty($pers_id)){
+            $rsp = $this->Resultados->getEvaluacionesPersona($pers_id);
+            echo json_encode($rsp);
+        }else{
+            echo json_encode(array("status" => false, "msg" => "Parametro pers_id esta vacio"));
+        }
+    }
 }

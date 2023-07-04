@@ -578,16 +578,6 @@
                       extend:"print",
                       text:'<i class="fas fa-print"></i><a class="text-secondary"> Imprimir </a>',
                       className: 'btn btn-default btn-sm'
-                    },
-                   /*  {
-                      extend:"colvis",
-                      text:'<a class="text-light"> Ocultar columnas </a>',
-                      className: 'btn btn-dark btn-sm'
-                    },  */
-                    {
-                      text: '<a class="text-light" data-toggle="modal" data-target="#nuevo_cliente"> Agregar </a>',
-                      style: 'margin-left:10px',
-                      className: 'btn btn-info btn-sm agregar',
                     }
                   ],
     })

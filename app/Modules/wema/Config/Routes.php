@@ -50,3 +50,4 @@ $routes->get('/ubicaciones', '\Modules\wema\Controllers\General::getUbicaciones'
 $routes->get('/resultado', '\Modules\wema\Controllers\Resultado::index');
 $routes->get('/resultado/clientes/(:num)', '\Modules\wema\Controllers\Resultado::clientes/$1');
 $routes->get('/resultado/personas/(:num)', '\Modules\wema\Controllers\Resultado::personas/$1');
+$routes->get('/resultado/evaluaciones/persona/(:num)', '\Modules\wema\Controllers\Resultado::getEvaluacionesPersona/$1');
