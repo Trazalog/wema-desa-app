@@ -84,14 +84,17 @@
       <with-param name="pers_id" query-param="pers_id" />
     </call-query>
   </resource>
-  <config id="WemapDataSource">
-    <property name="carbon_datasource_name">WemapDataSource</property>
-  </config>
-  <resource method="POST" path="/persona/cuestionario/vincular">
+  <resource path="/persona/cuestionario/vincular" method="POST">
     <description>Vincula info_id con pers_id en eva.encuestas_personas</description>
     <call-query href="vincularCuestionario">
       <with-param name="pers_id" query-param="pers_id" />
       <with-param name="info_id" query-param="info_id" />
+    </call-query>
+  </resource>
+  <resource path="/persona/evaluaciones/{pers_id}" method="GET">
+    <description />
+    <call-query href="getEvaluacionesPersonas">
+      <with-param name="pers_id" query-param="pers_id" />
     </call-query>
   </resource>
   <query id="getPersonas" useConfig="WemapDataSource">
@@ -346,7 +349,7 @@ from frm.instancias_formularios if2
 join eva.encuestas_personas ep on if2.info_id = ep.info_id
 join core.personas p on p.pers_id = ep.pers_id
 where ep.pers_id = cast(:pers_id as integer)</sql>
-    <param type="IN" name="pers_id" sqlType="STRING" paramType="SCALAR" optional="false" />
+    <param type="IN" name="pers_id" sqlType="STRING" optional="false" paramType="SCALAR" />
     <result outputType="json">{
     "encuestas":{
        "encuesta":[
@@ -363,7 +366,35 @@ where ep.pers_id = cast(:pers_id as integer)</sql>
   <query id="vincularCuestionario" useConfig="WemapDataSource">
     <sql>INSERT INTO eva.encuestas_personas(pers_id, info_id)
 VALUES(cast(:pers_id as integer),cast(:info_id as integer))</sql>
-    <param type="IN" name="pers_id" sqlType="STRING" paramType="SCALAR" optional="false" />
-    <param type="IN" name="info_id" sqlType="STRING" paramType="SCALAR" optional="false" />
+    <param type="IN" name="pers_id" sqlType="STRING" optional="false" paramType="SCALAR" />
+    <param type="IN" name="info_id" sqlType="STRING" optional="false" paramType="SCALAR" />
+  </query>
+  <query id="getEvaluacionesPersonas" useConfig="WemapDataSource">
+    <sql>select ep.info_id ,to_char( ep.fec_alta, 'YYYY-MM-DD HH24:MI') fec_alta,ep.area ,ep.posicion, to_char( ep.fec_hard, 'YYYY-MM-DD HH24:MI') fec_hard, to_char( ep.fec_soft, 'YYYY-MM-DD HH24:MI')fec_soft,
+ep.nombre_doc_hard,ep.doc_hard, ep.nombre_doc_soft ,ep.doc_soft ,ep.hard_skill, ep.soft_skill 
+from eva.encuestas_personas ep 
+where ep.pers_id = cast(:pers_id as integer)</sql>
+    <param type="IN" name="pers_id" sqlType="STRING" optional="false" paramType="SCALAR" />
+    <result outputType="json">{
+  "evaluaciones": {
+    "evaluacion": [
+      {
+        "info_id": "$info_id",
+        "fec_alta": "$fec_alta",
+        "usr_alta": "$usr_alta",
+        "area": "$area",
+        "posicion": "$posicion",
+        "fec_hard": "$fec_hard",
+        "fec_soft": "$fec_soft",
+        "nombre_doc_hard": "$nombre_doc_hard",
+        "doc_hard": "$doc_hard",
+        "nombre_doc_soft": "$nombre_doc_soft",
+        "doc_soft": "$doc_soft",
+        "hard_skill": "$hard_skill",
+        "soft_skill": "$soft_skill"
+      }
+    ]
+  }
+}</result>
   </query>
 </data>

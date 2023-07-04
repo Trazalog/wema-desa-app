@@ -12,19 +12,19 @@ class Resultados extends Model{
     }
 
     /**
-        * Listado de Cuentas
-        * @param  
-        * @return array listado de cuentas en core.cuentas
+        * Listado de evalauciones par auna persona por pers_id
+        * @param integer $pers_id
+        * @return array listado de evaluaciones en eva.evalauciones_personas
 	*/
-    public function getEmpresas(){
-        log_message('debug','#TRAZA | WEMA-DESA-APP | Model | Resultados | getEmpresas()');
+    public function getEvaluacionesPersona($pers_id){
+        log_message('debug','#TRAZA | WEMA-DESA-APP | Model | Resultados | getEvaluacionesPersona()');
 
-        $url = REST_EMPRESA.'/empresas';
+        $url = REST_PERSONA.'/persona/evaluaciones/'.$pers_id;
         $aux = $this->REST->callAPI("GET",$url);
         $data = json_decode($aux['data']);
 
-        if(!empty($data->empresas->empresa))
-            return $data->empresas->empresa;
+        if(!empty($data->evaluaciones->evaluacion))
+            return $data->evaluaciones->evaluacion;
         else    
             return array();
     }

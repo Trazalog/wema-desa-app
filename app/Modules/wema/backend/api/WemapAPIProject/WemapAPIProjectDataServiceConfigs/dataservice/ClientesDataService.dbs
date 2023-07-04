@@ -403,7 +403,7 @@ where c.clie_id = cast(:clie_id as integer)</sql>
             "nacionalidad":"$nacionalidad",
             "genero":"$genero",
             "ocupacion":"$ocupacion",
-            "paisNacimiento":"$paisNacimiento",
+            "paisNacimiento":"$paisNacimiento"
         }]
     }
 }</result>
