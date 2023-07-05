@@ -11,9 +11,9 @@
                 <div class="col-2" >
                     <h5 class="modal-title">Resultados Persona</h5>
                 </div>
-                <div class="col-2">
+                <!-- <div class="col-2">
                     <a type="button" id="btn-personas" class="btn btn-outline-primary btn-block btn-sm pull-right"><i class="fas fa-users"></i> Exportar </a>
-                </div>
+                </div> -->
                 <!-- <div class="col-2">
                     <button type="button" id="btn-organigrama" class="btn btn-outline-primary btn-block btn-sm pull-right"><i class="fas fa-sitemap" ></i> Ver Resultados </button>
                 </div> -->
@@ -35,13 +35,10 @@
                             </div>
                             <!-- /. card title -->
                             <div class="car-body">
-                                <!-- <div class="row align-items-start mt-3">
-                                    <div class="col-md-12"> -->
+                                <div class="row align-items-start mt-3">
+                                    <div class="col-md-8">
                                         <div class="grid">
-                                            <!-- <div class="grid-sizer"></div> -->
                                             <div class="grid-item">
-                                        <!-- <div class="col-md-4 centrar mr-0"> -->
-                                            <!-- <div class="form-group"> -->
                                                 <p id="persIdModalResultado" style="margin-top: -19px;margin-bottom: -7px; font-style: italic;" hidden></p>
                                                 <div class="" style="position:initial;">
                                                     <!-- <i class="fas fa-user" style="right:250px;"></i> -->
@@ -50,38 +47,29 @@
                                                         <i id="verImagenModalResultado" class="fas fa-eye"></i>
                                                     </button>
                                                 </div>
-                                            <!-- </div> -->
-                                        </div>
-                                        <!-- imagen -->
-                                        <div class="grid-item">
-                                            <!-- <div class="col-md-4"> -->
-                                                <!-- <div class="form-group"> -->
-                                                    <label>Apellidos: </label>
-                                                    <div class="input-group">
-                                                        <div class="input-group-prepend">
-                                                            <span class="input-group-text"><i class="fas fa-user"></i></span>
-                                                        </div>
-                                                        <input type="text" class="form-control requerido" name="apellidos" readonly>
+                                            </div>
+                                            <!-- imagen -->
+                                            <div class="grid-item">
+                                                <label>Apellidos: </label>
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text"><i class="fas fa-user"></i></span>
                                                     </div>
+                                                    <input type="text" class="form-control requerido" name="apellidos" readonly>
                                                 </div>
                                             </div>
                                             <!-- apellidos -->
-                                        <div class="grid-item">
-                                            <!-- <div class="col-md-4"> -->
-                                                <!-- <div class="form-group"> -->
-                                                    <label>Nombres: </label>
-                                                    <div class="input-group">
-                                                        <div class="input-group-prepend">
-                                                            <span class="input-group-text"><i class="fas fa-user"></i></span>
-                                                        </div>
-                                                        <input type="text" class="form-control requerido" name="nombres" readonly>
+                                            <div class="grid-item">
+                                                <label>Nombres: </label>
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text"><i class="fas fa-user"></i></span>
                                                     </div>
-                                                <!-- </div> -->
+                                                    <input type="text" class="form-control requerido" name="nombres" readonly>
+                                                </div>
                                             </div>
-                                        <!-- nombres -->
-                                        <div class="grid-item">
-                                        <!-- <div class="col-md-3"> -->
-                                            <!-- <div class="form-group"> -->
+                                            <!-- nombres -->
+                                            <div class="grid-item">
                                                 <p id="persona_id" style="margin-top: -19px;margin-bottom: -7px; font-style: italic;" hidden></p>
                                                 <label>Evaluador: </label>
                                                 <div class="input-group">
@@ -90,12 +78,9 @@
                                                     </div>
                                                     <input type="text" class="form-control requerido" name="evaluador" readonly>
                                                 </div>
-                                            <!-- </div> -->
-                                        </div>
-                                        <!-- Evaluador -->
-                                        <div class="grid-item">
-                                        <!-- <div class="col-md-3"> -->
-                                            <!-- <div class="form-group"> -->
+                                            </div>
+                                            <!-- Evaluador -->
+                                            <div class="grid-item">
                                                 <label>Puesto: </label>
                                                 <div class="input-group">
                                                     <div class="input-group-prepend">
@@ -103,21 +88,14 @@
                                                     </div>
                                                     <input type="text" class="form-control requerido" name="puesto" readonly>
                                                 </div>
-                                            <!-- </div> -->
+                                            </div>
+                                            <!-- Puesto -->
                                         </div>
-                                        <!-- Puesto -->
-                                        <div class="grid-item">
-                                        <!-- <div class="col-md-3"> -->
-                                            <!-- <div class="form-group"> -->
-                                                <canvas id="barChart" class="chartjs-render-monitor"></canvas>
-                                            <!-- </div> -->
-                                        </div>
-                                        <!-- chart -->
-
-                                        <!-- <div class="col-md-12">
-                                            <hr>
-                                        </div> -->
-                                    <!-- </div> -->
+                                    </div>
+                                    <div class="col-md-4">
+                                        <canvas id="barChart" style="width: 100%; height: 200px;" class="chartjs-render-monitor"></canvas>
+                                    </div>
+                                    <!-- chart -->
                                 </div>
                                 <!-- /. row align-items-start mt-3 -->
                                 <div class="tab-content">

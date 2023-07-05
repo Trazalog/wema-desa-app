@@ -78,7 +78,7 @@
                                             <td>'.$persona->apellidos.'</td>
                                             <td>'.$persona->nombres.'</td>
                                             <td>'.(!empty($persona->area) ? $persona->area : '').'</td>
-                                            <td>'.(!empty($persona->puesto) ? $persona->puesto : '').'</td>
+                                            <td>'.(!empty($persona->posicion) ? $persona->posicion : '').'</td>
                                             <td>'.(!empty($persona->resultado) ? $persona->resultado : '').'</td>
                                     </tr>
                                     ';
@@ -446,6 +446,16 @@
 
 
 <script>
+  $(document).ready(function () {
+    //Renderizo el contenido para ordenarlo
+    $('#modalResultados').on('shown.bs.modal', function() {
+      $('.grid').masonry({
+        columnWidth: '.grid-item',
+        itemSelector: '.grid-item',
+        percentPosition: true
+      });
+    });
+  });
 /* definicion de datatablet */
   $(function () {
     $("#tabla_personas").DataTable({
@@ -1069,6 +1079,8 @@ function verModalResultados(tag){
                 '</tr>';
                 tabla.row.add($(fila)).draw();
           });
+          //Genero el Bar Chart
+          generarBarChart([{"pers_id": 20, "valor2": Math.floor(Math.random() * 100), "valor3" : 100},{"pers_id": 20, "valor2": Math.floor(Math.random() * 100), "valor3" : 100}]);
         },
         error: (data) =>{
           notificar(notiError);
@@ -1094,13 +1106,13 @@ function verModalResultados(tag){
       $('#imagenUsuarioModalResultado').attr('src', '');
     }
   }
-  //Genero el Bar Chart
-  generarBarChart(datos.pers_id);
-
+  //Llamo a la instancia definida en $.ready
+  $('.grid').masonry('layout');
   //Muestro modal
   $('#modalResultados').modal('show');
 }
-function generarBarChart(pers_id){
+function generarBarChart(datos){
+  console.log("GENERADO BARCHART");
   var areaChartData = {
     labels  : [],
     datasets: [
@@ -1114,7 +1126,7 @@ function generarBarChart(pers_id){
         pointStrokeColor    : 'rgba(60,141,188,1)',
         pointHighlightFill  : '#fff',
         pointHighlightStroke: 'rgba(60,141,188,1)',
-        data                : [28, 48]
+        data                : [datos[0].valor2, datos[0].valor3]
       },
       {
         label               : 'Desempeño',
@@ -1125,7 +1137,7 @@ function generarBarChart(pers_id){
         pointStrokeColor    : '#c1c7d1',
         pointHighlightFill  : '#fff',
         pointHighlightStroke: 'rgba(220,220,220,1)',
-        data                : [65, 59]
+        data                : [datos[1].valor2, datos[1].valor3]
       },
     ]
   }
