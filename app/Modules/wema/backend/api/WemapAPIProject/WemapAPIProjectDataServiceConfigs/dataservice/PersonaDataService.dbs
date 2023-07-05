@@ -381,7 +381,6 @@ where ep.pers_id = cast(:pers_id as integer)</sql>
       {
         "info_id": "$info_id",
         "fec_alta": "$fec_alta",
-        "usr_alta": "$usr_alta",
         "area": "$area",
         "posicion": "$posicion",
         "fec_hard": "$fec_hard",

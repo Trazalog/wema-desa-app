@@ -1,13 +1,13 @@
-<data enableBatchRequests="true" name="ClientesDataService" serviceNamespace="ClientesDataService" transports="http https local">
+<data transports="http https local" serviceNamespace="ClientesDataService" name="ClientesDataService" enableBatchRequests="true">
   <config id="WemaDataSource">
     <property name="carbon_datasource_name">WemapDataSource</property>
   </config>
-  <resource method="GET" path="/clientes">
+  <resource path="/clientes" method="GET">
     <description>obtiene los datos de los clientes                                    
                                     </description>
     <call-query href="getClientes" />
   </resource>
-  <resource method="POST" path="/clientes">
+  <resource path="/clientes" method="POST">
     <description>permite guardar un nuevo cliente en la base de datos                           
                                     
                                     </description>
@@ -39,7 +39,7 @@
       <with-param name="nom_imagen" query-param="nom_imagen" />
     </call-query>
   </resource>
-  <resource method="PUT" path="/clientes">
+  <resource path="/clientes" method="PUT">
     <description>actualiza datos del cliente en core.clientes                           
                                     </description>
     <call-query href="updateClientes">
@@ -71,27 +71,27 @@
       <with-param name="clie_id" query-param="clie_id" />
     </call-query>
   </resource>
-  <resource method="DELETE" path="/clientes">
+  <resource path="/clientes" method="DELETE">
     <description>permite eliminado logico de un cliente en tabla core.clientes                            
                                     </description>
     <call-query href="deleteClientes">
       <with-param name="clie_id" query-param="clie_id" />
     </call-query>
   </resource>
-  <resource method="PUT" path="/habilitarcliente">
+  <resource path="/habilitarcliente" method="PUT">
     <description>permite habilitar el cliente luego de hacer el borrado logico en la tabla core.clientes                         
                                     </description>
     <call-query href="habilitarClientes">
       <with-param name="clie_id" query-param="clie_id" />
     </call-query>
   </resource>
-  <resource method="GET" path="/clientes/personas/{clie_id}">
+  <resource path="/clientes/personas/{clie_id}" method="GET">
     <description>filtra las personas que pertenecen a un cliente desde la tabla core.personas</description>
     <call-query href="clientesGetPersona">
       <with-param name="clie_id" query-param="clie_id" />
     </call-query>
   </resource>
-  <resource method="GET" path="/clientes/getCliente/{clie_id}">
+  <resource path="/clientes/getCliente/{clie_id}" method="GET">
     <description>permite obtener los datos de un cliente por id desde la tabla core.cliente</description>
     <call-query href="getClientexId">
       <with-param name="clie_id" query-param="clie_id" />
@@ -329,7 +329,7 @@ left join core.tablas t5 on t5.tabl_id = p.ubic_id
 left join core.clientes c on p.clie_id = c.clie_id
 left join core.empresas e on  e.empr_id = c.empr_id 
 where p.clie_id = cast(:clie_id as integer)</sql>
-    <param type="IN" name="clie_id" sqlType="STRING" paramType="SCALAR" optional="false" />
+    <param type="IN" name="clie_id" sqlType="STRING" optional="false" paramType="SCALAR" />
     <result outputType="json">{
     "personas": {
         "persona": [{
@@ -360,7 +360,9 @@ where p.clie_id = cast(:clie_id as integer)</sql>
             "imagen":"$imagen",
             "nom_imagen":"$nom_imagen",
             "nombreCliente":"$nombreCliente",
-           "nombreEmpresa":"$nombreEmpresa"
+           "nombreEmpresa":"$nombreEmpresa",
+           "posicion": "$posicion",
+           "area":"$area"
         }]
     }
 }</result>
@@ -375,7 +377,7 @@ left join core.tablas tn on c.naci_id  = tn.tabl_id
 left join core.tablas tg on c.gene_id  = tg.tabl_id
 left join core.tablas tpan on c.pana_id  = tpan.tabl_id
 where c.clie_id = cast(:clie_id as integer)</sql>
-    <param type="IN" name="clie_id" sqlType="STRING" paramType="SCALAR" optional="false" />
+    <param type="IN" name="clie_id" sqlType="STRING" optional="false" paramType="SCALAR" />
     <result outputType="json">{
     "clientes": {
         "cliente": [{
