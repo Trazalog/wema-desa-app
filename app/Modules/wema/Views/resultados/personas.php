@@ -843,7 +843,10 @@
           function callHandler(nodeId) {
             var nodeData = chart.get(nodeId);
             var employeeName = nodeData["name"];
-            window.open('https://webcall.me/' + employeeName, employeeName, 'width=340px, height=670px, top=50px, left=50px');
+            $('#modalResultados').modal('show');
+            
+
+            //window.open('https://webcall.me/' + employeeName, employeeName, 'width=340px, height=670px, top=50px, left=50px');
           }
 
           chart.nodeCircleMenuUI.on('drop', function (sender, args) {
@@ -1038,8 +1041,6 @@
   }); 
 
 
-
-
 /* Guarda modal de persona */
 function guardarPersona(){
   var formData = new FormData($('#frm-nuevaPersona')[0]);
@@ -1141,9 +1142,6 @@ function verPersona(e){
     $("[name='habilitarPersonaEditar']").bootstrapSwitch('state', true ,true);
    
 }
-
-
-
 
 /* inicializacion botones on/off */
  $("[name='habilitarPersonaEditar']").bootstrapSwitch({
@@ -1345,8 +1343,6 @@ function cargaVistaPrevia(){
   }
 }
 
-
- 
 /* actualiza tabla personas */
 function actualizaTablaPersonas(){
   clie_id ="<?= isset($clie_id) ? $clie_id : '1'  ?>";

@@ -1510,12 +1510,12 @@ $(document).on("click", ".btn-organigrama", function() {
         }       
     
         chart.draw();
-        console.log(chart);
-        console.log(chart.config.nodes);
+        /*console.log(chart);
+        console.log(chart.config.nodes);*/
 
         $('#modalOrganigrama #treeOrg').val('');
         $('#modalOrganigrama #treeOrg').val(JSON.stringify(chart.config.nodes));
-        console.log(nodes);
+        /*console.log(nodes);*/
 
       }      
 
