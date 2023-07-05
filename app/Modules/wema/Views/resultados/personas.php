@@ -165,11 +165,50 @@
                           </div>
                           <!-- /.col (RIGHT) -->
                         </div>
-                        <!-- /.row -->
-                      </div><!-- /.container-fluid -->
-                    </section>
-                    <!-- /.content -->                  
-                  </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <table id="tabla_personas" class="table table-bordered table-striped">
+                                <thead>
+                                <tr>
+                                    <th>Acciones</th>
+                                    <th>Imagen</th>
+                                    <th>CURP</th>
+                                    <th>Apellidos</th>
+                                    <th>Nombres</th>
+                                    <th>Área</th>
+                                    <th>Puesto</th>
+                                    <th>Resultado</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($listadoPersonas as $key => $persona) {
+                                    /* imagen de perfil */
+                                    if($persona->imagen) {$src = imagePerfil($persona->imagen, $persona->nom_imagen); $class = "img-circle elevation-2"; $style = "height: 3rem; width: 3.9rem";}
+                                    else{ $src = ""; $class = ""; $style = "";}
+                                    (strcmp($persona->estado, 'true') == 0) ? $check= 'filaEliminada' : $check = '';
+                                    echo '<tr class="centrar '.$check.'" data-json=\''.json_encode($persona).'\'>';
+                                    echo  '<td>
+                                            <div class="btn-group"> 
+                                                <i class="fa fa-search" style="cursor: pointer;margin: 3px;" title="Ver Detalles" onclick="verPersona(this)"></i>
+                                                <img style="cursor: pointer; margin-left: 3px" src="'.base_url("icons/lookup-icon.png").'" width="20" onclick="verModalResultados(this)" title="Ver Resultado">
+                                            </div>
+                                            </td>
+                                            <td class="centrar"><img src="'. $src .'" class="'.$class.'" style="'.$style.'"/></td>
+                                            <td>'.$persona->curp.'</td>
+                                            <td>'.$persona->apellidos.'</td>
+                                            <td>'.$persona->nombres.'</td>
+                                            <td>'.(!empty($persona->area) ? $persona->area : '').'</td>
+                                            <td>'.(!empty($persona->posicion) ? $persona->posicion : '').'</td>
+                                            <td>'.(!empty($persona->resultado) ? $persona->resultado : '').'</td>
+                                    </tr>
+                                    ';
+                                    }?>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
                 </div>
               </div>
               <!-- /.card -->
@@ -527,6 +566,16 @@
 </div>
 
 <script>
+  $(document).ready(function () {
+    //Renderizo el contenido para ordenarlo
+    $('#modalResultados').on('shown.bs.modal', function() {
+      $('.grid').masonry({
+        columnWidth: '.grid-item',
+        itemSelector: '.grid-item',
+        percentPosition: true
+      });
+    });
+  });
 /* definicion de datatablet */
   $(function () {
     $("#tabla_personas").DataTable({
@@ -1586,6 +1635,8 @@ function verModalResultados(tag){
                 '</tr>';
                 tabla.row.add($(fila)).draw();
           });
+          //Genero el Bar Chart
+          generarBarChart([{"pers_id": 20, "valor2": Math.floor(Math.random() * 100), "valor3" : 100},{"pers_id": 20, "valor2": Math.floor(Math.random() * 100), "valor3" : 100}]);
         },
         error: (data) =>{
           notificar(notiError);
@@ -1611,13 +1662,13 @@ function verModalResultados(tag){
       $('#imagenUsuarioModalResultado').attr('src', '');
     }
   }
-  //Genero el Bar Chart
-  generarBarChart(datos.pers_id);
-
+  //Llamo a la instancia definida en $.ready
+  $('.grid').masonry('layout');
   //Muestro modal
   $('#modalResultados').modal('show');
 }
-function generarBarChart(pers_id){
+function generarBarChart(datos){
+  console.log("GENERADO BARCHART");
   var areaChartData = {
     labels  : [],
     datasets: [
@@ -1631,7 +1682,7 @@ function generarBarChart(pers_id){
         pointStrokeColor    : 'rgba(60,141,188,1)',
         pointHighlightFill  : '#fff',
         pointHighlightStroke: 'rgba(60,141,188,1)',
-        data                : [28, 48]
+        data                : [datos[0].valor2, datos[0].valor3]
       },
       {
         label               : 'Desempeño',
@@ -1642,7 +1693,7 @@ function generarBarChart(pers_id){
         pointStrokeColor    : '#c1c7d1',
         pointHighlightFill  : '#fff',
         pointHighlightStroke: 'rgba(220,220,220,1)',
-        data                : [65, 59]
+        data                : [datos[1].valor2, datos[1].valor3]
       },
     ]
   }

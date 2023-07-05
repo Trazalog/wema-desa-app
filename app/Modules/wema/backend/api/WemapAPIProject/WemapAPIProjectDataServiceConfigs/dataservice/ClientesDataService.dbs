@@ -363,7 +363,9 @@ where p.clie_id = cast(:clie_id as integer)</sql>
             "imagen":"$imagen",
             "nom_imagen":"$nom_imagen",
             "nombreCliente":"$nombreCliente",
-           "nombreEmpresa":"$nombreEmpresa"
+           "nombreEmpresa":"$nombreEmpresa",
+           "posicion": "$posicion",
+           "area":"$area"
         }]
     }
 }</result>

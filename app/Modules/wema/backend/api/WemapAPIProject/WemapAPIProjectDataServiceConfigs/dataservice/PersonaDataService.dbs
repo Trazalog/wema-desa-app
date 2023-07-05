@@ -366,4 +366,31 @@ VALUES(cast(:pers_id as integer),cast(:info_id as integer))</sql>
     <param type="IN" name="pers_id" sqlType="STRING" paramType="SCALAR" optional="false" />
     <param type="IN" name="info_id" sqlType="STRING" paramType="SCALAR" optional="false" />
   </query>
+  <query id="getEvaluacionesPersonas" useConfig="WemapDataSource">
+    <sql>select ep.info_id ,to_char( ep.fec_alta, 'YYYY-MM-DD HH24:MI') fec_alta,ep.area ,ep.posicion, to_char( ep.fec_hard, 'YYYY-MM-DD HH24:MI') fec_hard, to_char( ep.fec_soft, 'YYYY-MM-DD HH24:MI')fec_soft,
+ep.nombre_doc_hard,ep.doc_hard, ep.nombre_doc_soft ,ep.doc_soft ,ep.hard_skill, ep.soft_skill 
+from eva.encuestas_personas ep 
+where ep.pers_id = cast(:pers_id as integer)</sql>
+    <param type="IN" name="pers_id" sqlType="STRING" optional="false" paramType="SCALAR" />
+    <result outputType="json">{
+  "evaluaciones": {
+    "evaluacion": [
+      {
+        "info_id": "$info_id",
+        "fec_alta": "$fec_alta",
+        "area": "$area",
+        "posicion": "$posicion",
+        "fec_hard": "$fec_hard",
+        "fec_soft": "$fec_soft",
+        "nombre_doc_hard": "$nombre_doc_hard",
+        "doc_hard": "$doc_hard",
+        "nombre_doc_soft": "$nombre_doc_soft",
+        "doc_soft": "$doc_soft",
+        "hard_skill": "$hard_skill",
+        "soft_skill": "$soft_skill"
+      }
+    ]
+  }
+}</result>
+  </query>
 </data>
