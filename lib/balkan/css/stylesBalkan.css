@@ -14,16 +14,6 @@ html, body {
     height: 100%;
 }
 
-
-/*partial*/
-.node.QA rect {
-    fill: #F57C00;
-}
-
-.node.Dev rect {
-    fill: #039BE5;
-}
-
-.node.Marketing rect {
-    fill: #FFCA28;
+.node.Administrador rect {
+    fill: #F57C00 !important;
 }

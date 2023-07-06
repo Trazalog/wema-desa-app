@@ -12,20 +12,19 @@ use Modules\wema\Models\Cuentas;
 class Cliente extends BaseController
 {
 
-    public function __construct()
-    {
+    public function __construct(){
         $this->Clientes = new Clientes();
         $this->Generales = new Generales();
         $this->Cuentas = new Cuentas();
 
+        $this->Personas = new Personas();
     }
     /**
         * Carga pantalla principal de ABM clientes
         * @param  
         * @return view index.php
 	*/
-    public function index()
-    {
+    public function index(){
 
         /* LISTADO DE GENEROS */
         $data['listadoGeneros'] = $this->Generales->getTabla("generos");
@@ -41,8 +40,12 @@ class Cliente extends BaseController
 
         /* LISTADO DE CLIENTES */
         $data['listadoClientes'] = $this->Clientes->getClientes();
-        log_message('debug', "#TRAZA | WEMA-DESA-APP | Cliente | Index | Cliente:  ".json_encode($data['listadoClientes'],true));
-        log_message('debug', "#TRAZA | WEMA-DESA-APP | Cliente | Index | ORGB:  ".json_encode($data['listadoClientes']));
+        //log_message('debug', "#TRAZA | WEMA-DESA-APP | Cliente | Index | Cliente:  ".json_encode($data['listadoClientes'],true));
+        
+        /* LISTADO DE CLIENTES */
+        $data['listadoPersonas'] = $this->Personas->getPersonas();
+        log_message('debug', "#TRAZA | WEMA-DESA-APP | Cliente | Index | Personas:  ".json_encode($data['listadoPersonas'],true));
+        
 
         return view('Modules\wema\Views\clientes\index', $data)
         .view('Modules\wema\Views\cuentas\modalGenericoCuenta');
@@ -135,6 +138,23 @@ class Cliente extends BaseController
         );
 
         $resp = $this->Clientes->editarCliente($data);
+        
+        echo json_encode($resp);
+
+    }
+
+    function editarOrganigrama(){
+        $request = \Config\Services::request();
+
+        $data['put_organigrama'] = array(
+            
+            'clie_id' => $request->getPost('treeCliente'),
+            'orgb' => $request->getPost('treeOrg')
+        );
+
+        log_message('debug', "#TRAZA | WEMA-DESA-APP | Cliente | Editar | Organigrama:  ".json_encode($data));
+
+        $resp = $this->Clientes->editarOrganigrama($data);
         
         echo json_encode($resp);
 
@@ -252,11 +272,10 @@ class Cliente extends BaseController
         * @param  array $empr_id empresa
         * @return view clientes
     */
-    function getClientesXIdEmpresa($empr_id)
-    {
+    function getClientesXIdEmpresa($empr_id){
         /* LISTADO DE CLIENTES */
         $resp = $this->Cuentas->getClientes($empr_id);
          
         echo json_encode($resp);
-    }
+    }    
 }

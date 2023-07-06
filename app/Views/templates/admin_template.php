@@ -48,8 +48,9 @@
   <script src="<?= base_url()?>/lib/sweetalert2/dist/sweetalert2.all.min.js"></script>
   <link rel="stylesheet" src="<?= base_url()?>/lib/sweetalert2/dist/sweetalert2.min.css">
   <!-- Select2 -->
-  <link href="<?= base_url()?>/lib/select2/dist/css/select2.min.css" rel="stylesheet" />
-  <script src="<?= base_url()?>/lib/select2/dist/js/select2.min.js"></script>
+  <link rel="stylesheet" href="<?= base_url()?>/public/plugins/select2/css/select2.min.css">
+  <link rel="stylesheet" href="<?= base_url()?>/public/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+
   <!-- Scripts para Notificaciones -->
   <script src="<?= base_url()?>/lib/notificaciones.js"></script>
   <!--Scripts Generales -->
@@ -302,6 +303,10 @@
 <script src="<?= base_url()?>/public/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
 <!-- AdminLTE App -->
 <script src="<?= base_url()?>/public/dist/js/adminlte.js"></script>
+
+<!-- Select2 -->
+<script src="<?= base_url()?>/public/plugins/select2/js/select2.full.min.js"></script>
+
 <!-- AdminLTE for demo purposes -->
 <!-- <script src="<?= base_url()?>/public/dist/js/demo.js"></script> -->
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
@@ -309,8 +314,6 @@
 
 <!-- plugin form multiples tabs JS-->
 <script src="<?= base_url()?>/public/plugins/bs-stepper/js/bs-stepper.min.js"></script>
-
-
 
 <!-- DataTables  & Plugins -->
 <script src="<?= base_url()?>/public/plugins/datatables/jquery.dataTables.min.js"></script>
@@ -325,6 +328,7 @@
 <script src="<?= base_url()?>/public/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
 <script src="<?= base_url()?>/public/plugins/datatables-buttons/js/buttons.print.min.js"></script>
 <script src="<?= base_url()?>/public/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+
 
 <!-- Balkan Orgchart -->
 <!--<script src="<?= base_url() ?>/lib/balkan/js/balkanAdmin.js"></script>-->

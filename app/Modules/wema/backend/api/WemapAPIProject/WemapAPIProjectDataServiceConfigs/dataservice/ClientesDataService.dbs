@@ -3,14 +3,11 @@
     <property name="carbon_datasource_name">WemapDataSource</property>
   </config>
   <resource path="/clientes" method="GET">
-    <description>obtiene los datos de los clientes                                    
-                                    </description>
+    <description>obtiene los datos de los clientes </description>
     <call-query href="getClientes" />
   </resource>
   <resource path="/clientes" method="POST">
-    <description>permite guardar un nuevo cliente en la base de datos                           
-                                    
-                                    </description>
+    <description>permite guardar un nuevo cliente en la base de datos</description>
     <call-query href="setClientes">
       <with-param name="nombre" query-param="nombre" />
       <with-param name="id_tributario" query-param="id_tributario" />
@@ -40,8 +37,7 @@
     </call-query>
   </resource>
   <resource path="/clientes" method="PUT">
-    <description>actualiza datos del cliente en core.clientes                           
-                                    </description>
+    <description>actualiza datos del cliente en core.clientes </description>
     <call-query href="updateClientes">
       <with-param name="nombre" query-param="nombre" />
       <with-param name="id_tributario" query-param="id_tributario" />
@@ -414,4 +410,16 @@ where c.clie_id = cast(:clie_id as integer)</sql>
     }
 }</result>
   </query>
+  <query id="updateOrganigrama" useConfig="WemaDataSource">
+    <sql>update core.clientes set orgb = cast(:orgb as jsonb) where clie_id = cast(:clie_id as integer)</sql>
+    <param name="orgb" sqlType="STRING" paramType="SCALAR" />
+    <param name="clie_id" sqlType="STRING" paramType="SCALAR" />
+  </query>
+  <resource path="/organigrama" method="PUT">
+    <description>Actualiza el organigrama de un cliente</description>
+    <call-query href="updateOrganigrama">
+      <with-param name="orgb" query-param="orgb" />
+      <with-param name="clie_id" query-param="clie_id" />
+    </call-query>
+  </resource>
 </data>
