@@ -171,7 +171,9 @@ class Persona extends BaseController
     public function cargarListadoEntrevistados(){
         log_message('debug','#TRAZA | WEMA-DESA-APP | Controller | Persona | cargarListadoEntrevistados()');
         $data['listadoPersonas'] = $this->Personas->getPersonas();
-        return view('Modules\wema\Views\persona\entrevistas\listadoPersonas',$data);    
+
+        return view('Modules\wema\Views\persona\entrevistas\listadoPersonas',$data)
+        .view('Modules\wema\Views\resultados\modales\modalResultados');
     }
     /**
         * Pantalla con cuestionario para reazliar entrevista

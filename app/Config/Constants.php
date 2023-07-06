@@ -94,5 +94,5 @@ define('REST_CLIENTE', HOST.'/services/ClientesDataService');
 define('REST_PERSONA', HOST.'/services/PersonaDataService');
 define('REST_EMPRESA', HOST.'/services/EmpresasDataService');
 define('REST_CORE', HOST.'/services/CoreDataService');
-define('API_EMLO', HOST.'/nemesysco/connect/audios/get');
+define('API_EMLO', HOST.'/nemesysco/connect/audio/rate');
 

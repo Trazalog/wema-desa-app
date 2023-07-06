@@ -153,7 +153,7 @@
                                                                             <div class="input-group-prepend">
                                                                                 <span class="input-group-text"><i class="fas fa-poll"></i></span>
                                                                             </div>
-                                                                            <input type="text" class="form-control requerido" id="hardSkillResult" name="hardSkillResult" readonly>
+                                                                            <input type="text" class="form-control requerido" id="softSkillResult" name="softSkillResult" readonly>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -164,7 +164,7 @@
                                                                             <div class="input-group-prepend">
                                                                                 <span class="input-group-text"><i class="fas fa-calendar"></i></span>
                                                                             </div>
-                                                                            <input type="date" class="form-control requerido" id="hardSkillFecha" name="hardSkillFecha" readonly>
+                                                                            <input type="date" class="form-control requerido" id="softSkillFecha" name="softSkillFecha" readonly>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -189,7 +189,7 @@
                                                                             <div class="input-group-prepend">
                                                                                 <span class="input-group-text"><i class="fas fa-poll"></i></span>
                                                                             </div>
-                                                                            <input type="text" class="form-control requerido" id="hardSkillResult" name="hardSkillResult" readonly>
+                                                                            <input type="text" class="form-control requerido" id="ethicSkillResult" name="ethicSkillResult" readonly>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -200,7 +200,7 @@
                                                                             <div class="input-group-prepend">
                                                                                 <span class="input-group-text"><i class="fas fa-calendar"></i></span>
                                                                             </div>
-                                                                            <input type="date" class="form-control requerido" id="hardSkillFecha" name="hardSkillFecha" readonly>
+                                                                            <input type="date" class="form-control requerido" id="ethicSkillFecha" name="ethicSkillFecha" readonly>
                                                                         </div>
                                                                     </div>
                                                                 </div>

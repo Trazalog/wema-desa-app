@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <api context="/nemesysco/connect" name="NemesyscoAPI" xmlns="http://ws.apache.org/ns/synapse">
-    <resource methods="POST" url-mapping="/audios/get">
+    <resource methods="POST" url-mapping="/audio/rate">
         <inSequence>
             <property expression="get-property('registry','conf:tools/nemesysconfig.xml')" name="apiconf" scope="default" type="OM" xmlns:ns="http://org.apache.synapse/xsd" xmlns:ns2="http://org.apache.synapse/xsd"/>
             <property expression="$ctx:apiconf//dataservices_url" name="dataservices_url" scope="default" type="STRING" xmlns:ns="http://org.apache.synapse/xsd" xmlns:ns2="http://org.apache.synapse/xsd"/>

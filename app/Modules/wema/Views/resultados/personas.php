@@ -1037,7 +1037,7 @@ $('#CodigoColonia').select2({
 });
 function verModalResultados(tag){
   datos = $(tag).closest('tr').data('json');
-
+  
   //Clear campos
   $("hardSkillResult").val('');
   $("hardSkillFecha").val('');
@@ -1050,8 +1050,6 @@ function verModalResultados(tag){
     $("#modalResultados [name='hardSkillFecha']").val(datos.soft_skill);
     $("#modalResultados [name='nombres']").val(datos.nombres);
     $("#modalResultados [name='apellidos']").val(datos.apellidos);
-    $("#modalResultados [name='evaluador']").val(datos.evaluador);
-    $("#modalResultados [name='puesto']").val(datos.posicion);
     //Obtengo las evaluaciones realizadas
     $.ajax({
         type: 'GET',
@@ -1072,13 +1070,20 @@ function verModalResultados(tag){
                   '</div>'+
                 '</td>'+
                 '<td>'+ value.fec_alta +'</td>'+
+                '<td>'+ value.apellidos_eval + " " + value.nombres_eval +'</td>'+
                 '<td>'+'</td>'+
-                '<td>'+'</td>'+
-                '<td>'+ value.area +'</td>'+
-                '<td>'+ value.posicion +'</td>'+
+                '<td>'+ (value.area ? value.area : '')+'</td>'+
+                '<td>'+ (value.posicion ? value.posicion : '') +'</td>'+
                 '</tr>';
                 tabla.row.add($(fila)).draw();
           });
+          //Relleno los campos con la info de la ultima evaluacion
+          $("#modalResultados [name='evaluador']").val(data[0].nombres_eval + " " + data[0].apellidos_eval);
+          $("#modalResultados [name='puesto']").val(data[0].posicion_eval ? data[0].posicion_eval : '');
+          $("#modalResultados #hardSkillResult").val(data[0].hard_skill ? data[0].hard_skill + "%" : '');
+          $("#modalResultados #hardSkillFecha").val(data[0].fec_hard ? moment(data[0].fec_hard).format("YYYY-MM-DD") : '');
+          $("#modalResultados #softSkillResult").val(data[0].soft_skill ? data[0].soft_skill + "%" : '');
+          $("#modalResultados #softSkillFecha").val(data[0].fec_soft ? moment(data[0].fec_soft).format("YYYY-MM-DD") : '');
           //Genero el Bar Chart
           generarBarChart([{"pers_id": 20, "valor2": Math.floor(Math.random() * 100), "valor3" : 100},{"pers_id": 20, "valor2": Math.floor(Math.random() * 100), "valor3" : 100}]);
         },
