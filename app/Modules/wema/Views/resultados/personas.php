@@ -193,10 +193,10 @@
                 </div>
                 </label>
                 <div class="col-3" >
-                    <button type="button" id="btn-editar" class="btn btn-outline-primary btn-block btn-sm" onclick="habilitaEditarPersona()" hidden><i class="fa fa-edit"></i> Editar</button>
+                    <!--<button type="button" id="btn-editar" class="btn btn-outline-primary btn-block btn-sm" onclick="habilitaEditarPersona()" hidden><i class="fa fa-edit"></i> Editar</button>-->
                 </div>
                 <div class="col-3" >
-                    <button type="button" id="btn-asociarPosicion" class="btn btn-outline-primary btn-block btn-sm" hidden><i class="fas fa-inbox" ></i> Asociar posición</button>
+                    <!--<button type="button" id="btn-asociarPosicion" class="btn btn-outline-primary btn-block btn-sm" hidden><i class="fas fa-inbox" ></i> Asociar posición</button>-->
                 </div>
                 <div class="col-2">
                 <button type="button" class="close" onclick="limpiaForm('#nueva_persona')" data-dismiss="modal" aria-label="Close">
@@ -735,7 +735,7 @@
               nodeMenu: {
                 details: { 
                   text: "Info. Persona" ,
-                  //onClick: detalleNodo
+                  onClick: detalleNodo
                 },
                 /*edit: { 
                   text: "Editar",
@@ -806,7 +806,10 @@
                           //addDepartment: { text: "Nueva Area", icon: OrgChart.icon.add(24, 24, "#7A7A7A"), onClick: addArea },
                           //addAssistant: { text: "Add new assitsant", icon: OrgChart.icon.add(24, 24, "#7A7A7A"), onClick: addAssistant },
                           //edit: { text: "Info. Persona" },
-                          details: { text: "Info. Persona" },
+                          details: { 
+                            text: "Info. Persona",
+                            onClick: detalleNodo
+                          },
                           call: {
                               icon: webcallMeIcon,
                               text: "Ver resultados",
@@ -846,18 +849,15 @@
             }
           } 
 
-          function callHandler(nodeId) {
-            var nodeData = chart.get(nodeId);
-            //var employeeName = nodeData["name"];
+          function detalleNodo(nodeId){
             var node = chart.get(nodeId);
-            console.log(node);   
-            //name  "cadabra abra - [ID: 36] 
             var name = node.name.split('-');
+            console.log(name);
             var value = name[1].split(' ');
+            console.log(value);
             var nro = value[2].split(']');      
-            var id = nro[0];
-            console.log(id); 
-            console.log(selects); 
+            console.log(nro);
+            var id = nro[0]; 
             for(var i = 0; i < selects.length; i++){
               var p = selects[i];
               if(id == p.pers_id){
@@ -865,9 +865,24 @@
                 break;
               }
             }
-            console.log(person);
+            verPersonaChart(person);
+          }
+
+          function callHandler(nodeId) {
+            var node = chart.get(nodeId); 
+            //name  "cadabra abra - [ID: 36] 
+            var name = node.name.split('-');
+            var value = name[1].split(' ');
+            var nro = value[2].split(']');      
+            var id = nro[0];
+            for(var i = 0; i < selects.length; i++){
+              var p = selects[i];
+              if(id == p.pers_id){
+                var person = p;
+                break;
+              }
+            }
             verModalResultados(person,1);
-            //window.open('https://webcall.me/' + employeeName, employeeName, 'width=340px, height=670px, top=50px, left=50px');
           }
 
           chart.nodeCircleMenuUI.on('drop', function (sender, args) {
@@ -1040,11 +1055,7 @@
         data: barChartData2,
         options: barChartOptions2
       });
-
-
     });
-
-
 
  /* Abre modal nueva persona y habilita/deshabilita botones*/
   $("#nueva_persona").on("hide.bs.modal", function() {
@@ -1102,6 +1113,54 @@ function guardarPersona(){
       actualizaTablaPersonas();
     }
   });
+}
+
+function verPersonaChart(json){
+  $('#btn-accion').hide();
+  $('#mdl-title').html('Persona');
+  $('#frm-nuevaPersona').find('.form-control').prop('disabled', true);
+  $('#btn-editar').prop('hidden', false);
+  $('#btn-asociarPosicion').prop('hidden', false);
+  $('#nueva_persona').modal('show');
+  $('#btn-habilitarPersona').prop('hidden', true);
+  $('#persona_id').prop('hidden', false);
+
+  $('#nueva_persona #pers_id').val(json.pers_id);
+  $('#nueva_persona #apellidos').val(json.apellidos);
+  $('#nueva_persona #nombres').val(json.nombres);
+  $('#nueva_persona #curp').val(json.curp);
+  $('#nueva_persona #pers_id').val(json.pers_id);
+  $('#nueva_persona #genero').val(json.gene_id);
+  $('#nueva_persona #telefono').val(json.telefono);
+  $('#nueva_persona #correo').val(json.email);
+  $('#nueva_persona #numeroExterior').val(json.num_exterior);
+  $('#nueva_persona #numeroInterior').val(json.num_interior);
+  $('#nueva_persona #ocupacion').val(json.ocupacion);
+  $('#nueva_persona #calle').val(json.calle);
+  $('#nueva_persona #CodigoColonia').val(json.cod_postal);
+  $('#nueva_persona #escolaridad').val(json.educ_id);
+  $('#nueva_persona #estadoCivil').val(json.esci_id);
+  $('#nueva_persona #nacionalidad').val(json.naci_id);
+  $('#nueva_persona #paisNacimiento').val(json.pana_id);
+  $('#nueva_persona #fechaNacimiento').val(json.fec_nacimiento.slice(0,10));
+  $('#nueva_persona #persona_id').text( "(id: " + json.pers_id + ")");
+  if(json.nom_imagen){
+    var codificacion = obtenerExtension(json.nom_imagen);
+    
+    var decodedData = window.atob(json.imagen);
+    
+    document.getElementById('verImagen').onclick = function (){
+      event.preventDefault();
+      var newTab = window.open();
+      newTab.document.body.innerHTML = '<img src="'+ codificacion + decodedData +'" >';
+      newTab.document.close();
+    }    
+    $('#imagenUsuario').attr('src', codificacion + decodedData);
+  }else{
+    $('#imagenUsuario').attr('src', '');
+  }
+
+  $('#nueva_persona').modal('show');
 }
 
 /* Permite ver los datos de cada persona */
@@ -1476,8 +1535,7 @@ function actualizaTablaPersonas(){
 }
 
 function modalCliente(clie_id){
-//debugger;
-/* harcodeo para poder acceder desde navegacion */
+//debugger; /* harcodeo para poder acceder desde navegacion */
   if(clie_id == undefined){
     var clie_id = '7';
   }
@@ -1563,6 +1621,7 @@ $('#CodigoColonia').select2({
             return markup;
         },
 });
+
 function verModalResultados(tag,orgb){
   
   var datos = [];
@@ -1579,7 +1638,9 @@ function verModalResultados(tag,orgb){
     datos.hard_skill = tag.hard_skill;
     datos.soft_skill = tag.soft_skill;
     datos.etic_skill = tag.etic_skill;
-    datos.evaluador = tag.evaluador
+    datos.evaluador = tag.evaluador;
+    datos.nom_imagen = tag.nom_imagen;
+    datos.imagen = tag.imagen;
   }
 
   
@@ -1657,6 +1718,7 @@ function verModalResultados(tag,orgb){
   //Muestro modal
   $('#modalResultados').modal('show');
 }
+
 function generarBarChart(datos){
   console.log("GENERADO BARCHART");
   var areaChartData = {
