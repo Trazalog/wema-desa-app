@@ -48,46 +48,44 @@
               <div class="card-body">
                 <div class="tab-content" id="custom-tabs-one-tabContent">
                   <div class="tab-pane fade show active" id="custom-tabs-one-home" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
-                    <table id="tabla_personas" class="table table-bordered table-striped">
-                      <thead>
-                        <tr>
-                          <th>Acciones</th>
-                          <th>Imagen</th>
-                          <th>CURP</th>
-                          <th>Apellidos</th>
-                          <th>Nombres</th>
-                          <th>Área</th>
-                          <th>Puesto</th>
-                          <th>Resultado</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <?php 
-                          foreach ($listadoPersonas as $key => $persona) {
-                            /* imagen de perfil */
-                            if($persona->imagen) {
-                              $src = imagePerfil($persona->imagen, $persona->nom_imagen); $class = "img-circle elevation-2"; $style = "height: 3rem; width: 3.9rem";
-                            }else{ 
-                              $src = ""; $class = ""; $style = "";
-                            }
-                            (strcmp($persona->estado, 'true') == 0) ? $check= 'filaEliminada' : $check = '';
-                              echo '<tr class="centrar '.$check.'" data-json=\''.json_encode($persona).'\'>';
-                              echo  '<td>
-                                      <div class="btn-group"> 
-                                        <i class="fa fa-search" style="cursor: pointer;margin: 3px;" title="Ver Detalles" onclick="verPersona(this)"></i>
-                                      </div>
-                                    </td>
-                                    <td class="centrar"><img src="'. $src .'" class="'.$class.'" style="'.$style.'"/></td>
-                                    <td>'.$persona->curp.'</td>
-                                    <td>'.$persona->apellidos.'</td>
-                                    <td>'.$persona->nombres.'</td>
-                                    <td>'.(!empty($persona->area) ? $persona->area : '').'</td>
-                                    <td>'.(!empty($persona->puesto) ? $persona->puesto : '').'</td>
-                                    <td>'.(!empty($persona->resultado) ? $persona->resultado : '').'</td>
-                                  </tr>';
-                            }?>
-                      </tbody>
-                    </table>
+                  <table id="tabla_personas" class="table table-bordered table-striped">
+                                <thead>
+                                <tr>
+                                    <th>Acciones</th>
+                                    <th>Imagen</th>
+                                    <th>CURP</th>
+                                    <th>Apellidos</th>
+                                    <th>Nombres</th>
+                                    <th>Área</th>
+                                    <th>Puesto</th>
+                                    <th>Resultado</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($listadoPersonas as $key => $persona) {
+                                    /* imagen de perfil */
+                                    if($persona->imagen) {$src = imagePerfil($persona->imagen, $persona->nom_imagen); $class = "img-circle elevation-2"; $style = "height: 3rem; width: 3.9rem";}
+                                    else{ $src = ""; $class = ""; $style = "";}
+                                    (strcmp($persona->estado, 'true') == 0) ? $check= 'filaEliminada' : $check = '';
+                                    echo '<tr class="centrar '.$check.'" data-json=\''.json_encode($persona).'\'>';
+                                    echo  '<td>
+                                            <div class="btn-group"> 
+                                                <i class="fa fa-search" style="cursor: pointer;margin: 3px;" title="Ver Detalles" onclick="verPersona(this)"></i>
+                                                <img style="cursor: pointer; margin-left: 3px" src="'.base_url("icons/lookup-icon.png").'" width="20" onclick="verModalResultados(this,0)" title="Ver Resultado">
+                                            </div>
+                                            </td>
+                                            <td class="centrar"><img src="'. $src .'" class="'.$class.'" style="'.$style.'"/></td>
+                                            <td>'.$persona->curp.'</td>
+                                            <td>'.$persona->apellidos.'</td>
+                                            <td>'.$persona->nombres.'</td>
+                                            <td>'.(!empty($persona->area) ? $persona->area : '').'</td>
+                                            <td>'.(!empty($persona->posicion) ? $persona->posicion : '').'</td>
+                                            <td>'.(!empty($persona->resultado) ? $persona->resultado : '').'</td>
+                                    </tr>
+                                    ';
+                                    }?>
+                                </tbody>
+                            </table>
                   </div>
                   <div class="tab-pane fade" id="custom-tabs-one-profile" role="tabpanel" aria-labelledby="custom-tabs-one-profile-tab">
                     <div class="modal-body">
@@ -165,48 +163,7 @@
                           </div>
                           <!-- /.col (RIGHT) -->
                         </div>
-                        <!-- /.card-header -->
-                        <div class="card-body">
-                            <table id="tabla_personas" class="table table-bordered table-striped">
-                                <thead>
-                                <tr>
-                                    <th>Acciones</th>
-                                    <th>Imagen</th>
-                                    <th>CURP</th>
-                                    <th>Apellidos</th>
-                                    <th>Nombres</th>
-                                    <th>Área</th>
-                                    <th>Puesto</th>
-                                    <th>Resultado</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                    <?php foreach ($listadoPersonas as $key => $persona) {
-                                    /* imagen de perfil */
-                                    if($persona->imagen) {$src = imagePerfil($persona->imagen, $persona->nom_imagen); $class = "img-circle elevation-2"; $style = "height: 3rem; width: 3.9rem";}
-                                    else{ $src = ""; $class = ""; $style = "";}
-                                    (strcmp($persona->estado, 'true') == 0) ? $check= 'filaEliminada' : $check = '';
-                                    echo '<tr class="centrar '.$check.'" data-json=\''.json_encode($persona).'\'>';
-                                    echo  '<td>
-                                            <div class="btn-group"> 
-                                                <i class="fa fa-search" style="cursor: pointer;margin: 3px;" title="Ver Detalles" onclick="verPersona(this)"></i>
-                                                <img style="cursor: pointer; margin-left: 3px" src="'.base_url("icons/lookup-icon.png").'" width="20" onclick="verModalResultados(this)" title="Ver Resultado">
-                                            </div>
-                                            </td>
-                                            <td class="centrar"><img src="'. $src .'" class="'.$class.'" style="'.$style.'"/></td>
-                                            <td>'.$persona->curp.'</td>
-                                            <td>'.$persona->apellidos.'</td>
-                                            <td>'.$persona->nombres.'</td>
-                                            <td>'.(!empty($persona->area) ? $persona->area : '').'</td>
-                                            <td>'.(!empty($persona->posicion) ? $persona->posicion : '').'</td>
-                                            <td>'.(!empty($persona->resultado) ? $persona->resultado : '').'</td>
-                                    </tr>
-                                    ';
-                                    }?>
-                                </tbody>
-                            </table>
-                        </div>
-                        <!-- /.card-body -->
+                        <!-- /.card-header -->                       
                     </div>
                     <!-- /.card -->
                 </div>
@@ -891,10 +848,25 @@
 
           function callHandler(nodeId) {
             var nodeData = chart.get(nodeId);
-            var employeeName = nodeData["name"];
-            $('#modalResultados').modal('show');
-            
-
+            //var employeeName = nodeData["name"];
+            var node = chart.get(nodeId);
+            console.log(node);   
+            //name  "cadabra abra - [ID: 36] 
+            var name = node.name.split('-');
+            var value = name[1].split(' ');
+            var nro = value[2].split(']');      
+            var id = nro[0];
+            console.log(id); 
+            console.log(selects); 
+            for(var i = 0; i < selects.length; i++){
+              var p = selects[i];
+              if(id == p.pers_id){
+                var person = p;
+                break;
+              }
+            }
+            console.log(person);
+            verModalResultados(person,1);
             //window.open('https://webcall.me/' + employeeName, employeeName, 'width=340px, height=670px, top=50px, left=50px');
           }
 
@@ -1591,8 +1563,26 @@ $('#CodigoColonia').select2({
             return markup;
         },
 });
-function verModalResultados(tag){
-  datos = $(tag).closest('tr').data('json');
+function verModalResultados(tag,orgb){
+  
+  var datos = [];
+
+  if(orgb==0){
+    console.log("Tabla");
+    datos = $(tag).closest('tr').data('json');
+  }else{
+    console.log("Chart");
+    datos.pers_id = tag.pers_id;    
+    datos.nombres = tag.nombres;
+    datos.apellidos = tag.apellidos;
+    datos.posicion = tag.posicion;
+    datos.hard_skill = tag.hard_skill;
+    datos.soft_skill = tag.soft_skill;
+    datos.etic_skill = tag.etic_skill;
+    datos.evaluador = tag.evaluador
+  }
+
+  
 
   //Clear campos
   $("hardSkillResult").val('');
