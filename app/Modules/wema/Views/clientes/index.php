@@ -1205,8 +1205,7 @@ $(document).on("click", ".btn-organigrama", function() {
     nodes = JSON.parse(nodos); 
     console.log("nodes: "+ nodes);
 
-    var clie_id = $('#clie_id').val();
-    $('#modalOrganigrama #treeCliente').val(clie_id);
+    var clie_id = $('#clie_id').val();    
 
     for(var i = 0; i < selects.length; i++){ //Valida que el usuario no este asignado
       var select = selects[i];
@@ -1276,6 +1275,8 @@ $(document).on("click", ".btn-organigrama", function() {
           color: '#fff',
           stroke: '#aeaeae'
       };
+
+      OrgChart.SEARCH_PLACEHOLDER = "Busqueda"; // the default value is "Search"
 
       OrgChart.templates.invisibleGroup.padding = [20, 0, 0, 0];
 
@@ -1509,12 +1510,12 @@ $(document).on("click", ".btn-organigrama", function() {
         }       
     
         chart.draw();
-        console.log(chart);
-        console.log(chart.config.nodes);
+        /*console.log(chart);
+        console.log(chart.config.nodes);*/
 
         $('#modalOrganigrama #treeOrg').val('');
         $('#modalOrganigrama #treeOrg').val(JSON.stringify(chart.config.nodes));
-        console.log(nodes);
+        /*console.log(nodes);*/
 
       }      
 
@@ -1531,6 +1532,7 @@ function AgregarOrganigrama() {
 $('#treeOrg').val(JSON.stringify(chart.config.nodes));
 var nodes= $('#treeOrg').val();
 var clie_id = $('#clie_id').val();
+$('#modalOrganigrama #treeCliente').val(clie_id);
 console.log("---Agregar nodo---");
 console.info(clie_id);
 console.info(nodes);

@@ -1,12 +1,12 @@
-<data transports="http https local" serviceNamespace="ClientesDataService" name="ClientesDataService" enableBatchRequests="true">
+<data enableBatchRequests="true" name="ClientesDataService" serviceNamespace="ClientesDataService" transports="http https local">
   <config id="WemaDataSource">
     <property name="carbon_datasource_name">WemapDataSource</property>
   </config>
-  <resource path="/clientes" method="GET">
+  <resource method="GET" path="/clientes">
     <description>obtiene los datos de los clientes </description>
     <call-query href="getClientes" />
   </resource>
-  <resource path="/clientes" method="POST">
+  <resource method="POST" path="/clientes">
     <description>permite guardar un nuevo cliente en la base de datos</description>
     <call-query href="setClientes">
       <with-param name="nombre" query-param="nombre" />
@@ -36,7 +36,7 @@
       <with-param name="nom_imagen" query-param="nom_imagen" />
     </call-query>
   </resource>
-  <resource path="/clientes" method="PUT">
+  <resource method="PUT" path="/clientes">
     <description>actualiza datos del cliente en core.clientes </description>
     <call-query href="updateClientes">
       <with-param name="nombre" query-param="nombre" />
@@ -67,29 +67,36 @@
       <with-param name="clie_id" query-param="clie_id" />
     </call-query>
   </resource>
-  <resource path="/clientes" method="DELETE">
+  <resource method="DELETE" path="/clientes">
     <description>permite eliminado logico de un cliente en tabla core.clientes                            
                                     </description>
     <call-query href="deleteClientes">
       <with-param name="clie_id" query-param="clie_id" />
     </call-query>
   </resource>
-  <resource path="/habilitarcliente" method="PUT">
+  <resource method="PUT" path="/habilitarcliente">
     <description>permite habilitar el cliente luego de hacer el borrado logico en la tabla core.clientes                         
                                     </description>
     <call-query href="habilitarClientes">
       <with-param name="clie_id" query-param="clie_id" />
     </call-query>
   </resource>
-  <resource path="/clientes/personas/{clie_id}" method="GET">
+  <resource method="GET" path="/clientes/personas/{clie_id}">
     <description>filtra las personas que pertenecen a un cliente desde la tabla core.personas</description>
     <call-query href="clientesGetPersona">
       <with-param name="clie_id" query-param="clie_id" />
     </call-query>
   </resource>
-  <resource path="/clientes/getCliente/{clie_id}" method="GET">
+  <resource method="GET" path="/clientes/getCliente/{clie_id}">
     <description>permite obtener los datos de un cliente por id desde la tabla core.cliente</description>
     <call-query href="getClientexId">
+      <with-param name="clie_id" query-param="clie_id" />
+    </call-query>
+  </resource>
+  <resource method="PUT" path="/organigrama">
+    <description>Actualiza el organigrama de un cliente</description>
+    <call-query href="updateOrganigrama">
+      <with-param name="orgb" query-param="orgb" />
       <with-param name="clie_id" query-param="clie_id" />
     </call-query>
   </resource>
@@ -405,7 +412,8 @@ where c.clie_id = cast(:clie_id as integer)</sql>
             "nacionalidad":"$nacionalidad",
             "genero":"$genero",
             "ocupacion":"$ocupacion",
-            "paisNacimiento":"$paisNacimiento"
+            "paisNacimiento":"$paisNacimiento",
+            "orgb": "$orgb"
         }]
     }
 }</result>
@@ -415,11 +423,4 @@ where c.clie_id = cast(:clie_id as integer)</sql>
     <param name="orgb" sqlType="STRING" paramType="SCALAR" />
     <param name="clie_id" sqlType="STRING" paramType="SCALAR" />
   </query>
-  <resource path="/organigrama" method="PUT">
-    <description>Actualiza el organigrama de un cliente</description>
-    <call-query href="updateOrganigrama">
-      <with-param name="orgb" query-param="orgb" />
-      <with-param name="clie_id" query-param="clie_id" />
-    </call-query>
-  </resource>
 </data>

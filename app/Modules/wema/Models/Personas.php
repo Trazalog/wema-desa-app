@@ -45,6 +45,21 @@ class Personas extends Model{
 
         return $aux;
     }
+
+    /**
+        * Edita una posiocion y area en core.personas por pers_id
+        * @param array $data datos persona
+        * @return array respuesta del servicio
+	*/
+    public function editarAreaPosicion($data){
+        log_message('debug','#TRAZA | WEMA-DESA-APP | Model | Personas | editarPersona()');
+
+        $url = REST_PERSONA."/editarareaposicion";
+        $aux = $this->REST->callAPI("PUT",$url, $data);
+
+        return $aux;
+    }
+
     /**
         * Edita una persona en core.personas por pers_id
         * @param array $data datos persona

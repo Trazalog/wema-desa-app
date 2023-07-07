@@ -51,12 +51,6 @@
       <type>yaml</type>
     </dependency>
     <dependency>
-      <groupId>com.example.api</groupId>
-      <artifactId>NemesyscoAPI</artifactId>
-      <version>1.0.0</version>
-      <type>xml</type>
-    </dependency>
-    <dependency>
       <groupId>com.example.dataservice</groupId>
       <artifactId>COREDataService</artifactId>
       <version>1.0.0</version>
@@ -73,12 +67,6 @@
       <artifactId>ClientesDataService</artifactId>
       <version>1.0.0</version>
       <type>dbs</type>
-    </dependency>
-    <dependency>
-      <groupId>com.example.resource</groupId>
-      <artifactId>nemesysconfig</artifactId>
-      <version>1.0.0</version>
-      <type>zip</type>
     </dependency>
   </dependencies>
   <repositories>
