@@ -61,9 +61,9 @@
   <script src="<?= base_url()?>/lib/recorderjs/dist/recorder.js"></script>
   <!-- Masonry Plugin -->
   <script src="<?= base_url()?>/public/plugins/masonry/masonry.pkgd.min.js"></script>
-
-  <script src="https://unpkg.com/wavesurfer.js"></script>
-  <script src="https://unpkg.com/wavesurfer.js@6.6.3/dist/plugin/wavesurfer.microphone.min.js"></script>
+  <!-- WaveSurfer Plugin -->
+  <script type="module" src="<?= base_url()?>/public/plugins/wavesurfer/wavesurfer_6.6.4.js"></script>
+  <script type="module" src="<?= base_url()?>/public/plugins/wavesurfer/plugin_wavesurfer.microphone_6.6.3.min.js"></script>
 
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">

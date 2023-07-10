@@ -1,4 +1,7 @@
 <data transports="http https local" name="PersonaDataService" enableBatchRequests="true">
+  <config id="WemapDataSource">
+    <property name="carbon_datasource_name">WemapDataSource</property>
+  </config>
   <resource path="/persona" method="GET">
     <description>Listado personas de core.personas                           
                                     </description>
@@ -401,4 +404,16 @@ order by fec_alta desc</sql>
   }
 }</result>
   </query>
+  <query id="updateAudioResponse" useConfig="WemapDataSource">
+    <sql>update frm.instancias_formularios set emlo_response = cast(:emlo_response as jsonb) where inst_id = cast(:inst_id as integer)</sql>
+    <param name="emlo_response" sqlType="STRING" paramType="SCALAR" />
+    <param name="inst_id" sqlType="STRING" paramType="SCALAR" />
+  </query>
+  <resource path="/audio/response" method="PUT">
+    <description>Actualiza el organigrama de un cliente</description>
+    <call-query href="updateAudioResponse">
+      <with-param name="emlo_response" query-param="emlo_response" />
+      <with-param name="inst_id" query-param="inst_id" />
+    </call-query>
+  </resource>
 </data>

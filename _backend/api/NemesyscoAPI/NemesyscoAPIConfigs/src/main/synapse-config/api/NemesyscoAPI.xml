@@ -15,7 +15,7 @@
             <header name="Content-Type" scope="transport" value="multipart/form-data"/>
             <header name="Accept-Encoding" scope="transport" value="gzip,deflate"/>
             <property name="FORCE_ERROR_ON_SOAP_FAULT" scope="default" type="STRING" value="true"/>
-            <property expression="fn:concat($ctx:dummy_url,'/analysis/analyzeTest')" name="uri.var.post_emlo" scope="default" type="STRING"/>
+            <property expression="fn:concat($ctx:docker_url,'/analysis/analyzeTest')" name="uri.var.post_emlo" scope="default" type="STRING"/>
             <log level="custom">
                 <property name="Paso 2" value="Armo JSON para Emotion Logic"/>
                 <property expression="$ctx:uri.var.post_emlo" name="URL EMLO API"/>
@@ -54,6 +54,30 @@
                     </log>
                 </else>
             </filter>
+            <header name="Content-Type" scope="transport" value="multipart/form-data"/>
+            <header name="Accept-Encoding" scope="transport" value="gzip,deflate"/>
+            <property name="FORCE_ERROR_ON_SOAP_FAULT" scope="default" type="STRING" value="true"/>
+            <property expression="fn:concat($ctx:dataservices_url,'/services/PersonaDataService/evaluacion/response')" name="uri.var.put_emlo_response" scope="default" type="STRING"/>
+            <payloadFactory description="crear empresa" media-type="json">
+                <format>{"put_emlo_response": {"outputType": "json","dummyResponse": "true","questions": [{"question": "$1","url": "http://ec2-44-203-253-107.compute-1.amazonaws.com/recordedAudio_838633030.wav","topics": [{"name": "topic_1","weight": 5}]}]}}</format>
+                <args>
+                    <arg evaluator="json" expression="$.nombre"/>
+                    <arg evaluator="json" expression="$.ubicacion"/>
+                </args>
+            </payloadFactory>
+            <call>
+                <endpoint>
+                    <http method="post" uri-template="{uri.var.post_emlo}">
+                        <suspendOnFailure>
+                            <initialDuration>-1</initialDuration>
+                            <progressionFactor>1</progressionFactor>
+                        </suspendOnFailure>
+                        <markForSuspension>
+                            <retriesBeforeSuspension>0</retriesBeforeSuspension>
+                        </markForSuspension>
+                    </http>
+                </endpoint>
+            </call>
             <loopback/>
         </inSequence>
         <outSequence>
