@@ -404,6 +404,12 @@ order by fec_alta desc</sql>
   }
 }</result>
   </query>
+    <resource path="/persona/evaluaciones/{pers_id}" method="GET">
+    <description />
+    <call-query href="getEvaluacionesPersonas">
+      <with-param name="pers_id" query-param="pers_id" />
+    </call-query>
+  </resource>
   <query id="updateAudioResponse" useConfig="WemapDataSource">
     <sql>update frm.instancias_formularios set emlo_response = cast(:emlo_response as jsonb) where inst_id = cast(:inst_id as integer)</sql>
     <param name="emlo_response" sqlType="STRING" paramType="SCALAR" />
