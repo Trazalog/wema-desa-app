@@ -230,8 +230,6 @@ function stopRecording(e) {
             $("#btn-siguiente").click();
             ++indice;
             setTimeout(() => {
-                //Aca me quede
-                // sendAudios();
                 utterance = new SpeechSynthesisUtterance("Siguiente pregunta. " + $("#pregunta-"+indice).find("h3").text());
                 utterance.voice = voices[7];
                 synth.speak(utterance);

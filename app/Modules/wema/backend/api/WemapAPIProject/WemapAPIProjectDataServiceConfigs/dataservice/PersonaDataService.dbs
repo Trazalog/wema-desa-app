@@ -1,10 +1,13 @@
 <data transports="http https local" name="PersonaDataService" enableBatchRequests="true">
+  <config id="WemapDataSource">
+    <property name="carbon_datasource_name">WemapDataSource</property>
+  </config>
   <resource path="/persona" method="GET">
     <description>Listado personas de core.personas                           
                                     </description>
     <call-query href="getPersonas" />
   </resource>
-  <resource path="/persona" method="POST">
+  <resource method="POST" path="/persona">
     <description>Guarda persona en tabla core.personas                     </description>
     <call-query href="setPersona">
       <with-param name="apellidos" query-param="apellidos" />
@@ -31,7 +34,7 @@
       <with-param name="nom_imagen" query-param="nom_imagen" />
     </call-query>
   </resource>
-  <resource path="/persona" method="PUT">
+  <resource method="PUT" path="/persona">
     <description>Updatea datos de persona en core.personas por pers_id                       
                                     
                                     
@@ -62,7 +65,7 @@
       <with-param name="nom_imagen" query-param="nom_imagen" />
     </call-query>
   </resource>
-  <resource path="/persona" method="DELETE">
+  <resource method="DELETE" path="/persona">
     <description>Borrado logico de persona por pers_id en core.personas                               
                                     
                                     </description>
@@ -70,31 +73,34 @@
       <with-param name="pers_id" query-param="pers_id" />
     </call-query>
   </resource>
-  <resource path="/habilitarpersona" method="PUT">
+  <resource method="PUT" path="/habilitarpersona">
     <description>actualiza eliminado en true para poder habilitar una persona                    
                                     </description>
     <call-query href="habilitarPersona">
       <with-param name="pers_id" query-param="pers_id" />
     </call-query>
   </resource>
-  <resource path="/persona/id/{pers_id}" method="GET">
+  <resource method="GET" path="/persona/id/{pers_id}">
     <description>Obtiene datos de persona por pers_id                     
                                     </description>
     <call-query href="getPersonaxId">
       <with-param name="pers_id" query-param="pers_id" />
     </call-query>
   </resource>
-  <resource path="/persona/cuestionario/vincular" method="POST">
+  <resource method="POST" path="/persona/cuestionario/vincular">
     <description>Vincula info_id con pers_id en eva.encuestas_personas</description>
     <call-query href="vincularCuestionario">
       <with-param name="pers_id" query-param="pers_id" />
       <with-param name="info_id" query-param="info_id" />
     </call-query>
   </resource>
-  <config id="WemapDataSource">
-    <property name="carbon_datasource_name">WemapDataSource</property>
-  </config>
-  <query useConfig="WemapDataSource" id="getPersonas">
+  <resource method="GET" path="/persona/evaluaciones/{pers_id}">
+    <description />
+    <call-query href="getEvaluacionesPersonas">
+      <with-param name="pers_id" query-param="pers_id" />
+    </call-query>
+  </resource>
+  <query id="getPersonas" useConfig="WemapDataSource">
     <sql>select *,p.eliminado as estado, t.descripcion as genero, t1.descripcion as pais, 
 t2.descripcion as estado_civil, t3.descripcion as nacimiento,
 t4.descripcion as educacion, t5.descripcion as ubicacion 
@@ -135,7 +141,6 @@ left join core.tablas t5 on t5.tabl_id = p.ubic_id</sql>
             "estado":"$estado",
             "imagen":"$imagen",
             "nom_imagen":"$nom_imagen",
-            "@getEncuestas":"$pers_id->pers_id",
             "area":"$area",
             "posicion":"$posicion"
         }]
@@ -368,10 +373,12 @@ VALUES(cast(:pers_id as integer),cast(:info_id as integer))</sql>
   </query>
   <query id="getEvaluacionesPersonas" useConfig="WemapDataSource">
     <sql>select ep.info_id ,to_char( ep.fec_alta, 'YYYY-MM-DD HH24:MI') fec_alta,ep.area ,ep.posicion, to_char( ep.fec_hard, 'YYYY-MM-DD HH24:MI') fec_hard, to_char( ep.fec_soft, 'YYYY-MM-DD HH24:MI')fec_soft,
-ep.nombre_doc_hard,ep.doc_hard, ep.nombre_doc_soft ,ep.doc_soft ,ep.hard_skill, ep.soft_skill 
+ep.nombre_doc_hard,ep.doc_hard, ep.nombre_doc_soft ,ep.doc_soft ,ep.hard_skill, ep.soft_skill, p.nombres as nombres_eval, p.apellidos as apellidos_eval, ep.eval_area as area_eval, ep.eval_posicion as posicion_eval
 from eva.encuestas_personas ep 
-where ep.pers_id = cast(:pers_id as integer)</sql>
-    <param type="IN" name="pers_id" sqlType="STRING" optional="false" paramType="SCALAR" />
+left join core.personas p on p.pers_id = ep.eval_id
+where ep.pers_id = cast(:pers_id as integer)
+order by fec_alta desc</sql>
+    <param type="IN" name="pers_id" sqlType="STRING" paramType="SCALAR" optional="false" />
     <result outputType="json">{
   "evaluaciones": {
     "evaluacion": [
@@ -387,10 +394,32 @@ where ep.pers_id = cast(:pers_id as integer)</sql>
         "nombre_doc_soft": "$nombre_doc_soft",
         "doc_soft": "$doc_soft",
         "hard_skill": "$hard_skill",
-        "soft_skill": "$soft_skill"
+        "soft_skill": "$soft_skill",
+        "nombres_eval": "$nombres_eval",
+        "apellidos_eval": "$apellidos_eval",
+        "area_eval": "$area_eval",
+        "posicion_eval": "$posicion_eval"
       }
     ]
   }
 }</result>
   </query>
+    <resource path="/persona/evaluaciones/{pers_id}" method="GET">
+    <description />
+    <call-query href="getEvaluacionesPersonas">
+      <with-param name="pers_id" query-param="pers_id" />
+    </call-query>
+  </resource>
+  <query id="updateAudioResponse" useConfig="WemapDataSource">
+    <sql>update frm.instancias_formularios set emlo_response = cast(:emlo_response as jsonb) where inst_id = cast(:inst_id as integer)</sql>
+    <param name="emlo_response" sqlType="STRING" paramType="SCALAR" />
+    <param name="inst_id" sqlType="STRING" paramType="SCALAR" />
+  </query>
+  <resource path="/audio/response" method="PUT">
+    <description>Actualiza el organigrama de un cliente</description>
+    <call-query href="updateAudioResponse">
+      <with-param name="emlo_response" query-param="emlo_response" />
+      <with-param name="inst_id" query-param="inst_id" />
+    </call-query>
+  </resource>
 </data>

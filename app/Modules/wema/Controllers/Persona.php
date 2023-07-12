@@ -200,7 +200,9 @@ class Persona extends BaseController
     public function cargarListadoEntrevistados(){
         log_message('debug','#TRAZA | WEMA-DESA-APP | Controller | Persona | cargarListadoEntrevistados()');
         $data['listadoPersonas'] = $this->Personas->getPersonas();
-        return view('Modules\wema\Views\persona\entrevistas\listadoPersonas',$data);    
+
+        return view('Modules\wema\Views\persona\entrevistas\listadoPersonas',$data)
+        .view('Modules\wema\Views\resultados\modales\modalResultados');
     }
     /**
         * Pantalla con cuestionario para reazliar entrevista
@@ -290,20 +292,20 @@ class Persona extends BaseController
                         $resp['audios'][$audio->name]['status'] = false;
                         $resp['audios'][$audio->name]['msg'] = 'Fallo al crear el audio en el sistema.';
                     }else{
+                        $resp['audios'][$audio->name]['status'] = true;
+                        $resp['audios'][$audio->name]['msg'] = 'Audio decodificado y creado correctamente.';
+
                         $aux = explode("/",$carpetaTemporal);
                         $data['ubicacion'] = array_pop($aux);
                         $data['nombre'] = $audio->name;
                         $data['inst_id'] = $audio->inst_id;
-                        $this->Personas->evaluarCuestionario($data);
-
-                        $resp['audios'][$audio->name]['status'] = true;
-                        $resp['audios'][$audio->name]['msg'] = 'Audio decodificado y creado correctamente.';
+                        
+                        //4° Llamo a la API para evaluar los audios y guardo las respuestas
+                        $resp['audios'][$audio->name]['API_EMLO'] = $this->Personas->evaluarCuestionario($data);
                     }
                 }
             }
         }
-        //4° Llamo a la API para evaluar los audios y guardo las respuestas
-        #script..
 
         //5° Limpio la carpeta generada y elimino la carpeta luego de vaciarla
         if (!is_dir($carpetaTemporal)) {

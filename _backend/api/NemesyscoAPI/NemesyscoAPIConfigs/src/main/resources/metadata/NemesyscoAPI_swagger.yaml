@@ -6,7 +6,7 @@ info:
 servers:
 - url: http://localhost:8290/nemesysco/connect
 paths:
-  /audios/get:
+  /audio/rate:
     post:
       requestBody:
         description: Sample Payload
