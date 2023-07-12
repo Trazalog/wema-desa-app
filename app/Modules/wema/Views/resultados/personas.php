@@ -28,26 +28,27 @@
       </div><!-- /.container-fluid -->
     </section>
     <section class="content">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-12">
-                    <div class="card card-lightblue card-tabs">
-                        <div class="card-header p-0 pt-1">
-                            <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
-                                <li class="nav-item">
-                                <a class="nav-link active" id="custom-tabs-one-home-tab" data-toggle="pill" href="#custom-tabs-one-home" role="tab" aria-controls="custom-tabs-one-home" aria-selected="true">Lista de Personas</a>
-                                </li>
-                                <li class="nav-item">
-                                <a class="nav-link" id="custom-tabs-one-profile-tab" data-toggle="pill" href="#custom-tabs-one-profile" role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false">Organigrama</a>
-                                </li>
-                                <li class="nav-item">
-                                <a class="nav-link" id="custom-tabs-one-messages-tab" data-toggle="pill" href="#custom-tabs-one-messages" role="tab" aria-controls="custom-tabs-one-messages" aria-selected="false">Áreas</a>
-                                </li>
-                            </ul>
-                        </div>
-                        <!-- /.card-header -->
-                        <div class="card-body">
-                            <table id="tabla_personas" class="table table-bordered table-striped">
+      <div class="container-fluid">
+      <div class="row">
+          <div class="col-12">
+            <div class="card card-light card-tabs">
+              <div class="card-header p-0 pt-1">
+                <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
+                  <li class="nav-item">
+                    <a class="nav-link active" id="custom-tabs-one-home-tab" data-toggle="pill" href="#custom-tabs-one-home" role="tab" aria-controls="custom-tabs-one-home" aria-selected="true">Lista de Personas</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" id="custom-tabs-one-profile-tab" data-toggle="pill" href="#custom-tabs-one-profile" role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false">Organigrama</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" id="custom-tabs-one-messages-tab" data-toggle="pill" href="#custom-tabs-one-messages" role="tab" aria-controls="custom-tabs-one-messages" aria-selected="false">Áreas</a>
+                  </li>
+                </ul>
+              </div>
+              <div class="card-body">
+                <div class="tab-content" id="custom-tabs-one-tabContent">
+                  <div class="tab-pane fade show active" id="custom-tabs-one-home" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
+                  <table id="tabla_personas" class="table table-bordered table-striped">
                                 <thead>
                                 <tr>
                                     <th>Acciones</th>
@@ -70,7 +71,7 @@
                                     echo  '<td>
                                             <div class="btn-group"> 
                                                 <i class="fa fa-search" style="cursor: pointer;margin: 3px;" title="Ver Detalles" onclick="verPersona(this)"></i>
-                                                <img style="cursor: pointer; margin-left: 3px" src="'.base_url("icons/lookup-icon.png").'" width="20" onclick="verModalResultados(this)" title="Ver Resultado">
+                                                <img style="cursor: pointer; margin-left: 3px" src="'.base_url("icons/lookup-icon.png").'" width="20" onclick="verModalResultados(this,0)" title="Ver Resultado">
                                             </div>
                                             </td>
                                             <td class="centrar"><img src="'. $src .'" class="'.$class.'" style="'.$style.'"/></td>
@@ -85,16 +86,94 @@
                                     }?>
                                 </tbody>
                             </table>
+                  </div>
+                  <div class="tab-pane fade" id="custom-tabs-one-profile" role="tabpanel" aria-labelledby="custom-tabs-one-profile-tab">
+                    <div class="modal-body">
+                      <div id="tree"></div>
+                    </div>   
+                  </div>
+                  <div class="tab-pane fade" id="custom-tabs-one-messages" role="tabpanel" aria-labelledby="custom-tabs-one-messages-tab">
+                    <!-- Main content -->
+                    <section class="content">
+                      <div class="container-fluid">
+                        <div class="row">
+                          <div class="col-md-6">
+                            
+                            
+                              <!-- BAR CHART -->
+                              <div class="card card-light">
+                                <div class="card-header">
+                                  <h3 class="card-title">Administración</h3>
+                                </div>
+                                <div class="card-body">
+                                  <div class="chart">
+                                    <canvas id="barChart1" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                                  </div>
+                                </div>
+                                <!-- /.card-body -->
+                              </div>
+                              <!-- /.card -->
+
+                            <!-- BAR CHART -->
+                            <!--<div class="card card-light">
+                              <div class="card-header">
+                                <h3 class="card-title">Producción</h3>
+                              </div>
+                              <div class="card-body">
+                                <div class="chart">
+                                  <canvas id="barChart2" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                                </div>
+                              </div>-->
+                              <!-- /.card-body -->
+                            <!--</div>-->
+                            <!-- /.card -->
+
+                          </div>
+        
+                          <div class="col-md-6">
+
+                            <!-- BAR CHART -->
+                            <div class="card card-light">
+                              <div class="card-header">
+                                <h3 class="card-title">RRHH</h3>
+                              </div>
+                              <div class="card-body">
+                                <div class="chart">
+                                  <canvas id="barChart2" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                                </div>
+                              </div>
+                              <!-- /.card-body -->
+                            </div>
+                            <!-- /.card -->
+
+                            <!-- BAR CHART -->
+                            <!--<div class="card card-light">
+                              <div class="card-header">
+                                <h3 class="card-title">Finanzas</h3>                                
+                              </div>
+                              <div class="card-body">
+                                <div class="chart">
+                                  <canvas id="barChart4" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                                </div>-->
+                              <!--</div>-->
+                              <!-- /.card-body -->
+                            </div>
+                            <!-- /.card -->
+
+                          </div>
+                          <!-- /.col (RIGHT) -->
                         </div>
-                        <!-- /.card-body -->
+                        <!-- /.card-header -->                       
                     </div>
                     <!-- /.card -->
                 </div>
-                <!-- /.col -->
+              </div>
+              <!-- /.card -->
             </div>
-            <!-- /.row -->
-        </div>
-        <!-- /.container-fluid -->
+          </div>
+        </div>  
+      </div>
+      <!-- /.container-fluid -->
     </section>
     <!-- /.content -->
 
@@ -443,8 +522,6 @@
     </div>
 </div>
 
-
-
 <script>
   $(document).ready(function () {
     //Renderizo el contenido para ordenarlo
@@ -490,8 +567,482 @@
                       className: 'btn btn-default btn-sm'
                     }
                   ],
-    })
-  });
+    });
+
+    //---------------
+    //- ORGANIGRAMA -
+    //---------------
+    var  nodos = {};
+    var nodes = selects = clientes = options = chart=[];
+    delete nodos;
+
+    var clie_id = <?php echo $clie_id; ?>;
+    nodos = <?php echo $Cliente[0]->orgb ?>
+    //clientes = <?php //echo json_encode($listadoClientes); ?>;
+    selects = <?php echo json_encode($listadoPersonas); ?>; 
+    console.log(clie_id);
+    console.log("Organigrama: "+JSON.stringify(nodos));
+
+    if(nodos.length === 0){
+
+      Swal.fire({
+        title: 'Deinición Organigrama',
+        text: 'El cliente aun no tiene organigrama asociado/definido',
+        icon: 'warning',
+        showCancelButton: false,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Aceptar'
+      }).then((result) => {
+        if (result.isConfirmed) {
+        
+        }    
+      });
+
+    }else{
+    
+      delete nodes;   
+      nodes = JSON.parse(JSON.stringify(nodos)); 
+      console.log("nodes: "+ nodes);
+
+      for(var i = 0; i < selects.length; i++){ //Valida que el usuario no este asignado
+          var select = selects[i];
+          sw = false;
+          if(select.clie_id == clie_id){ //Verificamos que sea de la misma empresa
+            for(var j = 0; j < nodes.length; j++){
+              var node = nodes[j];
+              if(node.pers_id){
+                if(node.pers_id == select.pers_id){
+                  sw = true;
+                  break;
+                }else{
+                  sw = false;
+                }                 
+              }
+              if(!sw){
+                var option = {id: select.pers_id, value : select.nombres+" "+select.apellidos+" - [ID:"+select.pers_id+"]", text : select.nombres.toUpperCase()+" "+select.apellidos.toUpperCase()+" - [ID:"+select.pers_id+"]"};
+                options.push(option);
+                break;
+              }   
+            }
+          }      
+        }    
+
+        op_default= {id: -1, disabled: 'true', value : "Seleccione..." , text : "Seleccione..."};
+        options.unshift(op_default);
+        console.log("Options: "+options.length+"Options Pricipal: "+JSON.stringify(options));
+
+        for (var i = 0; i < nodes.length; i++) {
+            var node = nodes[i];
+            switch (node.title) {
+                case "Administrador":
+                    console.log("Administrador");
+                    node.tags = ["yellow"];
+                    break;
+            }
+        }
+
+        if(options.length === 0){
+          Swal.fire({
+            title: 'Clientes Empresa',
+            text: 'Esta empresa no tiene ningún empleado asociado',
+            icon: 'warning',
+            showCancelButton: false,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Aceptar'
+          }).then((result) => {
+            if (result.isConfirmed) {
+          
+            }    
+          });
+        }else{
+
+          OrgChart.templates.ana.plus = '<circle cx="15" cy="15" r="15" fill="#ffffff" stroke="#aeaeae" stroke-width="1"></circle>'
+          + '<text text-anchor="middle" style="font-size: 18px;cursor:pointer;" fill="#757575" x="15" y="22">{collapsed-children-count}</text>';
+
+          var webcallMeIcon = '<svg width="24" height="24" viewBox="0 0 300 400"><g transform="matrix(1,0,0,1,40,40)"><path fill="#5DB1FF" d="M260.423,0H77.431c-5.522,0-10,4.477-10,10v317.854c0,5.522,4.478,10,10,10h182.992c5.522,0,10-4.478,10-10V10 C270.423,4.477,265.945,0,260.423,0z M178.927,302.594c0,5.522-4.478,10-10,10c-5.523,0-10-4.478-10-10v-3.364h20V302.594z M250.423,279.229H87.431V58.624h162.992V279.229z" /><path fill="#5DB1FF" d="M118.5,229.156c4.042,4.044,9.415,6.271,15.132,6.271c5.715,0,11.089-2.227,15.133-6.269l29.664-29.662 c4.09-4.093,6.162-9.442,6.24-14.816c5.601-0.078,10.857-2.283,14.829-6.253l29.66-29.662c4.042-4.043,6.269-9.417,6.269-15.133 c0-5.716-2.227-11.09-6.269-15.13l-9.806-9.806c-4.041-4.043-9.415-6.27-15.132-6.27c-5.716,0-11.09,2.227-15.132,6.269 l-29.663,29.662c-4.092,4.092-6.164,9.443-6.242,14.817c-5.601,0.078-10.857,2.283-14.828,6.252l-29.661,29.662 c-4.042,4.043-6.269,9.418-6.268,15.136c0,5.716,2.227,11.089,6.269,15.129L118.5,229.156z M168.618,147.548l29.662-29.661 c1.587-1.587,3.696-2.461,5.94-2.461c2.243,0,4.353,0.874,5.938,2.461l9.808,9.808c1.586,1.586,2.46,3.694,2.46,5.937 c0,2.244-0.874,4.354-2.462,5.941l-29.658,29.661c-1.588,1.587-3.697,2.46-5.941,2.46c-2.243,0-4.353-0.874-5.938-2.46 l-0.309-0.309l19.598-19.598c2.539-2.539,2.539-6.654,0-9.192c-2.537-2.538-6.654-2.538-9.191,0l-19.599,19.598l-0.308-0.308 C165.344,156.152,165.345,150.823,168.618,147.548z M117.888,198.28l29.66-29.661c1.587-1.586,3.695-2.46,5.939-2.46 c2.242,0,4.349,0.872,5.934,2.455c0.002,0.001,0.004,0.003,0.005,0.005l0.309,0.309l-19.598,19.598 c-2.539,2.538-2.539,6.653,0,9.191c1.269,1.27,2.933,1.904,4.596,1.904s3.327-0.635,4.596-1.904l19.599-19.598l0.309,0.309 c3.273,3.273,3.273,8.603,0,11.877l-29.662,29.66c-1.588,1.588-3.698,2.462-5.941,2.462c-2.243,0-4.352-0.874-5.938-2.462 l-9.807-9.806c-1.586-1.586-2.46-3.694-2.46-5.938C115.426,201.978,116.3,199.868,117.888,198.28z" /></g></svg>';
+
+          OrgChart.templates.itTemplate = Object.assign({}, OrgChart.templates.ana);
+          OrgChart.templates.itTemplate.nodeMenuButton = "";
+          OrgChart.templates.itTemplate.nodeCircleMenuButton = {
+              radius: 18,
+              x: 250,
+              y: 60,
+              color: '#fff',
+              stroke: '#aeaeae'
+          };
+
+          OrgChart.templates.invisibleGroup.padding = [20, 0, 0, 0];
+
+          OrgChart.SEARCH_PLACEHOLDER = "Busqueda"; // the default value is "Search"
+
+          chart = new OrgChart(document.getElementById("tree"), {
+              mouseScrool: OrgChart.action.ctrlZoom,
+              template: "ana",
+              enableDragDrop: true,
+              nodeMouseClick: false,
+              enableSearch: false,
+              /*menu: {
+                  pdfPreview: {
+                      text: "Export to PDF",
+                      icon: OrgChart.icon.pdf(24, 24, '#7A7A7A'),
+                      onClick: preview
+                  },
+                  csv: { text: "Save as CSV" }
+              },*/
+              nodeBinding: {
+                      field_0: "name",
+                      field_1: "title",
+                      img_0: "img"
+              },  
+              editForm: {
+                generateElementsFromFields: true,            
+                addMore: null,
+                addMoreBtn: null,
+                addMoreFieldName: null,
+                titleBinding: 'name',
+                cancelBtn: 'Cancelar',
+                saveAndCloseBtn: 'Asignar',
+                buttons:  {
+                  /*edit: {
+                    icon: OrgChart.icon.edit(24,24,'#fff'),
+                    text: 'Editar',
+                    hideIfEditMode: true,
+                    hideIfDetailsMode: false
+                  },*/
+                  share: {
+                    icon: OrgChart.icon.share(24,24,'#fff'),
+                    text: 'Compartir'
+                  },
+                  pdf: {
+                    icon: OrgChart.icon.pdf(24,24,'#fff'),
+                    text: 'PDF'
+                  },
+                  /*remove: {
+                    icon: OrgChart.icon.remove(24,24,'#fff'),
+                    text: 'Eliminar',
+                    hideIfDetailsMode: true
+                  }*/
+                },
+                elements: [
+                  { type: 'select', options: options, label: 'Nombres', binding: 'name'},
+                  { type: 'textbox', label: 'Puesto', binding: 'title'},  
+                  { type: 'textbox', label: 'Id', binding: 'pers_id', readOnly: true},  
+                  { type: 'textbox', label: 'Url Imagen', binding: 'img', btn: 'Upload' },            
+                ]
+              },
+              nodeMenu: {
+                details: { 
+                  text: "Info. Persona" ,
+                  //onClick: detalleNodo
+                },
+                /*edit: { 
+                  text: "Editar",
+                  onClick: editarNodo
+                }*/
+                call: {
+                      icon: webcallMeIcon,
+                      text: "Ver resultados",
+                      onClick: callHandler
+                  }
+                /*add: { 
+                  text: "Agregar",
+                  //onClick: agregarNodo
+                },*/
+                /*remove: { 
+                  text: "Eliminar" 
+                }*/
+              },        
+              align: OrgChart.ORIENTATION,
+              toolbar: {
+                  fullScreen: true,
+                  zoom: true,
+                  fit: true,
+                  expandAll: true
+              },
+              nodeBinding: {
+                  field_0: "name",
+                  field_1: "title",
+                  img_0: "img"
+              },
+              tags: {
+                  "top-management": {
+                      template: "invisibleGroup",
+                      subTreeConfig: {
+                          orientation: OrgChart.orientation.bottom,
+                          collapse: {
+                              level: 1
+                          }
+                      }
+                  },
+                  "it-team": {
+                      subTreeConfig: {
+                          layout: OrgChart.mixed,
+                          collapse: {
+                              level: 1
+                          }
+                      },
+                  },
+                  "hr-team": {
+                      subTreeConfig: {
+                          layout: OrgChart.treeRightOffset,
+                          collapse: {
+                              level: 1
+                          }
+                      },
+                  },
+                  "sales-team": {
+                      subTreeConfig: {
+                          layout: OrgChart.treeLeftOffset,
+                          collapse: {
+                              level: 1
+                          }
+                      },
+                  },
+                  "ceo-menu": {
+                      nodeMenu: {
+                          //addSharholder: { text: "Add new sharholder", icon: OrgChart.icon.add(24, 24, "#7A7A7A"), onClick: addSharholder },
+                          //addDepartment: { text: "Nueva Area", icon: OrgChart.icon.add(24, 24, "#7A7A7A"), onClick: addArea },
+                          //addAssistant: { text: "Add new assitsant", icon: OrgChart.icon.add(24, 24, "#7A7A7A"), onClick: addAssistant },
+                          //edit: { text: "Info. Persona" },
+                          details: { text: "Info. Persona" },
+                          call: {
+                              icon: webcallMeIcon,
+                              text: "Ver resultados",
+                              onClick: callHandler
+                          }                          
+                      }
+                  },
+                  "area": {
+                      template: "group",
+                      nodeMenu: {
+                          //addManager: { text: "Nuevo Manager", icon: OrgChart.icon.add(24, 24, "#7A7A7A"), onClick: addManager },
+                          //remove: { text: "Eliminar Area" },
+                          //edit: { text: "Editar Area" },
+                          //nodePdfPreview: { text: "Export department to PDF", icon: OrgChart.icon.pdf(24, 24, "#7A7A7A"), onClick: nodePdfPreview }
+                      }
+                  }
+              },
+              clinks: [
+                  { from: 11, to: 18 }
+              ],
+              nodes:nodes
+          });
+
+          /*
+          Agrega nodo nuevo en blanco.
+          */ 
+          function agregarNodo(nodeId){
+
+            var node = chart.get(nodeId);      
+            //console.log("node: "+ JSON.stringify(node));      
+            var data = { pers_id : "", id: ((nodes.length*1)+1), pid: node.id, name: "", title:"", email:"", img: ""};
+            chart.addNode(data); //Agrega al tree
+            console.log("data: "+ JSON.stringify(data));
+            console.log("nodes new: "+ JSON.stringify(nodes));
+            if (data.length == 0) {
+                this.style.display = "none";
+            }
+          } 
+
+          function callHandler(nodeId) {
+            var nodeData = chart.get(nodeId);
+            //var employeeName = nodeData["name"];
+            var node = chart.get(nodeId);
+            console.log(node);   
+            //name  "cadabra abra - [ID: 36] 
+            var name = node.name.split('-');
+            var value = name[1].split(' ');
+            var nro = value[2].split(']');      
+            var id = nro[0];
+            console.log(id); 
+            console.log(selects); 
+            for(var i = 0; i < selects.length; i++){
+              var p = selects[i];
+              if(id == p.pers_id){
+                var person = p;
+                break;
+              }
+            }
+            console.log(person);
+            verModalResultados(person,1);
+            //window.open('https://webcall.me/' + employeeName, employeeName, 'width=340px, height=670px, top=50px, left=50px');
+          }
+
+          chart.nodeCircleMenuUI.on('drop', function (sender, args) {
+            chart.addClink(args.from, args.to).draw(OrgChart.action.update);
+          });
+
+            chart.on("added", function (sender, id) {
+              sender.editUI.show(id);
+            });
+
+            chart.on('drop', function (sender, draggedNodeId, droppedNodeId) {
+              var draggedNode = sender.getNode(draggedNodeId);
+              var droppedNode = sender.getNode(droppedNodeId);
+
+              if (droppedNode.tags.indexOf("area") != -1 && draggedNode.tags.indexOf("area") == -1) {
+                  var draggedNodeData = sender.get(draggedNode.id);
+                  draggedNodeData.pid = null;
+                  draggedNodeData.stpid = droppedNode.id;
+                  sender.updateNode(draggedNodeData);
+                  return false;
+              }
+            });
+
+
+            chart.on('exportstart', function (sender, args) {
+              args.styles = document.getElementById('myStyles').outerHTML;
+            });
+
+            function preview() {
+              OrgChart.pdfPrevUI.show(chart, {
+                  format: 'A4'
+              });
+            }
+
+            function nodePdfPreview(nodeId) {
+              OrgChart.pdfPrevUI.show(chart, {
+                  format: 'A4',
+                  nodeId: nodeId
+              });
+            }
+
+            function addArea(nodeId) {
+              var node = chart.getNode(nodeId);
+              var data = { id: OrgChart.randomId(), pid: node.stParent.id, tags: ["area"] };
+              chart.addNode(data);
+            }
+
+            function addManager(nodeId) {
+              chart.addNode({ id: OrgChart.randomId(), stpid: nodeId });
+            }
+
+            function editarNodo(nodeId){
+
+            console.log("---Editar nodo---");
+            var node = chart.get(nodeId);
+            console.log("node: "+ JSON.stringify(node)); 
+            console.log("Options Editar: "+JSON.stringify(options));        
+            chart.editUI.show(nodeId);    
+
+            chart.draw();
+            console.log(chart);
+            console.log(chart.config.nodes);
+
+            $('#modalOrganigrama #treeOrg').val('');
+            $('#modalOrganigrama #treeOrg').val(JSON.stringify(chart.config.nodes));
+            console.log(nodes);
+
+            }      
+
+            $('#treeOrg').val('');//Limpiamos para que reciba el nodes actualizados
+            $('#modalOrganigrama #treeOrg').val(JSON.stringify(nodes));
+        
+        }  
+      }
+
+
+      //-------------
+      //- BAR CHART -
+      //-------------
+      var areaChartData1 = {
+        labels  : ['Porcentajes (%)'],
+        datasets: [
+          {
+            label               : 'Desempeño',
+            backgroundColor     : 'rgba(60,141,188,0.9)',
+            borderColor         : 'rgba(60,141,188,0.8)',
+            pointRadius          : false,
+            pointColor          : '#3b8bba',
+            pointStrokeColor    : 'rgba(60,141,188,1)',
+            pointHighlightFill  : '#fff',
+            pointHighlightStroke: 'rgba(60,141,188,1)',
+            data                : [34]
+          },
+          {
+            label               : 'Areas de Oportunidad',
+            backgroundColor     : 'rgba(210, 214, 222, 1)',
+            borderColor         : 'rgba(210, 214, 222, 1)',
+            pointRadius         : false,
+            pointColor          : 'rgba(210, 214, 222, 1)',
+            pointStrokeColor    : '#c1c7d1',
+            pointHighlightFill  : '#fff',
+            pointHighlightStroke: 'rgba(220,220,220,1)',
+            data                : [65]
+          },
+        ]
+      }
+
+      var barChartCanvas1 = $('#barChart1').get(0).getContext('2d')
+      var barChartData1 = $.extend(true, {}, areaChartData1)
+      var temp0 = areaChartData1.datasets[0]
+      var temp1 = areaChartData1.datasets[1]
+      barChartData1.datasets[0] = temp1
+      barChartData1.datasets[1] = temp0
+
+      var barChartOptions1 = {
+        responsive              : true,
+        maintainAspectRatio     : false,
+        datasetFill             : false
+      }
+
+      new Chart(barChartCanvas1, {
+        type: 'bar',
+        data: barChartData1,
+        options: barChartOptions1
+      });
+
+      var areaChartData2 = {
+        labels  : ['Porcentajes (%)'],
+        datasets: [
+          {
+            label               : 'Desempeño',
+            backgroundColor     : 'rgba(60,141,188,0.9)',
+            borderColor         : 'rgba(60,141,188,0.8)',
+            pointRadius          : false,
+            pointColor          : '#3b8bba',
+            pointStrokeColor    : 'rgba(60,141,188,1)',
+            pointHighlightFill  : '#fff',
+            pointHighlightStroke: 'rgba(60,141,188,1)',
+            data                : [76]
+          },
+          {
+            label               : 'Areas de Oportunidad',
+            backgroundColor     : 'rgba(210, 214, 222, 1)',
+            borderColor         : 'rgba(210, 214, 222, 1)',
+            pointRadius         : false,
+            pointColor          : 'rgba(210, 214, 222, 1)',
+            pointStrokeColor    : '#c1c7d1',
+            pointHighlightFill  : '#fff',
+            pointHighlightStroke: 'rgba(220,220,220,1)',
+            data                : [29]
+          },
+        ]
+      }
+
+      var barChartCanvas2 = $('#barChart2').get(0).getContext('2d')
+      var barChartData2 = $.extend(true, {}, areaChartData2)
+      var temp0 = areaChartData2.datasets[0]
+      var temp1 = areaChartData2.datasets[1]
+      barChartData2.datasets[0] = temp1
+      barChartData2.datasets[1] = temp0
+
+      var barChartOptions2 = {
+        responsive              : true,
+        maintainAspectRatio     : false,
+        datasetFill             : false
+      }
+
+      new Chart(barChartCanvas2, {
+        type: 'bar',
+        data: barChartData2,
+        options: barChartOptions2
+      });
+
+
+    });
 
 
 
@@ -509,8 +1060,6 @@
     $('#frm-nuevaPersona')[0].reset();
     $("#imagenUsuario").removeAttr("src","");
   }); 
-
-
 
 
 /* Guarda modal de persona */
@@ -615,8 +1164,6 @@ function verPersona(e){
    
 }
 
-
-
 /* inicializacion botones on/off */
  $("[name='habilitarPersonaEditar']").bootstrapSwitch({
 /* habilitar/deshabilitar personas desde modal editar persona*/
@@ -664,9 +1211,7 @@ function verPersona(e){
 }
 });
 
-
-
-    
+   
 /*boton que habilita editar los datos de una persona en el modal */
 function habilitaEditarPersona(){
   $('#btn-habilitarPersona').prop('hidden', false);
@@ -679,9 +1224,6 @@ function habilitaEditarPersona(){
   $('#btn-asociarPosicion').prop('hidden', true);
 
 }
-
-
-
 
 /* Guarda los datos editados de la persona */
 function editarPersona(){
@@ -730,9 +1272,6 @@ function editarPersona(){
     });
 }
 
-
-
-
 /* inicializacion botones on/off  de tabla*/
 $("[name='habilitarPersona']").bootstrapSwitch({
   /* habilitar/deshabilitar personas */
@@ -780,16 +1319,12 @@ $("[name='habilitarPersona']").bootstrapSwitch({
   }
 });
 
-
-
 /* abrir modal agregar imagen */
 $(document).on("click", ".agregaImagen", function() {
   $('#modalAgregarImagen').modal('show');
   event.preventDefault();
   $("#nueva_persona").css('overflow-y', 'auto');//habilita el scroll de nuevo
 });
-
-
 
 /* funcion para deshabilitar una persona */
 function deshabilitaPersona(pers_id){
@@ -803,9 +1338,6 @@ function deshabilitaPersona(pers_id){
   })
 }
 
-
-
-
 /* funcion para habilitar una persona */
 function habilitaPersona(pers_id){
   $.get('<?= base_url()?>/habilitarPersona/' + pers_id, function (data){
@@ -816,8 +1348,6 @@ function habilitaPersona(pers_id){
           );
   })
 }
-
-
 
 function cargaVistaPrevia(){
   var input = $('#inputImagen').prop('files');
@@ -834,8 +1364,6 @@ function cargaVistaPrevia(){
   }
 }
 
-
- 
 /* actualiza tabla personas */
 function actualizaTablaPersonas(){
   clie_id ="<?= isset($clie_id) ? $clie_id : '1'  ?>";
@@ -1035,9 +1563,27 @@ $('#CodigoColonia').select2({
             return markup;
         },
 });
-function verModalResultados(tag){
-  datos = $(tag).closest('tr').data('json');
+function verModalResultados(tag,orgb){
   
+  var datos = [];
+
+  if(orgb==0){
+    console.log("Tabla");
+    datos = $(tag).closest('tr').data('json');
+  }else{
+    console.log("Chart");
+    datos.pers_id = tag.pers_id;    
+    datos.nombres = tag.nombres;
+    datos.apellidos = tag.apellidos;
+    datos.posicion = tag.posicion;
+    datos.hard_skill = tag.hard_skill;
+    datos.soft_skill = tag.soft_skill;
+    datos.etic_skill = tag.etic_skill;
+    datos.evaluador = tag.evaluador
+  }
+
+  
+
   //Clear campos
   $("hardSkillResult").val('');
   $("hardSkillFecha").val('');

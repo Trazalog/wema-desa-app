@@ -84,7 +84,13 @@ class Resultado extends BaseController
         /* LISTADO NIVELES EDUCATIVOS */
         $data['listadoNivelEducativo'] = $this->Generales->getTabla("niveles_educativos");
 
+        /*GET CLIENTE*/
+        $data['Cliente'] = $this->Clientes->getClientexId( $clie_id); 
+
         $data['clie_id'] = $clie_id;
+
+        log_message('debug', "#TRAZA | WEMA-DESA-APP | Controller | Resultado | personas() |  :  ".json_encode($data));
+
         
         return view('Modules\wema\Views\resultados\personas',$data)
         .view('Modules\wema\Views\clientes\modalGenericoCliente')

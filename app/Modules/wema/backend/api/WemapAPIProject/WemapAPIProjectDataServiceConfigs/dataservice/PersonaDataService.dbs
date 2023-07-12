@@ -131,7 +131,7 @@ left join core.tablas t5 on t5.tabl_id = p.ubic_id</sql>
 	     "num_exterior":"$num_exterior",
             "cod_postal":"$cod_postal",
             "calle":"$calle",
-           "clie_id" : "$clie_id";
+           "clie_id" : "$clie_id",
             "num_interior":"$num_interior",
             "genero":"$genero",
             "pais":"$pais",
@@ -142,12 +142,12 @@ left join core.tablas t5 on t5.tabl_id = p.ubic_id</sql>
             "imagen":"$imagen",
             "nom_imagen":"$nom_imagen",
             "area":"$area",
-            "posicion":"$posicion",
+            "posicion":"$posicion"
         }]
     }
 }</result>
   </query>
-  <query id="setPersona" useConfig="WemapDataSource">
+  <query useConfig="WemapDataSource" id="setPersona">
     <sql>INSERT INTO core.personas  
     (apellidos,
     nombres,
@@ -240,7 +240,7 @@ from
     <param name="imagen" sqlType="STRING" />
     <param name="nom_imagen" sqlType="STRING" />
   </query>
-  <query id="updatePersona" useConfig="WemapDataSource">
+  <query useConfig="WemapDataSource" id="updatePersona">
     <sql>update core.personas p
 set
 apellidos = :apellidos,
@@ -291,15 +291,15 @@ where pers_id = cast(:pers_id as integer)</sql>
     <param name="pers_id" sqlType="STRING" />
     <param name="nom_imagen" sqlType="STRING" />
   </query>
-  <query id="deletePersona" useConfig="WemapDataSource">
+  <query useConfig="WemapDataSource" id="deletePersona">
     <sql>update core.personas set eliminado = true where pers_id = cast(:pers_id as integer)</sql>
     <param name="pers_id" sqlType="STRING" />
   </query>
-  <query id="habilitarPersona" useConfig="WemapDataSource">
+  <query useConfig="WemapDataSource" id="habilitarPersona">
     <sql>update core.personas set eliminado = false where pers_id = cast(:pers_id as integer)</sql>
     <param name="pers_id" sqlType="STRING" />
   </query>
-  <query id="getPersonaxId" useConfig="WemapDataSource">
+  <query useConfig="WemapDataSource" id="getPersonaxId">
     <sql>select *,p.eliminado as estado, t.descripcion as genero, t1.descripcion as pais, 
 t2.descripcion as estado_civil, t3.descripcion as nacimiento,
 t4.descripcion as educacion, t5.descripcion as ubicacion 
@@ -345,7 +345,7 @@ where p.pers_id = cast(:pers_id as integer)</sql>
   }
 }</result>
   </query>
-  <query id="getEncuestas" useConfig="WemapDataSource">
+  <query useConfig="WemapDataSource" id="getEncuestas">
     <sql>select if2."label" ,if2."name",if2.valor4_base64, if2.info_id
 from frm.instancias_formularios if2 
 join eva.encuestas_personas ep on if2.info_id = ep.info_id
@@ -365,7 +365,7 @@ where ep.pers_id = cast(:pers_id as integer)</sql>
     }
 }</result>
   </query>
-  <query id="vincularCuestionario" useConfig="WemapDataSource">
+  <query useConfig="WemapDataSource" id="vincularCuestionario">
     <sql>INSERT INTO eva.encuestas_personas(pers_id, info_id)
 VALUES(cast(:pers_id as integer),cast(:info_id as integer))</sql>
     <param type="IN" name="pers_id" sqlType="STRING" paramType="SCALAR" optional="false" />
